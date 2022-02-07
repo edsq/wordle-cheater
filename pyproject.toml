@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "wordle-cheater"
+version = "0.1.0"
+description = ""
+authors = ["Edward Eskew <edward.eskew@wsu.edu>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+english-words = "^1.1.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+ipython = "^8.0.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
