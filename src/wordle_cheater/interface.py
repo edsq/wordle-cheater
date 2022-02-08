@@ -3,8 +3,8 @@ from wordle_cheater.dictionary import letters
 from wordle_cheater.cheater import find_words
 
 @click.command()
-@click.option('--rows', default=4, show_default=True, help='Maximum number of rows to print')
-@click.option('--cols', default=4, show_default=True, help='Number of columns to print.')
+@click.option('--rows', default=10, show_default=True, help='Maximum number of rows to print')
+@click.option('--cols', default=8, show_default=True, help='Number of columns to print.')
 def wordle_cheat(rows, cols):
     """Cheat on wordle :(
 
