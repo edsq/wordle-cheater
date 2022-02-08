@@ -56,7 +56,7 @@ def check_word(word, blacks=None, yellows=None, greens=None, hard=True, check_di
         if char in blacks:
             return False
 
-        elif yellows[i] == char:
+        elif char in yellows[i]:
             return False
 
         elif greens[i] is not None and greens[i] != char:
