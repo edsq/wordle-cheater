@@ -3,7 +3,8 @@ from dictionary import letters
 from cheater import find_words
 
 @click.command()
-def wordle_cheat():
+@click.option('--cols', default=4, show_default=True, help='Number of columns to print.')
+def wordle_cheat(cols):
     """Cheat on wordle :(
 
     Given your current guesses, this utility will print a list of possible solutions.  When entering
@@ -105,9 +106,15 @@ def wordle_cheat():
             
             greens[index] = char
 
+    # Get list of possible words
     possible_words = find_words(blacks=blacks, yellows=yellows, greens=greens)
-    click.echo('Possible words:')
-    click.echo(possible_words)
+
+    # Format output
+    lines = ('\t'.join(possible_words[i:i+cols]) for i in range(0, len(possible_words), cols))
+    out_str = '\n'.join(lines)
+
+    click.secho('Possible solutions:', underline=True)
+    click.echo(out_str)
 
 
 if __name__ == '__main__':
