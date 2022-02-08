@@ -54,23 +54,35 @@ def wordle_cheat(rows, cols):
             continue
 
         elif c == '\x1b' or c == '\t':
+            click.echo('\033[?25l', nl=False) # hide cursor
+            click.secho('_\b', bg='green', fg='black', nl=False) # show colored underscore
+
             # We want to enter a green colored character if user presses escape or tab
             c = click.getchar()
             if c.upper() not in letters:
+                click.echo('\033[?25h', nl=False) # show cursor
+                click.echo('_\b', nl=False) # uncolor underscore
                 continue
 
             click.secho(c.upper(), bg='green', fg='black', nl=False)
+            click.echo('\033[?25h', nl=False) # show cursor
 
             guesses.append(('g', char_index, c.lower()))
             char_index += 1
 
         elif c == ' ':
             # We want to enter a yellow colored character
+            click.echo('\033[?25l', nl=False) # hide cursor
+            click.secho('_\b', bg='yellow', fg='black', nl=False) # show colored underscore
+
             c = click.getchar()
             if c.upper() not in letters:
+                click.echo('\033[?25h', nl=False) # show cursor
+                click.echo('_\b', nl=False) # uncolor underscore
                 continue
 
             click.secho(c.upper(), bg='yellow', fg='black', nl=False)
+            click.echo('\033[?25h', nl=False) # show cursor
 
             guesses.append(('y', char_index, c.lower()))
             char_index += 1
