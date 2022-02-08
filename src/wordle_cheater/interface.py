@@ -3,8 +3,9 @@ from wordle_cheater.dictionary import letters
 from wordle_cheater.cheater import find_words
 
 @click.command()
+@click.option('--rows', default=4, show_default=True, help='Maximum number of rows to print')
 @click.option('--cols', default=4, show_default=True, help='Number of columns to print.')
-def wordle_cheat(cols):
+def wordle_cheat(rows, cols):
     """Cheat on wordle :(
 
     Given your current guesses, this utility will print a list of possible solutions.  When entering
@@ -81,10 +82,10 @@ def wordle_cheat(cols):
             guesses.append(('b', char_index, c.lower()))
             char_index += 1
 
-    get_results(guesses, cols=cols)
+    get_results(guesses, rows=rows, cols=cols)
 
 
-def get_results(guesses, cols=4):
+def get_results(guesses, rows=4, cols=4):
     """Get possible words given `guesses` and print them nicely.
 
     Positional arguments
@@ -97,6 +98,8 @@ def get_results(guesses, cols=4):
 
     Keyword arguments
     -----------------
+    rows : int
+        The maximum number of rows to print before using a pager.
     cols : int
         The number of columns to print of results.
     """
@@ -130,11 +133,17 @@ def get_results(guesses, cols=4):
     possible_words = find_words(blacks=blacks, yellows=yellows, greens=greens)
 
     # Format output
-    lines = ('\t'.join(possible_words[i:i+cols]) for i in range(0, len(possible_words), cols))
+    lines = ['\t'.join(possible_words[i:i+cols]) for i in range(0, len(possible_words), cols)]
     out_str = '\n'.join(lines)
 
-    click.secho('Possible solutions:', underline=True)
-    click.echo(out_str)
+    if len(lines) > rows:
+        long_out_str = click.style('Possible solutions:', underline=True) + '\n'
+        long_out_str += out_str
+        click.echo_via_pager(long_out_str)
+
+    else:
+        click.secho('Possible solutions:', underline=True)
+        click.echo(out_str)
 
 
 if __name__ == '__main__':
