@@ -7,16 +7,15 @@ def wordle_cheat():
     """Cheat on wordle :(
 
     Given your current guesses, this utility will print a list of possible solutions.  When entering
-    guesses, press space before a letter to mark it as yellow, and tab before a letter to mark it as
-    green.
+    guesses, press space before a letter to mark it as yellow, and esc or tab before a letter to
+    mark it as green.
     """
 
     click.secho('Wordle Cheater :(', bold=True)
     click.echo('Enter current guesses below.')
     click.secho('Mark as yellow: press spacebar', dim=True)
     click.secho('Mark as green:  press esc or tab', dim=True)
-    click.echo('\n')
-    click.echo('\033[F', nl=False) # Go to the beginning of the last line, leaving space at bottom
+    click.echo('\n\n\033[F', nl=False)
     click.echo('    _____\b\b\b\b\b', nl=False)
 
     guesses = []
@@ -25,12 +24,22 @@ def wordle_cheat():
     while entering_guesses:
         c = click.getchar()
 
-        if char_index == 5 and c == '\r':
-            # We've entered a full word and want a new line (pressed return)
-            char_index = 0
-            click.echo('\n')
-            click.echo('\033[F', nl=False)
-            click.echo('    _____\b\b\b\b\b', nl=False)
+        if c == '\r':
+            if len(guesses) == 30 and char_index == 5:
+                # We've used all 6 guesses
+                click.echo('\n')
+                entering_guesses = False
+
+            elif char_index == 0:
+                # We've hit return on an empty line and want to exit
+                click.echo('\033[2K\r') # Clear line of underscores
+                entering_guesses = False
+
+            elif char_index == 5:
+                # We've entered a full word and want a new line (pressed return)
+                char_index = 0
+                click.echo('\n\n\033[F', nl=False) # Leave a blank line below cursor
+                click.echo('    _____\b\b\b\b\b', nl=False)
 
         elif c == '\x7f' and char_index > 0:
             # Backspace pressed - ignore this if we're at the beginning of the line already
@@ -42,13 +51,8 @@ def wordle_cheat():
             # Only return and delete do anything if we've typed 5 characters already
             continue
 
-        elif char_index == 0 and c == '\r':
-            # We've hit return on an empty line and want to exit
-            click.echo('     ') # clear last line of underscores
-            entering_guesses = False
-
         elif c == '\x1b' or c == '\t':
-            # We want to enter a green colored character
+            # We want to enter a green colored character if user presses escape or tab
             c = click.getchar()
             if c.upper() not in letters:
                 continue
