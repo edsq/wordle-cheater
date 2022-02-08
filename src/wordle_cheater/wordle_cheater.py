@@ -1,4 +1,4 @@
-from dictionary import wordle_words
+from wordle_cheater.dictionary import wordle_words
 
 def check_word(word, blacks=None, yellows=None, greens=None, hard=True, check_dict=True):
     """Check if `word` is a possible solution given previous guesses.
