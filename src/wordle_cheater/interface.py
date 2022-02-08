@@ -1,6 +1,6 @@
 import click
-from dictionary import letters
-from cheater import find_words
+from wordle_cheater.dictionary import letters
+from wordle_cheater.cheater import find_words
 
 @click.command()
 @click.option('--cols', default=4, show_default=True, help='Number of columns to print.')
