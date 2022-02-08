@@ -10,7 +10,7 @@ english-words = "^1.1.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
-ipython = "^8.0.1"
+ipython = "^7.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
