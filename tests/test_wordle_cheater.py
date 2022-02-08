@@ -1,7 +1,7 @@
 from wordle_cheater import __version__
 from wordle_cheater.dictionary import wordle_words
-from wordle_cheater.wordle_cheater import check_word
-from wordle_cheater.wordle_cheater import find_words
+from wordle_cheater.cheater import check_word
+from wordle_cheater.cheater import find_words
 
 # Wordle from 02-07-2022 (solution 'elder')
 # My guesses were 'beats', 'oiled', 'elder'
