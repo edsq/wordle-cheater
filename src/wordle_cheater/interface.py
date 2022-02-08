@@ -17,8 +17,14 @@ def wordle_cheat(rows, cols):
     click.echo('Enter guesses below.')
     click.secho('Mark as yellow: spacebar', dim=True)
     click.secho('Mark as green:  esc or tab', dim=True)
-    click.echo('\n\n\033[F', nl=False)
-    click.echo('    _____\b\b\b\b\b', nl=False)
+
+    guesses = get_guesses()
+    get_results(guesses, rows=rows, cols=cols)
+
+
+def get_guesses():
+    click.echo('\n\n\033[F', nl=False) # Add empty line below cursor
+    click.echo('    _____\b\b\b\b\b', nl=False) # First line of underscores
 
     guesses = []
     char_index = 0
@@ -94,7 +100,7 @@ def wordle_cheat(rows, cols):
             guesses.append(('b', char_index, c.lower()))
             char_index += 1
 
-    get_results(guesses, rows=rows, cols=cols)
+    return guesses
 
 
 def get_results(guesses, rows=4, cols=4):
