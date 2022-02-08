@@ -43,6 +43,9 @@ def check_word(word, blacks=None, yellows=None, greens=None, hard=True, check_di
     if greens is None:
         greens = [None, None, None, None, None]
 
+    assert len(yellows) == 5
+    assert len(greens) == 5
+
     # Check for hard mode compliance
     if hard:
         known_chars = [char for position in yellows for char in position]
@@ -69,3 +72,32 @@ def check_word(word, blacks=None, yellows=None, greens=None, hard=True, check_di
 
     # If we've made it this far, the word is a possible solution
     return True
+
+
+def find_words(blacks=None, yellows=None, greens=None):
+    """Find all possible words that are consistent with current information.
+
+    Keyword arguments
+    ----------------
+    blacks : list
+        A list of lowercase letters that are not in the word.
+    yellows : length-5 list of lists
+        Lowercase letters that are in the word, but not in the correct location.  For example, if
+        our guesses tell us that the letter 'A' was in the word, but it was not the third letter, we
+        would pass `yellows = [[], [], ['a'], [], []]`.
+    greens : length-5 list
+        Lowercase letters that are in the word and in the correct location.  For example, if our
+        guesses tell us that the letter 'A' is the fourth letter of the word, we would pass
+        `greens = [None, None, None, 'a', None]`.
+
+    Returns
+    -------
+    possible_words : list
+        List of possible solutions that match the given guesses.
+    """
+    possible_words = []
+    for word in wordle_words:
+        if check_word(word, blacks=blacks, yellows=yellows, greens=greens, hard=True):
+            possible_words.append(word)
+
+    return possible_words

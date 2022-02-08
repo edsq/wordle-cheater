@@ -1,6 +1,7 @@
 from wordle_cheater import __version__
 from wordle_cheater.dictionary import wordle_words
 from wordle_cheater.wordle_cheater import check_word
+from wordle_cheater.wordle_cheater import find_words
 
 # Wordle from 02-07-2022 (solution 'elder')
 # My guesses were 'beats', 'oiled', 'elder'
@@ -73,3 +74,7 @@ def test_check_word_invalid_wordlist():
                           hard=False,
                           check_dict=True,
                          )
+
+def test_find_words():
+    words = find_words(blacks=blacks, yellows=yellows, greens=greens)
+    assert sorted(words) == ['dynel', 'elder']
