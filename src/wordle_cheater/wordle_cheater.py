@@ -1,7 +1,4 @@
-from english_words import english_words_lower_alpha_set as all_words
-
-def get_words():
-    return {word for word in all_words if len(word) == 5}
+from dictionary import wordle_words
 
 def check_word(word, blacks=None, yellows=None, greens=None, hard=True, check_dict=True):
     """Check if `word` is a possible solution given previous guesses.
@@ -67,8 +64,7 @@ def check_word(word, blacks=None, yellows=None, greens=None, hard=True, check_di
 
     # Check if guess is a real word
     if check_dict:
-        all_words = get_words()
-        if word not in all_words:
+        if word not in wordle_words:
             return False
 
     # If we've made it this far, the word is a possible solution
