@@ -81,6 +81,26 @@ def wordle_cheat(cols):
             guesses.append(('b', char_index, c.lower()))
             char_index += 1
 
+    get_results(guesses, cols=cols)
+
+
+def get_results(guesses, cols=4):
+    """Get possible words given `guesses` and print them nicely.
+
+    Positional arguments
+    --------------------
+    guesses : list of tuples
+        The previously guessed results.  Each tuple should be of the form
+        `(color, index, letter)` where `color` is one of 'b', 'y', 'g' (referring to the marked
+        color of `letter`: 'black', 'yellow', or 'green', respectively), `index` is the letter's
+        position in the word (indexing from 0), and `letter` is the letter in question.
+
+    Keyword arguments
+    -----------------
+    cols : int
+        The number of columns to print of results.
+    """
+
     blacks = []
     yellows = [[], [], [], [], []]
     greens = [None, None, None, None, None]
