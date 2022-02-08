@@ -13,9 +13,9 @@ def wordle_cheat(cols):
     """
 
     click.secho('Wordle Cheater :(', bold=True)
-    click.echo('Enter current guesses below.')
-    click.secho('Mark as yellow: press spacebar', dim=True)
-    click.secho('Mark as green:  press esc or tab', dim=True)
+    click.echo('Enter guesses below.')
+    click.secho('Mark as yellow: spacebar', dim=True)
+    click.secho('Mark as green:  esc or tab', dim=True)
     click.echo('\n\n\033[F', nl=False)
     click.echo('    _____\b\b\b\b\b', nl=False)
 
