@@ -2,9 +2,14 @@ import click
 from wordle_cheater.dictionary import letters
 from wordle_cheater.cheater import find_words
 
+
 @click.command()
-@click.option('--rows', default=10, show_default=True, help='Maximum number of rows to print')
-@click.option('--cols', default=8, show_default=True, help='Number of columns to print.')
+@click.option(
+    "--rows", default=10, show_default=True, help="Maximum number of rows to print"
+)
+@click.option(
+    "--cols", default=8, show_default=True, help="Number of columns to print."
+)
 def wordle_cheat(rows, cols):
     """Cheat on wordle :(
 
@@ -13,18 +18,18 @@ def wordle_cheat(rows, cols):
     mark it as green.
     """
 
-    click.secho('Wordle Cheater :(', bold=True)
-    click.echo('Enter guesses below.')
-    click.secho('Mark as yellow: spacebar', dim=True)
-    click.secho('Mark as green:  esc or tab', dim=True)
+    click.secho("Wordle Cheater :(", bold=True)
+    click.echo("Enter guesses below.")
+    click.secho("Mark as yellow: spacebar", dim=True)
+    click.secho("Mark as green:  esc or tab", dim=True)
 
     guesses = get_guesses()
     get_results(guesses, rows=rows, cols=cols)
 
 
 def get_guesses():
-    click.echo('\n\n\033[F', nl=False) # Add empty line below cursor
-    click.echo('    _____\b\b\b\b\b', nl=False) # First line of underscores
+    click.echo("\n\n\033[F", nl=False)  # Add empty line below cursor
+    click.echo("    _____\b\b\b\b\b", nl=False)  # First line of underscores
 
     guesses = []
     char_index = 0
@@ -32,26 +37,26 @@ def get_guesses():
     while entering_guesses:
         c = click.getchar()
 
-        if c == '\r':
+        if c == "\r":
             if len(guesses) == 30 and char_index == 5:
                 # We've used all 6 guesses
-                click.echo('\n')
+                click.echo("\n")
                 entering_guesses = False
 
             elif char_index == 0:
                 # We've hit return on an empty line and want to exit
-                click.echo('\033[2K\r') # Clear line of underscores
+                click.echo("\033[2K\r")  # Clear line of underscores
                 entering_guesses = False
 
             elif char_index == 5:
                 # We've entered a full word and want a new line (pressed return)
                 char_index = 0
-                click.echo('\n\n\033[F', nl=False) # Leave a blank line below cursor
-                click.echo('    _____\b\b\b\b\b', nl=False)
+                click.echo("\n\n\033[F", nl=False)  # Leave a blank line below cursor
+                click.echo("    _____\b\b\b\b\b", nl=False)
 
-        elif c == '\x7f' and char_index > 0:
+        elif c == "\x7f" and char_index > 0:
             # Backspace pressed - ignore this if we're at the beginning of the line already
-            click.echo('\b_\b', nl=False)
+            click.echo("\b_\b", nl=False)
             guesses.pop()
             char_index -= 1
 
@@ -59,45 +64,49 @@ def get_guesses():
             # Only return and delete do anything if we've typed 5 characters already
             continue
 
-        elif c == '\x1b' or c == '\t':
-            click.echo('\033[?25l', nl=False) # hide cursor
-            click.secho('_\b', bg='green', fg='black', nl=False) # show colored underscore
+        elif c == "\x1b" or c == "\t":
+            click.echo("\033[?25l", nl=False)  # hide cursor
+            click.secho(
+                "_\b", bg="green", fg="black", nl=False
+            )  # show colored underscore
 
             # We want to enter a green colored character if user presses escape or tab
             c = click.getchar()
             if c.upper() not in letters:
-                click.echo('\033[?25h', nl=False) # show cursor
-                click.echo('_\b', nl=False) # uncolor underscore
+                click.echo("\033[?25h", nl=False)  # show cursor
+                click.echo("_\b", nl=False)  # uncolor underscore
                 continue
 
-            click.secho(c.upper(), bg='green', fg='black', nl=False)
-            click.echo('\033[?25h', nl=False) # show cursor
+            click.secho(c.upper(), bg="green", fg="black", nl=False)
+            click.echo("\033[?25h", nl=False)  # show cursor
 
-            guesses.append(('g', char_index, c.lower()))
+            guesses.append(("g", char_index, c.lower()))
             char_index += 1
 
-        elif c == ' ':
+        elif c == " ":
             # We want to enter a yellow colored character
-            click.echo('\033[?25l', nl=False) # hide cursor
-            click.secho('_\b', bg='yellow', fg='black', nl=False) # show colored underscore
+            click.echo("\033[?25l", nl=False)  # hide cursor
+            click.secho(
+                "_\b", bg="yellow", fg="black", nl=False
+            )  # show colored underscore
 
             c = click.getchar()
             if c.upper() not in letters:
-                click.echo('\033[?25h', nl=False) # show cursor
-                click.echo('_\b', nl=False) # uncolor underscore
+                click.echo("\033[?25h", nl=False)  # show cursor
+                click.echo("_\b", nl=False)  # uncolor underscore
                 continue
 
-            click.secho(c.upper(), bg='yellow', fg='black', nl=False)
-            click.echo('\033[?25h', nl=False) # show cursor
+            click.secho(c.upper(), bg="yellow", fg="black", nl=False)
+            click.echo("\033[?25h", nl=False)  # show cursor
 
-            guesses.append(('y', char_index, c.lower()))
+            guesses.append(("y", char_index, c.lower()))
             char_index += 1
 
         elif c.upper() in letters:
             # We want to enter a "black" colored character
-            click.secho(c.upper(), nl=False, bg='black', fg='white')
+            click.secho(c.upper(), nl=False, bg="black", fg="white")
 
-            guesses.append(('b', char_index, c.lower()))
+            guesses.append(("b", char_index, c.lower()))
             char_index += 1
 
     return guesses
@@ -128,42 +137,46 @@ def get_results(guesses, rows=4, cols=4):
 
     # Get black characters first so we can check against them
     for color, index, char in guesses:
-        if color == 'b':
+        if color == "b":
             blacks.append(char)
 
     for color, index, char in guesses:
-        if color == 'y':
+        if color == "y":
             if char in blacks:
-                raise ValueError(f'{char} appears as both black and yellow')
+                raise ValueError(f"{char} appears as both black and yellow")
 
             yellows[index].append(char)
 
-        elif color == 'g':
+        elif color == "g":
             if char in blacks:
-                raise ValueError(f'{char} appears as both black and green')
+                raise ValueError(f"{char} appears as both black and green")
 
             if greens[index] is not None and greens[index] != char:
-                raise ValueError(f'{greens[index]} and {char} are both marked green in the same location')
-            
+                raise ValueError(
+                    f"{greens[index]} and {char} are both marked green in the same location"
+                )
+
             greens[index] = char
 
     # Get list of possible words
     possible_words = find_words(blacks=blacks, yellows=yellows, greens=greens)
 
     # Format output
-    lines = ['\t'.join(possible_words[i:i+cols]) for i in range(0, len(possible_words), cols)]
-    out_str = '\n'.join(lines)
+    lines = [
+        "\t".join(possible_words[i : i + cols])
+        for i in range(0, len(possible_words), cols)
+    ]
+    out_str = "\n".join(lines)
 
     if len(lines) > rows:
-        long_out_str = click.style('Possible solutions:', underline=True) + '\n'
+        long_out_str = click.style("Possible solutions:", underline=True) + "\n"
         long_out_str += out_str
         click.echo_via_pager(long_out_str)
 
     else:
-        click.secho('Possible solutions:', underline=True)
+        click.secho("Possible solutions:", underline=True)
         click.echo(out_str)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     wordle_cheat()
-
