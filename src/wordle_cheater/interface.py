@@ -191,16 +191,18 @@ def get_results(guesses, rows=4, cols=4):
         "\t".join(possible_words[i : i + cols])
         for i in range(0, len(possible_words), cols)
     ]
-    out_str = "\n".join(lines)
 
     if len(lines) > rows:
-        long_out_str = click.style("Possible solutions:", underline=True) + "\n"
-        long_out_str += out_str
-        click.echo_via_pager(long_out_str)
+        # Truncate some rows
+        out_str = "\n".join(lines[0:rows])
+        n_missing = int(len(possible_words) - rows * cols)
+        out_str += f'\n...({n_missing} more)'
 
     else:
-        click.secho("Possible solutions:", underline=True)
-        click.echo(out_str)
+        out_str = "\n".join(lines)
+
+    click.secho('Possible solutions:', underline=True)
+    click.echo(out_str)
 
 
 if __name__ == "__main__":
