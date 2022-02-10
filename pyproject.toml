@@ -11,7 +11,7 @@ click = "^8.0.3"
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
 ipython = "^7.0"
-black = "^22.1.0"
+pre-commit = "^2.17.0"
 
 [tool.poetry.scripts]
 wordle-cheater = "wordle_cheater.interface:wordle_cheat"
