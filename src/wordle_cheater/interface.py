@@ -2,21 +2,26 @@ import click
 from wordle_cheater.dictionary import letters
 from wordle_cheater.cheater import find_words
 
+
 def move_cursor_down_left(n):
     """Move cursor down n lines and to beginning of line."""
-    click.echo(f'\033[{n}E', nl=False)
+    click.echo(f"\033[{n}E", nl=False)
+
 
 def move_cursor_up_left(n):
     """Move cursor up n lines and to beginning of line."""
-    click.echo(f'\033[{n}F', nl=False)
+    click.echo(f"\033[{n}F", nl=False)
+
 
 def hide_cursor():
     """Hide the cursor."""
     click.echo("\033[?25l", nl=False)
 
+
 def show_cursor():
     """Show the cursor."""
     click.echo("\033[?25h", nl=False)
+
 
 def clear_line():
     """Clear current line and return cursor to left."""
@@ -42,7 +47,7 @@ def wordle_cheat(rows, cols):
     click.echo("Enter guesses below.")
     click.secho("Mark as yellow: spacebar", dim=True)
     click.secho("Mark as green:  esc or tab", dim=True)
-    click.echo('')
+    click.echo("")
 
     guesses = get_guesses()
     get_results(guesses, rows=rows, cols=cols)
@@ -69,7 +74,7 @@ def get_guesses():
             elif char_index == 0:
                 # We've hit return on an empty line and want to exit
                 clear_line()  # Clear line of underscores
-                click.echo('') # End with blank line
+                click.echo("")  # End with blank line
                 entering_guesses = False
 
             elif char_index == 5:
@@ -196,12 +201,12 @@ def get_results(guesses, rows=4, cols=4):
         # Truncate some rows
         out_str = "\n".join(lines[0:rows])
         n_missing = int(len(possible_words) - rows * cols)
-        out_str += f'\n...({n_missing} more)'
+        out_str += f"\n...({n_missing} more)"
 
     else:
         out_str = "\n".join(lines)
 
-    click.secho('Possible solutions:', underline=True)
+    click.secho("Possible solutions:", underline=True)
     click.echo(out_str)
 
 
