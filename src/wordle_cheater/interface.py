@@ -2,6 +2,26 @@ import click
 from wordle_cheater.dictionary import letters
 from wordle_cheater.cheater import find_words
 
+def move_cursor_down_left(n):
+    """Move cursor down n lines and to beginning of line."""
+    click.echo(f'\033[{n}E', nl=False)
+
+def move_cursor_up_left(n):
+    """Move cursor up n lines and to beginning of line."""
+    click.echo(f'\033[{n}F', nl=False)
+
+def hide_cursor():
+    """Hide the cursor."""
+    click.echo("\033[?25l", nl=False)
+
+def show_cursor():
+    """Show the cursor."""
+    click.echo("\033[?25h", nl=False)
+
+def clear_line():
+    """Clear current line and return cursor to left."""
+    click.echo("\033[2K\r", nl=False)
+
 
 @click.command()
 @click.option(
@@ -22,13 +42,15 @@ def wordle_cheat(rows, cols):
     click.echo("Enter guesses below.")
     click.secho("Mark as yellow: spacebar", dim=True)
     click.secho("Mark as green:  esc or tab", dim=True)
+    click.echo('')
 
     guesses = get_guesses()
     get_results(guesses, rows=rows, cols=cols)
 
 
 def get_guesses():
-    click.echo("\n\n\033[F", nl=False)  # Add empty line below cursor
+    click.echo("")  # Add empty line below cursor
+    move_cursor_up_left(1)
     click.echo("    _____\b\b\b\b\b", nl=False)  # First line of underscores
 
     guesses = []
@@ -38,6 +60,7 @@ def get_guesses():
         c = click.getchar()
 
         if c == "\r":
+            # Return pressed
             if len(guesses) == 30 and char_index == 5:
                 # We've used all 6 guesses
                 click.echo("\n")
@@ -45,13 +68,15 @@ def get_guesses():
 
             elif char_index == 0:
                 # We've hit return on an empty line and want to exit
-                click.echo("\033[2K\r")  # Clear line of underscores
+                clear_line()  # Clear line of underscores
+                click.echo('') # End with blank line
                 entering_guesses = False
 
             elif char_index == 5:
                 # We've entered a full word and want a new line (pressed return)
                 char_index = 0
-                click.echo("\n\n\033[F", nl=False)  # Leave a blank line below cursor
+                click.echo("\n")  # Leave a blank line below cursor
+                move_cursor_up_left(1)
                 click.echo("    _____\b\b\b\b\b", nl=False)
 
         elif c == "\x7f" and char_index > 0:
@@ -65,39 +90,39 @@ def get_guesses():
             continue
 
         elif c == "\x1b" or c == "\t":
-            click.echo("\033[?25l", nl=False)  # hide cursor
+            # Escape or tab pressed - we want to enter a green colored character
+            hide_cursor()
             click.secho(
                 "_\b", bg="green", fg="black", nl=False
             )  # show colored underscore
 
-            # We want to enter a green colored character if user presses escape or tab
             c = click.getchar()
             if c.upper() not in letters:
-                click.echo("\033[?25h", nl=False)  # show cursor
+                show_cursor()
                 click.echo("_\b", nl=False)  # uncolor underscore
                 continue
 
             click.secho(c.upper(), bg="green", fg="black", nl=False)
-            click.echo("\033[?25h", nl=False)  # show cursor
+            show_cursor()
 
             guesses.append(("g", char_index, c.lower()))
             char_index += 1
 
         elif c == " ":
-            # We want to enter a yellow colored character
-            click.echo("\033[?25l", nl=False)  # hide cursor
+            # Space pressed - we want to enter a yellow colored character
+            hide_cursor()
             click.secho(
                 "_\b", bg="yellow", fg="black", nl=False
             )  # show colored underscore
 
             c = click.getchar()
             if c.upper() not in letters:
-                click.echo("\033[?25h", nl=False)  # show cursor
+                show_cursor()
                 click.echo("_\b", nl=False)  # uncolor underscore
                 continue
 
             click.secho(c.upper(), bg="yellow", fg="black", nl=False)
-            click.echo("\033[?25h", nl=False)  # show cursor
+            show_cursor()
 
             guesses.append(("y", char_index, c.lower()))
             char_index += 1
