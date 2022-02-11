@@ -1,7 +1,11 @@
 from wordle_cheater import __version__
 from wordle_cheater.dictionary import wordle_words
-from wordle_cheater.cheater import check_word
-from wordle_cheater.cheater import find_words
+from wordle_cheater.cheater import (
+    WordleLetter,
+    check_word,
+    find_words,
+    parse_wordle_letters,
+)
 
 # Wordle from 02-07-2022 (solution 'elder')
 # My guesses were 'beats', 'oiled', 'elder'
@@ -16,6 +20,26 @@ def test_version():
 
 def test_wordle_dictionary():
     assert len(wordle_words) == 12972
+
+
+def test_parse_wordle_letters():
+    guesses = [
+        ("b", "black", None),
+        ("e", "yellow", 1),
+        ("a", "black", None),
+        ("t", "black", None),
+        ("s", "black", None),
+        ("o", "black", None),
+        ("i", "black", None),
+        ("l", "yellow", 2),
+        ("e", "green", 3),
+        ("d", "yellow", 4),
+    ]
+    wordle_letters = [WordleLetter(*guess) for guess in guesses]
+    parsed_blacks, parsed_yellows, parsed_greens = parse_wordle_letters(wordle_letters)
+    assert parsed_blacks == blacks
+    assert parsed_yellows == yellows
+    assert parsed_greens == greens
 
 
 def test_check_word_valid():
