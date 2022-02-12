@@ -38,9 +38,7 @@ def enter_letters(stdscr, y0=0, x0=0):
     curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_YELLOW)  # White on yellow
     curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_GREEN)  # White on green
 
-    for i in range(6):
-        print_after_cursor(stdscr, y0 + i, x0, "_____")
-    stdscr.move(y0, x0)
+    print_after_cursor(stdscr, y0, x0, "_____")
     stdscr.refresh()
 
     guesses = []
