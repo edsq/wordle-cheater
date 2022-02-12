@@ -20,24 +20,53 @@ def center_print(stdscr, y, string, *args, **kwargs):
 
 
 def main(stdscr):
-    center_print(stdscr, 1, "Wordle Cheater :(", curses.A_BOLD)
-    center_print(stdscr, 2, "Enter guesses below.")
-    center_print(stdscr, 3, "spacebar: change color", curses.A_DIM)
-
-    height, width = stdscr.getmaxyx()
-    guesses = enter_letters(stdscr, y0=5, x0=width // 2 - 3)
-
-    from wordle_cheater.interface import get_results
-
-    get_results(guesses)
-
-
-def enter_letters(stdscr, y0=0, x0=0):
     curses.use_default_colors()
     curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)
     curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_YELLOW)  # White on yellow
     curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_GREEN)  # White on green
 
+    center_print(stdscr, 1, "Wordle Cheater :(", curses.A_BOLD)
+    center_print(stdscr, 2, "Enter guesses below.")
+    center_print(stdscr, 3, "spacebar: change color", curses.A_DIM)
+
+    height, width = stdscr.getmaxyx()
+    results_window = curses.newwin(
+        height - 12, width, 12, 0
+    )  # window for printing results
+    guesses = enter_letters(stdscr, results_window, y0=5, x0=width // 2 - 3)
+    print_results(results_window, guesses)
+    curses.curs_set(False)
+    stdscr.getkey()
+
+
+def print_results(win, guesses):
+    """Print possible solutions given `guesses` in curses window `win`."""
+    height, width = win.getmaxyx()
+    blacks, yellows, greens = cheater.parse_wordle_letters(guesses)
+    possible_words = cheater.find_words(blacks, yellows, greens)
+
+    cols = width // 10
+    lines = [
+        "     ".join(possible_words[i : i + cols])
+        for i in range(0, len(possible_words), cols)
+    ]
+    if (
+        len(lines) > height - 2
+    ):  # -2 to account for "Possible solutions:" and "...({n_missing} more"
+        lines = lines[: height - 2]
+        n_missing = int(len(possible_words) - (cols * len(lines)))
+        out_str = "\n".join(lines)
+        out_str += f"\n...({n_missing} more)"
+    else:
+        out_str = "\n".join(lines)
+
+    win.clear()
+    win.addstr(0, 0, "Possible solutions:", curses.A_UNDERLINE)
+    win.addstr(1, 0, out_str)
+    win.refresh()
+
+
+def enter_letters(stdscr, results_window, y0=0, x0=0):
     print_after_cursor(stdscr, y0, x0, "_____")
     stdscr.refresh()
 
@@ -55,10 +84,14 @@ def enter_letters(stdscr, y0=0, x0=0):
 
             elif char_index == 0:
                 # We've hit return on an empty line and want to exit
+                stdscr.addstr(
+                    y0 + len(guesses) // 5, x0, "     "
+                )  # clear last line of underscores
                 entering_guesses = False
 
             elif char_index == 5:
                 # We've entered a full word and want a new line (pressed return)
+                print_results(results_window, guesses)
                 char_index = 0
                 print_after_cursor(stdscr, y0 + len(guesses) // 5, x0, "_____")
 
