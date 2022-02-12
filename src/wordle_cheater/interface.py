@@ -54,6 +54,11 @@ def wordle_cheat(rows, cols):
 
 
 def get_guesses():
+    """Get previous guesses with a Wordle-like interface.
+
+    Requires a terminal with ANSI support, and may not work well on all systems.
+    """
+
     click.echo("")  # Add empty line below cursor
     move_cursor_up_left(1)
     click.echo("    _____\b\b\b\b\b", nl=False)  # First line of underscores
@@ -147,7 +152,7 @@ def get_guesses():
     return guesses
 
 
-def get_results(guesses, rows=4, cols=4):
+def get_results(guesses, rows=10, cols=8):
     """Get possible words given `guesses` and print them nicely.
 
     Positional arguments
