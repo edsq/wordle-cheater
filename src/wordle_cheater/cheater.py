@@ -15,6 +15,9 @@ class WordleLetter:
         if self.letter.upper() not in letters:
             raise ValueError("`letter` must be an english letter.")
 
+        if not self.letter.lower() == self.letter:
+            raise ValueError("`letter` must be lowercase.")
+
         if self.color not in ["black", "yellow", "green"]:
             raise ValueError("`color` must be one of ['black', 'yellow', 'green']")
 
