@@ -169,17 +169,21 @@ def parse_wordle_letters(wordle_letters):
     for wl in wordle_letters:
         if wl.color == "yellow":
             if wl.letter in blacks:
-                raise ValueError(f"{wl.letter} appears as both black and yellow")
+                raise ValueError(
+                    f"'{wl.letter.upper()}' appears as both black and yellow"
+                )
 
             yellows[wl.index].append(wl.letter)
 
         elif wl.color == "green":
             if wl.letter in blacks:
-                raise ValueError(f"{wl.letter} appears as both black and green")
+                raise ValueError(
+                    f"'{wl.letter.upper()}' appears as both black and green"
+                )
 
             if greens[wl.index] is not None and greens[wl.index] != wl.letter:
                 raise ValueError(
-                    f"{greens[index]} and {wl.letter} are both marked green in the same location"
+                    f"'{greens[index].upper()}' and '{wl.letter.upper()}' are both marked green in the same location"
                 )
 
             greens[wl.index] = wl.letter
