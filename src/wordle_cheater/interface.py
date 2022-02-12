@@ -1,6 +1,6 @@
 import click
+import wordle_cheater.cheater as cheater
 from wordle_cheater.dictionary import letters
-from wordle_cheater.cheater import find_words
 
 
 def move_cursor_down_left(n):
@@ -110,7 +110,8 @@ def get_guesses():
             click.secho(c.upper(), bg="green", fg="black", nl=False)
             show_cursor()
 
-            guesses.append(("g", char_index, c.lower()))
+            wl = cheater.WordleLetter(letter=c.lower(), color="green", index=char_index)
+            guesses.append(wl)
             char_index += 1
 
         elif c == " ":
@@ -129,14 +130,18 @@ def get_guesses():
             click.secho(c.upper(), bg="yellow", fg="black", nl=False)
             show_cursor()
 
-            guesses.append(("y", char_index, c.lower()))
+            wl = cheater.WordleLetter(
+                letter=c.lower(), color="yellow", index=char_index
+            )
+            guesses.append(wl)
             char_index += 1
 
         elif c.upper() in letters:
             # We want to enter a "black" colored character
             click.secho(c.upper(), nl=False, bg="black", fg="white")
 
-            guesses.append(("b", char_index, c.lower()))
+            wl = cheater.WordleLetter(letter=c.lower(), color="black", index=None)
+            guesses.append(wl)
             char_index += 1
 
     return guesses
@@ -147,11 +152,8 @@ def get_results(guesses, rows=4, cols=4):
 
     Positional arguments
     --------------------
-    guesses : list of tuples
-        The previously guessed results.  Each tuple should be of the form
-        `(color, index, letter)` where `color` is one of 'b', 'y', 'g' (referring to the marked
-        color of `letter`: 'black', 'yellow', or 'green', respectively), `index` is the letter's
-        position in the word (indexing from 0), and `letter` is the letter in question.
+    guesses : list of WordleLetter objects
+        The previously guessed results.
 
     Keyword arguments
     -----------------
@@ -161,35 +163,11 @@ def get_results(guesses, rows=4, cols=4):
         The number of columns to print of results.
     """
 
-    blacks = []
-    yellows = [[], [], [], [], []]
-    greens = [None, None, None, None, None]
-
-    # Get black characters first so we can check against them
-    for color, index, char in guesses:
-        if color == "b":
-            blacks.append(char)
-
-    for color, index, char in guesses:
-        if color == "y":
-            if char in blacks:
-                raise ValueError(f"{char} appears as both black and yellow")
-
-            yellows[index].append(char)
-
-        elif color == "g":
-            if char in blacks:
-                raise ValueError(f"{char} appears as both black and green")
-
-            if greens[index] is not None and greens[index] != char:
-                raise ValueError(
-                    f"{greens[index]} and {char} are both marked green in the same location"
-                )
-
-            greens[index] = char
+    # Parse and check previous guesses
+    blacks, yellows, greens = cheater.parse_wordle_letters(guesses)
 
     # Get list of possible words
-    possible_words = find_words(blacks=blacks, yellows=yellows, greens=greens)
+    possible_words = cheater.find_words(blacks=blacks, yellows=yellows, greens=greens)
 
     # Format output
     lines = [
