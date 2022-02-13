@@ -171,3 +171,11 @@ def test_enter_letters_non_alpha():
     test_ui = NoInterfaceUI(inputs=inputs)
     wordle_letters = test_ui.enter_letters()
     assert wordle_letters == correct_wordle_letters
+
+
+def test_get_results_string():
+    """Basic test of get_results_string()."""
+    test_ui = NoInterfaceUI(inputs=[])
+    test_ui.guesses = correct_wordle_letters
+    out_str = test_ui.get_results_string()
+    assert out_str == "elder     dynel" or out_str == "dynel     elder"
