@@ -32,6 +32,7 @@ class WordleCheaterUI:
         """
         x, y = x0, y0  # Location of cursor.  (0, 0) is top left corner.
         self.print(x, y, "_____")  # Start with a blank line of underscores
+        self.move_cursor(x, y)
         self.guesses = []
         entering_letters = True
         while entering_letters:
@@ -60,6 +61,10 @@ class WordleCheaterUI:
 
             # Check if user pressed backspace
             elif self.is_backspace(c):
+                # Don't do anything if we're at the beginning of the first line
+                if x == x0 and y == y0:
+                    continue
+
                 # Check if we're at the beginning of a line
                 if x == x0:
                     self.print(x, y, "     ")  # Clear line of underscores
@@ -89,8 +94,8 @@ class WordleCheaterUI:
                 c2 = self.get_key()
 
                 # If second character pressed was a letter, enter that colored yellow
-                if c2.upper in english_letters:
-                    self.print(x, y, c2, c="yellow")  # Print yellow character
+                if c2.upper() in english_letters:
+                    self.print(x, y, c2.upper(), c="yellow")  # Print yellow character
                     self.set_cursor_visibility(True)  # Show cursor again
 
                     # Add guess to list
@@ -115,7 +120,7 @@ class WordleCheaterUI:
                         continue
 
                     # If we get here, c3 is a letter, so enter it colored green
-                    self.print(x, y, c3, c="green")
+                    self.print(x, y, c3.upper(), c="green")
                     self.set_cursor_visibility(True)
 
                     # Add letter to list
@@ -133,7 +138,7 @@ class WordleCheaterUI:
 
             # If we enter a letter without first pressing space, color it black
             elif c.upper() in english_letters:
-                self.print(x, y, c, c="black")  # Show letter colored black
+                self.print(x, y, c.upper(), c="black")  # Show letter colored black
                 wl = cheater.WordleLetter(letter=c.lower(), color="black", index=None)
                 self.guesses.append(wl)  # Add letter to list
                 x += 1
