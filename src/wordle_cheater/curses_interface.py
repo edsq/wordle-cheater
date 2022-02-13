@@ -84,6 +84,7 @@ def enter_letters(stdscr, results_window, y0=0, x0=0):
 
             elif char_index == 0:
                 # We've hit return on an empty line and want to exit
+                curses.curs_set(False)
                 stdscr.addstr(
                     y0 + len(guesses) // 5, x0, "     "
                 )  # clear last line of underscores
