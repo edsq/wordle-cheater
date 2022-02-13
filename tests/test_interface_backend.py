@@ -14,6 +14,8 @@ class NoInterfaceUI(WordleCheaterUI):
             A list of characters, to be read off sequentially as inputs by get_key().
         """
         self.inputs = inputs[::-1]  # Reverse order so we can just pop to get inputs
+        self.output = [""]  # List of strings of output, each element a new line.
+        self.output_colors = [""]  # List of colors of output
         super().__init__()
 
     def print_title(self):
@@ -23,7 +25,34 @@ class NoInterfaceUI(WordleCheaterUI):
         pass
 
     def print(self, x, y, string, c=None):
-        pass
+        if c is None:
+            color_str = " " * len(string)
+
+        elif c == "black":
+            color_str = "b" * len(string)
+
+        elif c == "yellow":
+            color_str = "y" * len(string)
+
+        elif c == "green":
+            color_str = "g" * len(string)
+
+        else:
+            raise ValueError("`c` must be one of ['black', 'yellow', 'green'] or None.")
+
+        # Add new lines if needed
+        if y >= len(self.output):
+            new_lines_needed = 1 + y - len(self.output)
+            self.output += ["" for i in range(new_lines_needed)]
+            self.output_colors += ["" for i in range(new_lines_needed)]
+
+        # Now "Print"
+        self.output[y] = self.output[y][:x] + string + self.output[y][x + len(string) :]
+        self.output_colors[y] = (
+            self.output_colors[y][:x]
+            + color_str
+            + self.output_colors[y][x + len(color_str) :]
+        )
 
     def move_cursor(self, x, y):
         pass
@@ -63,6 +92,9 @@ guesses = [
 ]
 correct_wordle_letters = [WordleLetter(*guess) for guess in guesses]
 
+correct_output = ["BEATS", "OILED", "     "]
+correct_output_colors = ["bybbb", "bbygy", "     "]
+
 
 def test_enter_letters():
     """Basic test of enter_letters()."""
@@ -91,6 +123,8 @@ def test_enter_letters():
     test_ui = NoInterfaceUI(inputs=inputs)
     wordle_letters = test_ui.enter_letters()
     assert wordle_letters == correct_wordle_letters
+    assert test_ui.output == correct_output
+    assert test_ui.output_colors == correct_output_colors
 
 
 def test_enter_letters_backspace():
@@ -136,6 +170,8 @@ def test_enter_letters_backspace():
     test_ui = NoInterfaceUI(inputs=inputs)
     wordle_letters = test_ui.enter_letters()
     assert wordle_letters == correct_wordle_letters
+    assert test_ui.output == correct_output
+    assert test_ui.output_colors == correct_output_colors
 
 
 def test_enter_letters_non_alpha():
@@ -171,6 +207,8 @@ def test_enter_letters_non_alpha():
     test_ui = NoInterfaceUI(inputs=inputs)
     wordle_letters = test_ui.enter_letters()
     assert wordle_letters == correct_wordle_letters
+    assert test_ui.output == correct_output
+    assert test_ui.output_colors == correct_output_colors
 
 
 def test_get_results_string():
