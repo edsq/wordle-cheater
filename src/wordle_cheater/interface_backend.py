@@ -7,6 +7,9 @@ class WordleCheaterUI:
 
     def __init__(self):
         self.guesses = []  # List of WordleLetter objects representing current guesses.
+        self.curs_x = 0  # x position of cursor
+        self.curs_y = 0  # y position of cursor
+        self.entering_letters = False  # Whether or not we're entering previous guesses
 
     def main(self, *args, **kwargs):
         """Main entry point; called by the CLI."""
@@ -30,63 +33,84 @@ class WordleCheaterUI:
         -------
         guesses : list of WordleLetter objects
         """
-        x, y = x0, y0  # Location of cursor.  (0, 0) is top left corner.
-        self.print(x, y, "_____")  # Start with a blank line of underscores
-        self.move_cursor(x, y)
+        self.curs_x, self.curs_y = (
+            x0,
+            y0,
+        )  # Location of cursor.  (0, 0) is top left corner.
+        self.print(
+            self.curs_x, self.curs_y, "_____"
+        )  # Start with a blank line of underscores
+        self.move_cursor(self.curs_x, self.curs_y)
         self.guesses = []
-        entering_letters = True
-        while entering_letters:
+        self.entering_letters = True
+        while self.entering_letters:
             # Get keypress
             c = self.get_key()
 
             # Check if user pressed return
             if self.is_enter(c):
                 # Check if we've entered all 6 words
-                if y == y0 + 5 and x == x0 + 5:
-                    entering_letters = False  # Exit loop
+                if self.curs_y == y0 + 5 and self.curs_x == x0 + 5:
+                    self.entering_letters = False  # Exit loop
 
                 # Check if user pressed return on an empty line and wants to exit
-                elif x == x0:
+                elif self.curs_x == x0:
                     self.set_cursor_visibility(False)  # Hide cursor
-                    self.print(x, y, "     ")  # Clear line of underscores
-                    entering_letters = False  # Exit loop
+                    self.print(
+                        self.curs_x, self.curs_y, "     "
+                    )  # Clear line of underscores
+                    self.entering_letters = False  # Exit loop
 
                 # Check if user pressed return on a full line and wants another
-                elif x == x0 + 5:
+                elif self.curs_x == x0 + 5:
                     self.print_results()  # Show results thus far
-                    x = x0  # Reset horizontal position
-                    y += 1  # Increment vertical position
-                    self.print(x, y, "_____")  # Print blank line of underscores
-                    self.move_cursor(x, y)  # Move cursor to beginning of line
+                    self.curs_x = x0  # Reset horizontal position
+                    self.curs_y += 1  # Increment vertical position
+                    self.print(
+                        self.curs_x, self.curs_y, "_____"
+                    )  # Print blank line of underscores
+                    self.move_cursor(
+                        self.curs_x, self.curs_y
+                    )  # Move cursor to beginning of line
 
             # Check if user pressed backspace
             elif self.is_backspace(c):
                 # Don't do anything if we're at the beginning of the first line
-                if x == x0 and y == y0:
+                if self.curs_x == x0 and self.curs_y == y0:
                     continue
 
                 # Check if we're at the beginning of a line
-                if x == x0:
-                    self.print(x, y, "     ")  # Clear line of underscores
-                    x = x0 + 5  # Go to end of last line
-                    y -= 1  # Go up one line
-                    self.move_cursor(x, y)  # Move cursor to end of last line
+                if self.curs_x == x0:
+                    self.print(
+                        self.curs_x, self.curs_y, "     "
+                    )  # Clear line of underscores
+                    self.curs_x = x0 + 5  # Go to end of last line
+                    self.curs_y -= 1  # Go up one line
+                    self.move_cursor(
+                        self.curs_x, self.curs_y
+                    )  # Move cursor to end of last line
 
                 else:
-                    x -= 1  # Move cursor back one
+                    self.curs_x -= 1  # Move cursor back one
                     self.guesses.pop()  # Delete last guess
-                    self.print(x, y, "_")  # Print underscore where letter used to be
-                    self.move_cursor(x, y)  # Move cursor back over underscore
+                    self.print(
+                        self.curs_x, self.curs_y, "_"
+                    )  # Print underscore where letter used to be
+                    self.move_cursor(
+                        self.curs_x, self.curs_y
+                    )  # Move cursor back over underscore
 
             # If we've typed five characters, only enter or backspace should do
             # anything, so ignore all other characters in this case.
-            elif x == x0 + 5:
+            elif self.curs_x == x0 + 5:
                 continue
 
             # Check if user pressed space and wants a colored character
             elif c == " ":
                 self.set_cursor_visibility(False)  # Hide cursor
-                self.print(x, y, "_", c="yellow")  # Show a yellow underscore
+                self.print(
+                    self.curs_x, self.curs_y, "_", c="yellow"
+                )  # Show a yellow underscore
 
                 # If the user presses space again, they want a green colored character.
                 # If they enter a letter, they want that letter to be yellow.  If they
@@ -95,53 +119,61 @@ class WordleCheaterUI:
 
                 # If second character pressed was a letter, enter that colored yellow
                 if c2.upper() in english_letters:
-                    self.print(x, y, c2.upper(), c="yellow")  # Print yellow character
+                    self.print(
+                        self.curs_x, self.curs_y, c2.upper(), c="yellow"
+                    )  # Print yellow character
                     self.set_cursor_visibility(True)  # Show cursor again
 
                     # Add guess to list
                     wl = cheater.WordleLetter(
-                        letter=c2.lower(), color="yellow", index=x - x0
+                        letter=c2.lower(), color="yellow", index=self.curs_x - x0
                     )
                     self.guesses.append(wl)
-                    x += 1
+                    self.curs_x += 1
 
                 # Check if user pressed space and thus wants a green colored character
                 elif c2 == " ":
-                    self.print(x, y, "_", c="green")
+                    self.print(self.curs_x, self.curs_y, "_", c="green")
 
                     # Need to get key a third time, and if anything other than a letter
                     # is pressed, cancel this entry.  If a letter is pressed, enter
                     # that letter colored green.
                     c3 = self.get_key()
                     if c3.upper() not in english_letters:
-                        self.print(x, y, "_")  # Print uncolored underscore
-                        self.move_cursor(x, y)  # Move cursor back over underscore
+                        self.print(
+                            self.curs_x, self.curs_y, "_"
+                        )  # Print uncolored underscore
+                        self.move_cursor(
+                            self.curs_x, self.curs_y
+                        )  # Move cursor back over underscore
                         self.set_cursor_visibility(True)  # Show cursor again
                         continue
 
                     # If we get here, c3 is a letter, so enter it colored green
-                    self.print(x, y, c3.upper(), c="green")
+                    self.print(self.curs_x, self.curs_y, c3.upper(), c="green")
                     self.set_cursor_visibility(True)
 
                     # Add letter to list
                     wl = cheater.WordleLetter(
-                        letter=c3.lower(), color="green", index=x - x0
+                        letter=c3.lower(), color="green", index=self.curs_x - x0
                     )
                     self.guesses.append(wl)
-                    x += 1  # Move cursor one over
+                    self.curs_x += 1  # Move cursor one over
 
                 # If second character pressed was not a letter, uncolor and continue
                 else:
-                    self.print(x, y, "_")  # Uncolor underscore
+                    self.print(self.curs_x, self.curs_y, "_")  # Uncolor underscore
                     self.set_cursor_visibility(True)  # Show cursor again
                     continue
 
             # If we enter a letter without first pressing space, color it black
             elif c.upper() in english_letters:
-                self.print(x, y, c.upper(), c="black")  # Show letter colored black
+                self.print(
+                    self.curs_x, self.curs_y, c.upper(), c="black"
+                )  # Show letter colored black
                 wl = cheater.WordleLetter(letter=c.lower(), color="black", index=None)
                 self.guesses.append(wl)  # Add letter to list
-                x += 1
+                self.curs_x += 1
 
         return self.guesses
 
