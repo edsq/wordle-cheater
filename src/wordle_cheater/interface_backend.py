@@ -163,6 +163,9 @@ class WordleCheaterUI:
                 # If second character pressed was not a letter, uncolor and continue
                 else:
                     self.print(self.curs_x, self.curs_y, "_")  # Uncolor underscore
+                    self.move_cursor(
+                        self.curs_x, self.curs_y
+                    )  # Move cursor back over underscore
                     self.set_cursor_visibility(True)  # Show cursor again
                     continue
 
