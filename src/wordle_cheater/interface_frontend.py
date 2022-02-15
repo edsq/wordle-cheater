@@ -89,7 +89,7 @@ class CursesInterface(WordleCheaterUI):
             return False
 
 
-class ClickUI(WordleCheaterUI):
+class ClickInterface(WordleCheaterUI):
     """Interface for using Click alone to enter letters and see solutions."""
 
     def __init__(self, max_rows=10, cols=8, x0=4, y0=4, esc="\033"):
