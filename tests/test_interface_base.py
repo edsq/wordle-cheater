@@ -1,4 +1,4 @@
-from wordle_cheater.interface_backend import WordleCheaterUI
+from wordle_cheater.interface_base import WordleCheaterUI
 from wordle_cheater.cheater import WordleLetter
 
 
