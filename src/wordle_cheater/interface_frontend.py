@@ -92,9 +92,9 @@ class CursesInterface(WordleCheaterUI):
 class ClickInterface(WordleCheaterUI):
     """Interface for using Click alone to enter letters and see solutions."""
 
-    def __init__(self, max_rows=10, cols=8, x0=4, y0=4, esc="\033"):
+    def __init__(self, max_rows=10, max_cols=8, x0=4, y0=4, esc="\033"):
         self.max_rows = max_rows
-        self.cols = 8
+        self.max_cols = max_cols
         self.x0 = x0  # Initial x position of guesses
         self.y0 = y0  # Initial y position of guesses
         self.esc = esc  # ANSI escape code
@@ -121,9 +121,12 @@ class ClickInterface(WordleCheaterUI):
 
     def main(self):
         self.print_title()
-        self.enter_letters(x0=self.x0, y0=self.y0)
-        self.print_results()
-        self.set_cursor_visibility(True)
+        try:
+            self.enter_letters(x0=self.x0, y0=self.y0)
+            self.print_results()
+
+        finally:
+            self.set_cursor_visibility(True)
 
     def print_title(self):
         self.print(0, 0, "Wordle Cheater :(", bold=True)
@@ -136,7 +139,7 @@ class ClickInterface(WordleCheaterUI):
             return
 
         out_str = self.get_results_string(
-            max_rows=self.max_rows, cols=self.cols, sep="     "
+            max_rows=self.max_rows, cols=self.max_cols, sep="     "
         )
 
         self.move_cursor(0, self.curs_xy[1] + 1)
