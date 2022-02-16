@@ -93,8 +93,8 @@ class ClickInterface(WordleCheaterUI):
     """Interface for using Click alone to enter letters and see solutions."""
 
     def __init__(self, max_rows=10, max_cols=8, x0=4, y0=4, esc="\033"):
-        self.max_rows = max_rows
-        self.max_cols = max_cols
+        self.max_rows = max_rows  # Maximum rows of results to print
+        self.max_cols = max_cols  # Maximum columns of results to print
         self.x0 = x0  # Initial x position of guesses
         self.y0 = y0  # Initial y position of guesses
         self.esc = esc  # ANSI escape code
@@ -120,8 +120,8 @@ class ClickInterface(WordleCheaterUI):
         self._curs_xy = xy
 
     def main(self):
-        self.print_title()
         try:
+            self.print_title()
             self.enter_letters(x0=self.x0, y0=self.y0)
             self.print_results()
 
@@ -173,7 +173,14 @@ class ClickInterface(WordleCheaterUI):
         elif self.curs_xy[1] < y:
             # Check if we need to add new lines to screen
             if len(self.line_lengths) - 1 < y:
-                click.echo("\n" * (y - self.curs_xy[1]), nl=False)
+                # First arrow down as far as possible
+                click.echo(
+                    f"{self.esc}[{(len(self.line_lengths) - 1) - self.curs_xy[1]}B",
+                    nl=False,
+                )
+
+                # Now add blank lines
+                click.echo("\n" * (y - (len(self.line_lengths) - 1)), nl=False)
 
                 # New line, so definitely need to print spaces to move x
                 click.echo(" " * x, nl=False)
@@ -192,7 +199,13 @@ class ClickInterface(WordleCheaterUI):
         elif self.curs_xy[0] < x:
             # Check if we need to add space to right of cursor
             if self.line_lengths[y] > x:
-                click.echo(" " * x, nl=False)
+                # First arrow to the right as far as possible
+                click.echo(
+                    f"{self.esc}[{self.line_lengths[y] - self.curs_xy[0]}C", nl=False
+                )
+
+                # Now add blank spaces
+                click.echo(" " * (x - self.line_lengths[y]), nl=False)
 
             else:
                 # Should just arrow to right to not overwrite stuff
@@ -228,5 +241,5 @@ class ClickInterface(WordleCheaterUI):
 if __name__ == "__main__":
     # curses_ui = CursesInterface()
     # curses.wrapper(curses_ui.main)
-    click_ui = ClickUI()
+    click_ui = ClickInterface()
     click_ui.main()
