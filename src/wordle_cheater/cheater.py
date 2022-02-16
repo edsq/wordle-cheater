@@ -179,12 +179,24 @@ def parse_wordle_letters(wordle_letters):
                     f"'{wl.letter.upper()}' appears as both black and yellow", wl
                 )
 
+            if greens[wl.index] is not None and greens[wl.index] == wl.letter:
+                raise InvalidWordleLetter(
+                    f"'{wl.letter.upper()}' appears as both green and yellow in the same location",
+                    wl,
+                )
+
             yellows[wl.index].append(wl.letter)
 
         elif wl.color == "green":
             if wl.letter in blacks:
                 raise InvalidWordleLetter(
                     f"'{wl.letter.upper()}' appears as both black and green", wl
+                )
+
+            if wl.letter in yellows[wl.index]:
+                raise InvalidWordleLetter(
+                    f"'{wl.letter.upper()}' appears as both green and yellow in the same location",
+                    wl,
                 )
 
             if greens[wl.index] is not None and greens[wl.index] != wl.letter:
