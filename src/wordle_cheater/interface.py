@@ -10,6 +10,7 @@ class CursesInterface(WordleCheaterUI):
         curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)  # White on black
         curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_YELLOW)  # Black on yellow
         curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_GREEN)  # Black on green
+        curses.init_pair(4, curses.COLOR_BLACK, curses.COLOR_RED)  # Black on red
 
         height, width = stdscr.getmaxyx()
         self.results_window = curses.newwin(
@@ -62,8 +63,13 @@ class CursesInterface(WordleCheaterUI):
         elif c == "green":
             self.stdscr.addstr(y, x, string, curses.color_pair(3))
 
+        elif c == "red":
+            self.stdscr.addstr(y, x, string, curses.color_pair(4))
+
         else:
-            raise ValueError("`c` must be one of ['black', 'yellow', 'green'] or None.")
+            raise ValueError(
+                "`c` must be one of ['black', 'yellow', 'green', 'red'] or none."
+            )
 
     def move_cursor(self, x, y):
         self.stdscr.move(y, x)
@@ -161,6 +167,14 @@ class ClickInterface(WordleCheaterUI):
 
         elif c == "green":
             click.secho(string, fg="black", bg="green", nl=False)
+
+        elif c == "red":
+            click.secho(string, fg="black", bg="red", nl=False)
+
+        else:
+            raise ValueError(
+                "`c` must be one of ['black', 'yellow', 'green', 'red'] or none."
+            )
 
         self.curs_xy = (self.curs_xy[0] + len(string), self.curs_xy[1])
 

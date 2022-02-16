@@ -32,6 +32,12 @@ class WordleLetter:
             raise ValueError("`index` must be `None` if `color` is 'black'")
 
 
+class InvalidWordleLetter(Exception):
+    def __init__(self, message, wordle_letter):
+        self.invalid_letter = wordle_letter
+        super().__init__(message)
+
+
 def check_word(
     word, blacks=None, yellows=None, greens=None, hard=True, check_dict=True
 ):
@@ -169,21 +175,22 @@ def parse_wordle_letters(wordle_letters):
     for wl in wordle_letters:
         if wl.color == "yellow":
             if wl.letter in blacks:
-                raise ValueError(
-                    f"'{wl.letter.upper()}' appears as both black and yellow"
+                raise InvalidWordleLetter(
+                    f"'{wl.letter.upper()}' appears as both black and yellow", wl
                 )
 
             yellows[wl.index].append(wl.letter)
 
         elif wl.color == "green":
             if wl.letter in blacks:
-                raise ValueError(
-                    f"'{wl.letter.upper()}' appears as both black and green"
+                raise InvalidWordleLetter(
+                    f"'{wl.letter.upper()}' appears as both black and green", wl
                 )
 
             if greens[wl.index] is not None and greens[wl.index] != wl.letter:
-                raise ValueError(
-                    f"'{greens[index].upper()}' and '{wl.letter.upper()}' are both marked green in the same location"
+                raise InvalidWorldeLetter(
+                    f"'{greens[index].upper()}' and '{wl.letter.upper()}' are both marked green in the same location",
+                    wl,
                 )
 
             greens[wl.index] = wl.letter

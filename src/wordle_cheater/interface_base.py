@@ -1,3 +1,4 @@
+import time
 import wordle_cheater.cheater as cheater
 from wordle_cheater.dictionary import letters as english_letters
 
@@ -54,7 +55,25 @@ class WordleCheaterUI:
 
                 # Check if user pressed return on a full line and wants another
                 elif x == x0 + 5:
-                    self.print_results()  # Show results thus far
+                    try:
+                        self.print_results()  # Show results thus far
+
+                    # If user entered an invalid word, color problem letter red
+                    except cheater.InvalidWordleLetter as exc:
+                        invalid_letter = exc.invalid_letter.letter
+
+                        # Find index of most recent occurence of invalid letter
+                        prev_letters = [guess.letter for guess in self.guesses]
+                        invalid_index = prev_letters[::-1].index(invalid_letter)
+
+                        # Color letter red
+                        prev_color = self.guesses[-invalid_index].color
+                        self.print(
+                            x - invalid_index - 1, y, invalid_letter.upper(), c="red"
+                        )
+                        self.move_cursor(x, y)
+                        continue
+
                     x = x0  # Reset horizontal position
                     y += 1  # Increment vertical position
                     self.print(x, y, "_____")  # Print blank line of underscores
