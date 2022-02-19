@@ -86,17 +86,20 @@ def check_word(
     assert len(yellows) == 5
     assert len(greens) == 5
 
+    # Get unraveled yellows
+    all_yellows = [c for position in yellows for c in position]
+
     # Check for hard mode compliance
     if hard:
-        known_chars = [char for position in yellows for char in position]
-        known_chars += [char for char in greens if char is not None]
+        known_chars = all_yellows + [char for char in greens if char is not None]
         for known_char in known_chars:
             if known_char not in word:
                 return False
 
     # Now check each letter for compatibility with known information
     for i, char in enumerate(word):
-        if char in blacks:
+        # Can only have black letters if those letters also appear as a yellow or green
+        if char in blacks and char not in all_yellows and char != greens[i]:
             return False
 
         elif char in yellows[i]:
@@ -174,12 +177,12 @@ def parse_wordle_letters(wordle_letters):
 
     for wl in wordle_letters:
         if wl.color == "yellow":
-            if wl.letter in blacks:
-                raise InvalidWordleLetter(
-                    f"'{wl.letter.upper()}' appears as both black and yellow", wl
-                )
+            # if wl.letter in blacks:
+            #    raise InvalidWordleLetter(
+            #        f"'{wl.letter.upper()}' appears as both black and yellow", wl
+            #    )
 
-            if greens[wl.index] is not None and greens[wl.index] == wl.letter:
+            if greens[wl.index] == wl.letter:
                 raise InvalidWordleLetter(
                     f"'{wl.letter.upper()}' appears as both green and yellow in the same location",
                     wl,
@@ -188,10 +191,10 @@ def parse_wordle_letters(wordle_letters):
             yellows[wl.index].append(wl.letter)
 
         elif wl.color == "green":
-            if wl.letter in blacks:
-                raise InvalidWordleLetter(
-                    f"'{wl.letter.upper()}' appears as both black and green", wl
-                )
+            # if wl.letter in blacks:
+            #    raise InvalidWordleLetter(
+            #        f"'{wl.letter.upper()}' appears as both black and green", wl
+            #    )
 
             if wl.letter in yellows[wl.index]:
                 raise InvalidWordleLetter(

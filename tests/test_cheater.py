@@ -177,6 +177,81 @@ def test_check_word_invalid_wordlist():
     )
 
 
+def test_check_word_two_repeated_letters():
+    # Test if check_word properly handles when two letters repeat
+    # Guess: "array", answer: "aroma"
+    blacks = ["r", "y"]  # second r marked black as it only appears in answer once
+    yellows = [
+        [],
+        [],
+        [],
+        ["a"],
+        [],
+    ]  # second a marked yellow as it appears in answer in a different position
+    greens = ["a", "r", None, None, None]
+    assert check_word("aroma", blacks=blacks, yellows=yellows, greens=greens)
+
+
+def test_check_word_green_and_black():
+    # Test if check_word properly handles when a letter is marked both green and black
+    # Guess: "berry", answer: "score"
+    blacks = ["b", "r", "y"]
+    yellows = [
+        [],
+        ["e"],
+        [],
+        [],
+        [],
+    ]  # second a marked yellow as it appears in answer in a different position
+    greens = [None, None, None, "r", None]
+    assert check_word("score", blacks=blacks, yellows=yellows, greens=greens)
+
+
+def test_check_word_green_and_yellow():
+    # Test if check_word properly handles when a letter is marked both green and yellow
+    # Guess: "berry", answer: "roars"
+    blacks = ["b", "e", "y"]
+    yellows = [
+        [],
+        [],
+        ["r"],
+        [],
+        [],
+    ]  # second a marked yellow as it appears in answer in a different position
+    greens = [None, None, None, "r", None]
+    assert check_word("roars", blacks=blacks, yellows=yellows, greens=greens)
+
+
+def test_check_word_yellow_and_black():
+    # Test if check_word properly handles when a letter is marked both green and yellow
+    # Guess: "array", answer: "leash"
+    blacks = ["a", "r", "r", "y"]
+    yellows = [
+        [],
+        [],
+        [],
+        ["a"],
+        [],
+    ]  # second a marked yellow as it appears in answer in a different position
+    greens = [None, None, None, None, None]
+    assert check_word("leash", blacks=blacks, yellows=yellows, greens=greens)
+
+
+def test_check_word_green_yellow_black():
+    # Test if check_word properly handles when a letter is marked all three colors
+    # Guess: "sassy", answer: "shops"
+    blacks = ["a", "s", "y"]
+    yellows = [
+        [],
+        [],
+        [],
+        ["s"],
+        [],
+    ]  # second a marked yellow as it appears in answer in a different position
+    greens = ["s", None, None, None, None]
+    assert check_word("shops", blacks=blacks, yellows=yellows, greens=greens)
+
+
 def test_find_words():
     words = find_words(blacks=blacks, yellows=yellows, greens=greens)
     assert sorted(words) == ["dynel", "elder"]
