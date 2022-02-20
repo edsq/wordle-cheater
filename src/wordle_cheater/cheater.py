@@ -38,6 +38,11 @@ class InvalidWordleLetter(Exception):
         super().__init__(message)
 
 
+def _flatten(l):
+    """Flatten a list of lists into a 1D list."""
+    return [item for sublist in l for item in sublist]
+
+
 def check_word(
     word, blacks=None, yellows=None, greens=None, hard=True, check_dict=True
 ):
@@ -152,62 +157,125 @@ def parse_wordle_letters(wordle_letters):
     Positional arguments
     --------------------
     wordle_letters : list of WordleLetter objects
-        The current guesses, a list of WordleLetter objects.
+        The current guesses, a list of WordleLetter objects.  Must be from an integer
+        number of words, so `len(wordle_letters)` must be an integer multiple of 5.
 
     Returns
     -------
-    blacks : list
-        A list of lowercase letters that are not in the word.
+    blacks : length-5 list of lists
+        A list of lowercase letters that are not in the word.  For example, if our
+        guesses have the letter 'A' marked black at the second character,
+        `yellows = [[], ['A'], [], [], []]`.
     yellows : length-5 list of lists
-        Lowercase letters that are in the word, but not in the correct location.  For example, if
-        our guesses tell us that the letter 'A' was in the word, but it was not the third letter, we
-        would pass `yellows = [[], [], ['a'], [], []]`.
+        Lowercase letters that are in the word, but not in the correct location.  For
+        example, if our guesses tell us that the letter 'A' was in the word, but it was
+        not the third letter, `yellows = [[], [], ['a'], [], []]`.
     greens : length-5 list
-        Lowercase letters that are in the word and in the correct location.  For example, if our
-        guesses tell us that the letter 'A' is the fourth letter of the word, we would pass
-        `greens = [None, None, None, 'a', None]`.
+        Lowercase letters that are in the word and in the correct location.  For
+        example, if our guesses tell us that the letter 'A' is the fourth letter of the
+        word, `greens = [None, None, None, 'a', None]`.
     """
 
-    blacks = []
+    blacks = [[], [], [], [], []]
     yellows = [[], [], [], [], []]
     greens = [None, None, None, None, None]
 
-    # Get black characters first so we can check against them
-    blacks = [wl.letter for wl in wordle_letters if wl.color == "black"]
+    if len(wordle_letters) % 5 != 0:
+        raise ValueError("`len(wordle_letters)` must be an integer multiple of five")
 
-    for wl in wordle_letters:
-        if wl.color == "yellow":
-            # if wl.letter in blacks:
-            #    raise InvalidWordleLetter(
-            #        f"'{wl.letter.upper()}' appears as both black and yellow", wl
-            #    )
+    words = [wordle_letters[i * 5 : i * 5 + 5] for i in range(len(wordle_letters) // 5)]
 
-            if greens[wl.index] == wl.letter:
+    for word in words:
+        these_blacks = [wl for wl in word if wl.color == "black"]
+        these_yellows = [wl for wl in word if wl.color == "yellow"]
+        these_greens = [wl for wl in word if wl.color == "green"]
+
+        # Validate black letters
+        for wl in these_blacks:
+            if wl.letter in yellows[wl.index]:
                 raise InvalidWordleLetter(
-                    f"'{wl.letter.upper()}' appears as both green and yellow in the same location",
+                    f"'{wl.letter.upper()}' marked black and yellow in the same location",
                     wl,
                 )
 
-            yellows[wl.index].append(wl.letter)
+            if wl.letter == greens[wl.index]:
+                raise InvalidWordleLetter(
+                    f"'{wl.letter.upper()}' marked black and green in the same location",
+                    wl,
+                )
 
-        elif wl.color == "green":
-            # if wl.letter in blacks:
-            #    raise InvalidWordleLetter(
-            #        f"'{wl.letter.upper()}' appears as both black and green", wl
-            #    )
+            # A black character could have been previously colored only if it is also
+            # colored at least as many times in this word as in previous words
+            if wl.letter in _flatten(yellows) or wl.letter in greens:
+                num_prev_colored = len([l for l in _flatten(yellows) if l == wl.letter])
+                num_prev_colored += len([l for l in greens if l == wl.letter])
+                num_curr_colored = len(
+                    [_wl for _wl in these_yellows if _wl.letter == wl.letter]
+                )
+                num_curr_colored += len(
+                    [_wl for _wl in these_greens if _wl.letter == wl.letter]
+                )
+
+                if num_prev_colored > num_curr_colored:
+                    raise InvalidWordleLetter(
+                        f"'{wl.letter.upper()}' marked black but previously colored", wl
+                    )
+
+        # Validate yellow letters
+        for wl in these_yellows:
+            if wl.letter in blacks[wl.index]:
+                raise InvalidWordleLetter(
+                    f"'{wl.letter.upper()}' marked yellow and black in the same location",
+                    wl,
+                )
+
+            if wl.letter == greens[wl.index]:
+                raise InvalidWordleLetter(
+                    f"'{wl.letter.upper()}' marked yellow and green in the same location",
+                    wl,
+                )
+
+            # A yellow character could have been previously marked black only if it was also previously colored
+            if wl.letter in _flatten(blacks) and (
+                wl.letter not in _flatten(yellows) or wl.letter not in greens
+            ):
+                raise InvalidWordleLetter(
+                    f"'{wl.letter.upper()}' marked yellow but previously marked black",
+                    wl,
+                )
+
+        # Validate green letters
+        for wl in these_greens:
+            if wl.letter in blacks[wl.index]:
+                raise InvalidWordleLetter(
+                    f"'{wl.letter.upper()}' marked green and black in the same location",
+                    wl,
+                )
 
             if wl.letter in yellows[wl.index]:
                 raise InvalidWordleLetter(
-                    f"'{wl.letter.upper()}' appears as both green and yellow in the same location",
+                    f"'{wl.letter.upper()}' marked green and yellow in the same location",
                     wl,
                 )
 
-            if greens[wl.index] is not None and greens[wl.index] != wl.letter:
-                raise InvalidWorldeLetter(
-                    f"'{greens[index].upper()}' and '{wl.letter.upper()}' are both marked green in the same location",
+            # A green character could have been previously marked black only if it was also previously colored
+            if wl.letter in _flatten(blacks) and (
+                wl.letter not in _flatten(yellows) or wl.letter not in greens
+            ):
+                raise InvalidWordleLetter(
+                    f"'{wl.letter.upper()}' marked green but previously marked black",
                     wl,
                 )
 
-            greens[wl.index] = wl.letter
+        # If we made it through all that validation, append these letters to output
+        for i, wl in enumerate(word):
+            if wl.color == "black":
+                blacks[i].append(wl.letter)
+
+            elif wl.color == "yellow":
+                yellows[i].append(wl.letter)
+
+            elif wl.color == "green":
+                greens[i] == wl.letter
 
     return blacks, yellows, greens
