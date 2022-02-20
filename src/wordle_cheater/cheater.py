@@ -86,32 +86,43 @@ def check_word(
     if greens is None:
         greens = [None, None, None, None, None]
 
+    assert len(blacks) == 5
     assert len(yellows) == 5
     assert len(greens) == 5
 
-    # Get unraveled yellows
-    all_yellows = [c for position in yellows for c in position]
+    # Get unraveled lists
+    all_blacks = _flatten(blacks)
+    all_yellows = _flatten(yellows)
 
     # Check for hard mode compliance
     if hard:
-        known_chars = all_yellows + [char for char in greens if char is not None]
-        for known_char in known_chars:
-            if known_char not in word:
+        known_letters = all_yellows + [l for l in greens if l is not None]
+        for known_letter in known_letters:
+            if known_letter not in word:
                 return False
 
     # Now check each letter for compatibility with known information
-    for i, char in enumerate(word):
-        if char in blacks[i]:
+    for i, letter in enumerate(word):
+        if letter in all_blacks:
+            # If a letter appears as black in the previous guesses, we know how many
+            # of that letter we must have - check that here.
+            # FIXME: This likely overestimates the number of occurrences of the letter
+            n_of_letter = all_yellows.count(letter) + greens.count(letter)
+            n_of_letter_word = word.count(letter)
+
+            # Technically, n_of_letter should be equal to n_of_letter_word, but if
+            # n_of_letter_word < n_of_letter, it's equivalent to not satisfying the
+            # hard mode rules, which we want to be optional (and check above).
+            if n_of_letter_word > n_of_letter:
+                return False
+
+        if letter in blacks[i]:
             return False
 
-        # Can only have black letters if those letters also appear as a yellow or green
-        if char in _flatten(blacks) and char not in all_yellows and char != greens[i]:
+        elif letter in yellows[i]:
             return False
 
-        elif char in yellows[i]:
-            return False
-
-        elif greens[i] is not None and greens[i] != char:
+        elif letter != greens[i] and greens[i] is not None:
             return False
 
     # Check if guess is a real word
