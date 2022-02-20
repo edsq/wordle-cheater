@@ -5,7 +5,7 @@ from wordle_cheater.cheater import find_words
 
 # Wordle from 02-07-2022 (solution 'elder')
 # My guesses were 'beats', 'oiled', 'elder'
-blacks = ["b", "a", "t", "s", "o", "i"]
+blacks = [["b", "o"], ["i"], ["a"], ["t"], ["s"]]
 yellows = [[], ["e"], ["l"], [], ["d"]]
 greens = [None, None, None, "e", None]
 
