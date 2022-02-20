@@ -53,8 +53,10 @@ def check_word(
 
     Keyword arguments
     ----------------
-    blacks : list
-        A list of lowercase letters that are not in the word.
+    blacks : length-5 list of lists
+        A list of lowercase letters that are not in the word.  For example, if our
+        guesses have the letter 'A' marked black at the second character,
+        `blacks = [[], ['A'], [], [], []]`.
     yellows : length-5 list of lists
         Lowercase letters that are in the word, but not in the correct location.  For example, if
         our guesses tell us that the letter 'A' was in the word, but it was not the third letter, we
@@ -76,7 +78,7 @@ def check_word(
     """
 
     if blacks is None:
-        blacks = []
+        blacks = [[], [], [], [], []]
 
     if yellows is None:
         yellows = [[], [], [], [], []]
@@ -99,8 +101,11 @@ def check_word(
 
     # Now check each letter for compatibility with known information
     for i, char in enumerate(word):
+        if char in blacks[i]:
+            return False
+
         # Can only have black letters if those letters also appear as a yellow or green
-        if char in blacks and char not in all_yellows and char != greens[i]:
+        if char in _flatten(blacks) and char not in all_yellows and char != greens[i]:
             return False
 
         elif char in yellows[i]:
@@ -123,8 +128,10 @@ def find_words(blacks=None, yellows=None, greens=None):
 
     Keyword arguments
     ----------------
-    blacks : list
-        A list of lowercase letters that are not in the word.
+    blacks : length-5 list of lists
+        A list of lowercase letters that are not in the word.  For example, if our
+        guesses have the letter 'A' marked black at the second character,
+        `blacks = [[], ['A'], [], [], []]`.
     yellows : length-5 list of lists
         Lowercase letters that are in the word, but not in the correct location.  For example, if
         our guesses tell us that the letter 'A' was in the word, but it was not the third letter, we
@@ -161,7 +168,7 @@ def parse_wordle_letters(wordle_letters):
     blacks : length-5 list of lists
         A list of lowercase letters that are not in the word.  For example, if our
         guesses have the letter 'A' marked black at the second character,
-        `yellows = [[], ['A'], [], [], []]`.
+        `blacks = [[], ['A'], [], [], []]`.
     yellows : length-5 list of lists
         Lowercase letters that are in the word, but not in the correct location.  For
         example, if our guesses tell us that the letter 'A' was in the word, but it was
