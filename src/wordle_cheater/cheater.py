@@ -21,15 +21,11 @@ class WordleLetter:
         if self.color not in ["black", "yellow", "green"]:
             raise ValueError("`color` must be one of ['black', 'yellow', 'green']")
 
-        if not (isinstance(self.index, int) or self.index is None):
-            raise ValueError("`index` must either be `None` or integer in range [0, 5)")
+        if not (isinstance(self.index, int)):
+            raise ValueError("`index` must be integer in range [0, 5)")
 
-        if self.index not in range(5) and self.index is not None:
-            raise ValueError("`index` must either be `None` or integer in range [0, 5)")
-
-        # If color is black, index doesn't matter, so ensure it hasn't been set
-        if self.color == "black" and self.index is not None:
-            raise ValueError("`index` must be `None` if `color` is 'black'")
+        if self.index not in range(5):
+            raise ValueError("`index` must be integer in range [0, 5)")
 
 
 class InvalidWordleLetter(Exception):
@@ -268,14 +264,14 @@ def parse_wordle_letters(wordle_letters):
                 )
 
         # If we made it through all that validation, append these letters to output
-        for i, wl in enumerate(word):
+        for wl in word:
             if wl.color == "black":
-                blacks[i].append(wl.letter)
+                blacks[wl.index].append(wl.letter)
 
             elif wl.color == "yellow":
-                yellows[i].append(wl.letter)
+                yellows[wl.index].append(wl.letter)
 
             elif wl.color == "green":
-                greens[i] == wl.letter
+                greens[wl.index] = wl.letter
 
     return blacks, yellows, greens
