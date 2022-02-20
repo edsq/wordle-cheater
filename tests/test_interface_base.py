@@ -79,13 +79,13 @@ class NoInterfaceUI(WordleCheaterUI):
 
 
 guesses = [
-    ("b", "black", None),
+    ("b", "black", 0),
     ("e", "yellow", 1),
-    ("a", "black", None),
-    ("t", "black", None),
-    ("s", "black", None),
-    ("o", "black", None),
-    ("i", "black", None),
+    ("a", "black", 2),
+    ("t", "black", 3),
+    ("s", "black", 4),
+    ("o", "black", 0),
+    ("i", "black", 1),
     ("l", "yellow", 2),
     ("e", "green", 3),
     ("d", "yellow", 4),

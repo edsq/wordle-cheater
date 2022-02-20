@@ -160,7 +160,7 @@ class WordleCheaterUI:
             # If we enter a letter without first pressing space, color it black
             elif c.upper() in english_letters:
                 self.print(x, y, c.upper(), c="black")  # Show letter colored black
-                wl = cheater.WordleLetter(letter=c.lower(), color="black", index=None)
+                wl = cheater.WordleLetter(letter=c.lower(), color="black", index=x - x0)
                 self.guesses.append(wl)  # Add letter to list
                 x += 1
 
