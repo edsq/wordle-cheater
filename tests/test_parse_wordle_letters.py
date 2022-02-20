@@ -5,6 +5,7 @@ from wordle_cheater.dictionary import wordle_words
 from wordle_cheater.cheater import (
     WordleLetter,
     parse_wordle_letters,
+    InvalidWordleLetter,
 )
 
 # Wordle from 02-07-2022 (solution 'elder')
@@ -95,3 +96,129 @@ def test_parse_wordle_letters_repeated_green_black():
     assert parsed_blacks == ["b", "a", "t", "s", "r", "i", "v"]
     assert parsed_yellows == [[], ["e"], [], [], []]
     assert parsed_greens == [None, None, None, "e", "r"]
+
+
+def test_parse_wordle_letters_invalid_black_green():
+    """Test when a character is marked black and then green in two different words."""
+    guesses = [
+        ("d", "black", None),
+        ("r", "black", None),
+        ("e", "black", None),
+        ("a", "black", None),
+        ("m", "black", None),
+        ("r", "black", None),
+        ("i", "black", None),
+        ("v", "black", None),
+        ("e", "green", 3),  # e was marked black in first word, but here is green
+        ("r", "black", None),
+    ]
+    wordle_letters = [WordleLetter(*guess) for guess in guesses]
+    with pytest.raises(InvalidWordleLetter):
+        parsed_blacks, parsed_yellows, parsed_greens = parse_wordle_letters(
+            wordle_letters
+        )
+
+
+def test_parse_wordle_letters_invalid_black_yellow():
+    """Test when a character is marked black and then yellow in two different words."""
+    guesses = [
+        ("d", "black", None),
+        ("r", "black", None),
+        ("e", "black", None),
+        ("a", "black", None),
+        ("m", "black", None),
+        ("r", "black", None),
+        ("i", "black", None),
+        ("v", "black", None),
+        ("e", "yellow", 3),  # e was marked black in first word, but here is yellow
+        ("r", "black", None),
+    ]
+    wordle_letters = [WordleLetter(*guess) for guess in guesses]
+    with pytest.raises(InvalidWordleLetter):
+        parsed_blacks, parsed_yellows, parsed_greens = parse_wordle_letters(
+            wordle_letters
+        )
+
+
+def test_parse_wordle_letters_invalid_green_black():
+    """Test when a character is marked green and then black in two different words."""
+    guesses = [
+        ("d", "black", None),
+        ("r", "black", None),
+        ("e", "green", 3),
+        ("a", "black", None),
+        ("m", "black", None),
+        ("r", "black", None),
+        ("i", "black", None),
+        ("v", "black", None),
+        ("e", "black", None),  # e was marked green in first word, but here is black
+        ("r", "black", None),
+    ]
+    wordle_letters = [WordleLetter(*guess) for guess in guesses]
+    with pytest.raises(InvalidWordleLetter):
+        parsed_blacks, parsed_yellows, parsed_greens = parse_wordle_letters(
+            wordle_letters
+        )
+
+
+def test_parse_wordle_letters_invalid_yellow_black():
+    """Test when a character is marked yellow and then black in two different words."""
+    guesses = [
+        ("d", "black", None),
+        ("r", "black", None),
+        ("e", "yellow", 3),
+        ("a", "black", None),
+        ("m", "black", None),
+        ("r", "black", None),
+        ("i", "black", None),
+        ("v", "black", None),
+        ("e", "black", None),  # e was marked yellow in first word, but here is black
+        ("r", "black", None),
+    ]
+    wordle_letters = [WordleLetter(*guess) for guess in guesses]
+    with pytest.raises(InvalidWordleLetter):
+        parsed_blacks, parsed_yellows, parsed_greens = parse_wordle_letters(
+            wordle_letters
+        )
+
+
+def test_parse_wordle_letters_invalid_yellow_green():
+    """Test when a character is marked yellow and then green in two different words."""
+    guesses = [
+        ("d", "black", None),
+        ("r", "black", None),
+        ("e", "yellow", 3),
+        ("a", "black", None),
+        ("m", "black", None),
+        ("r", "black", None),
+        ("i", "black", None),
+        ("v", "black", None),
+        ("e", "green", 3),  # e was marked yellow here in first word, but now is green
+        ("r", "black", None),
+    ]
+    wordle_letters = [WordleLetter(*guess) for guess in guesses]
+    with pytest.raises(InvalidWordleLetter):
+        parsed_blacks, parsed_yellows, parsed_greens = parse_wordle_letters(
+            wordle_letters
+        )
+
+
+def test_parse_wordle_letters_invalid_yellow_green():
+    """Test when a character is marked green and then yellow in two different words."""
+    guesses = [
+        ("d", "black", None),
+        ("r", "black", None),
+        ("e", "green", 3),
+        ("a", "black", None),
+        ("m", "black", None),
+        ("r", "black", None),
+        ("i", "black", None),
+        ("v", "black", None),
+        ("e", "yellow", 3),  # e was marked yellow here in first word, but now is green
+        ("r", "black", None),
+    ]
+    wordle_letters = [WordleLetter(*guess) for guess in guesses]
+    with pytest.raises(InvalidWordleLetter):
+        parsed_blacks, parsed_yellows, parsed_greens = parse_wordle_letters(
+            wordle_letters
+        )
