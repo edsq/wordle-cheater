@@ -28,11 +28,11 @@ class WordleCheaterUI:
 
         This method both returns and sets `self.guesses`.
 
-        Keyword arguments
-        -----------------
-        x0 : int
+        Parameters
+        ----------
+        x0 : int, optional
             The horizontal position of the upper-left corner of the words to enter.
-        y0 : int
+        y0 : int, optional
             The vertical position of the upper-left corner of the words to enter.
 
         Returns
@@ -177,15 +177,15 @@ class WordleCheaterUI:
     def get_results_string(self, max_rows=10, cols=8, sep="     "):
         """Get possible solutions formatted into columns.
 
-        Keyword arguments
-        -----------------
-        max_rows : int
+        Parameters
+        ----------
+        max_rows : int, optional
             The maximum number of rows to display.  If the full string would require
             more than `max_rows` rows, show an ellipsis and the number of missing
             words on the last line instead.
-        cols : int
+        cols : int, optional
             The number of words per row.
-        sep : str
+        sep : str, optional
             The character(s) to put in between each column.  Defaults to '     '
             (five spaces) so the space in between each column is the same as the width
             of each column.
@@ -223,18 +223,15 @@ class WordleCheaterUI:
     def print(self, x, y, string, c=None):
         """Print a string at coordinates x, y.
 
-        Positional arguments
-        --------------------
+        Parameters
+        ----------
         x : int
             Horizontal position at which to print the string.
         y : int
             Height at which to print the string.
         string : str
             The string to print.
-
-        Keyword arguments
-        -----------------
-        c : str
+        c : str, {None, 'black', 'yellow', 'green'}
             The color in which to print.  Must be one of ['black', 'yellow', 'green']
             or None. If `c` is None, it should print in the default color pair.
         """
@@ -243,8 +240,8 @@ class WordleCheaterUI:
     def sleep(self, ms):
         """Temporarily suspend execution.
 
-        Positional arguments
-        --------------------
+        Parameters
+        ----------
         ms : int
             Number of miliseconds before execution resumes.
         """
@@ -253,8 +250,8 @@ class WordleCheaterUI:
     def move_cursor(self, x, y):
         """Move cursor to position x, y.
 
-        Positional arguments
-        --------------------
+        Parameters
+        ----------
         x : int
             Desired horizontal position of cursor.
         y : int
@@ -265,9 +262,9 @@ class WordleCheaterUI:
     def set_cursor_visibility(self, visible):
         """Set cursor visibility.
 
-        Positional arguments
-        --------------------
-        visible : boolean
+        Parameters
+        ----------
+        visible : bool
             Whether or not the cursor is visible.
         """
         raise NotImplementedError
@@ -285,14 +282,14 @@ class WordleCheaterUI:
     def is_enter(self, key):
         """Check if `key` is the enter/return key.
 
-        Positional arguments
-        --------------------
+        Parameters
+        ----------
         key : str
             The key to check.
 
         Returns
         -------
-        is_enter : boolean
+        is_enter : bool
             True if `key` is the enter or return key, False otherwise.
         """
         raise NotImplementedError
@@ -300,14 +297,14 @@ class WordleCheaterUI:
     def is_backspace(self, key):
         """Check if `key` is the backspace/delete key.
 
-        Positional arguments
-        --------------------
+        Parameters
+        ----------
         key : str
             The key to check.
 
         Returns
         -------
-        is_backspace : boolean
+        is_backspace : bool
             True if `key` is the backspace or delete key, False otherwise.
         """
         raise NotImplementedError

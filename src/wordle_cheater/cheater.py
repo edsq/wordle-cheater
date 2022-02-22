@@ -78,26 +78,23 @@ def check_word(
 
     All inputs must be lowercase as we don't bother to cast them to lowercase to save a bit of time.
 
-    Positional arguments
-    -------------------
+    Parameters
+    ----------
     word : length-5 string
         The word to check.
-
-    Keyword arguments
-    ----------------
-    blacks : length-5 list of lists
+    blacks : length-5 list of lists, optional
         A list of lowercase letters that are not in the word.  For example, if our
         guesses have the letter 'A' marked black at the second character,
-        `blacks = [[], ['A'], [], [], []]`.
-    yellows : length-5 list of lists
+        `blacks = [[], ['A'], [], [], []]`.  Defaults to no letters marked black.
+    yellows : length-5 list of lists, optional
         Lowercase letters that are in the word, but not in the correct location.  For example, if
         our guesses tell us that the letter 'A' was in the word, but it was not the third letter, we
-        would pass `yellows = [[], [], ['a'], [], []]`.
-    greens : length-5 list
+        would pass `yellows = [[], [], ['a'], [], []]`.  Defaults to no letters marked yellow.
+    greens : length-5 list, optional
         Lowercase letters that are in the word and in the correct location.  For example, if our
         guesses tell us that the letter 'A' is the fourth letter of the word, we would pass
-        `greens = [None, None, None, 'a', None]`.
-    counts : dict
+        `greens = [None, None, None, 'a', None]`.  Defaults to no letters marked green.
+    counts : dict, optional
         Counts of letters that should appear in the solution.  For letters that are in
         `blacks`, this is interpreted as the exact number of times the letter must
         appear in the solution, and defaults to zero.  For letters that are in
@@ -107,15 +104,15 @@ def check_word(
         would know the solution must have at least two 'r's and pass `counts = {'r': 2}`.
         If a previous guess was 'array', with one 'r' marked black and one colored, then
         we know the solution must have exactly one 'r' and pass `counts = {'r': 1}`.
-    hard : boolean
+    hard : bool, optional
         Whether or not to use wordle 'hard mode' rules, requiring that all letters in `yellows` and
         `greens` must be in `word`.
-    check_dict : boolean
+    check_dict : bool, optional
         Whether or not to check if `word` is a real five letter english word.
 
     Returns
     -------
-    valid : boolean
+    valid : bool
         Whether or not `word` is a possible solution given `blacks`, `yellows`, and `greens`.
     """
 
@@ -182,21 +179,21 @@ def check_word(
 def find_words(blacks=None, yellows=None, greens=None, counts=None):
     """Find all possible words that are consistent with current information.
 
-    Keyword arguments
-    ----------------
-    blacks : length-5 list of lists
+    Parameters
+    ----------
+    blacks : length-5 list of lists, optional
         A list of lowercase letters that are not in the word.  For example, if our
         guesses have the letter 'A' marked black at the second character,
-        `blacks = [[], ['A'], [], [], []]`.
-    yellows : length-5 list of lists
+        `blacks = [[], ['A'], [], [], []]`.  Defaults to no letters marked black.
+    yellows : length-5 list of lists, optional
         Lowercase letters that are in the word, but not in the correct location.  For example, if
         our guesses tell us that the letter 'A' was in the word, but it was not the third letter, we
-        would pass `yellows = [[], [], ['a'], [], []]`.
-    greens : length-5 list
+        would pass `yellows = [[], [], ['a'], [], []]`.  Defaults to no letters marked yellow.
+    greens : length-5 list, optional
         Lowercase letters that are in the word and in the correct location.  For example, if our
         guesses tell us that the letter 'A' is the fourth letter of the word, we would pass
-        `greens = [None, None, None, 'a', None]`.
-    counts : dict
+        `greens = [None, None, None, 'a', None]`.  Defaults to no letters marked green.
+    counts : dict, optional
         Counts of letters that should appear in the solution.  For letters that are in
         `blacks`, this is interpreted as the exact number of times the letter must
         appear in the solution, and defaults to zero.  For letters that are in
@@ -230,8 +227,8 @@ def find_words(blacks=None, yellows=None, greens=None, counts=None):
 def parse_wordle_letters(wordle_letters):
     """Parse and validate a list of WordleLetter objects.
 
-    Positional arguments
-    --------------------
+    Parameters
+    ----------
     wordle_letters : list of WordleLetter objects
         The current guesses, a list of WordleLetter objects.  Must be from an integer
         number of words, so `len(wordle_letters)` must be an integer multiple of 5.

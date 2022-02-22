@@ -20,8 +20,8 @@ class CursesInterface(WordleCheaterUI):
 
         Should typically be called using `curses.wrapper`.
 
-        Positional arguments
-        --------------------
+        Parameters
+        ----------
         stdscr : curses.Window object
             The curses screen which the user interacts with.
         """
@@ -122,8 +122,8 @@ class CursesInterface(WordleCheaterUI):
 class ClickInterface(WordleCheaterUI):
     """Interface for using Click alone to enter letters and see solutions.
 
-    Keyword arguments
-    -----------------
+    Parameters
+    ----------
     max_rows : int, optional
         The maximum rows of possible solutions to print.
     max_cols : int, optional
