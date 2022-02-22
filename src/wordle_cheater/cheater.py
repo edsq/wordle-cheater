@@ -1,14 +1,25 @@
 from dataclasses import dataclass
-from typing import Optional
 from wordle_cheater.dictionary import letters
 from wordle_cheater.dictionary import wordle_words
 
 
 @dataclass
 class WordleLetter:
+    """Class describing a single letter in a Wordle guess.
+
+    Parameters
+    ----------
+    letter : str
+        The letter in question.  Should be lower case.
+    color : {"black", "yellow", "green"}
+        The color Wordle marked the letter.
+    index : {0, 1, 2, 3, 4}
+        The location in the word where the letter appeared.
+    """
+
     letter: str
     color: str
-    index: Optional[int] = None
+    index: int
 
     def __post_init__(self):
         # Parameter validation
@@ -38,8 +49,10 @@ class WordleLetter:
 class InvalidWordleLetters(Exception):
     """Exception for when invalid letters are passed to parse_worlde_letters.
 
-    Includes the attribute `wordle_letters`, which is a list of the invalid
-    letters that caused the exception.
+    Attributes
+    ----------
+    invalid_letters : list of WordleLetter objects
+        The relevant letters that were found to be invalid.
     """
 
     def __init__(self, message, wordle_letters):
