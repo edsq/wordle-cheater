@@ -130,9 +130,7 @@ def test_parse_wordle_letters_invalid_black_green():
     ]
     wordle_letters = [WordleLetter(*guess) for guess in guesses]
     with pytest.raises(InvalidWordleLetter):
-        parsed_blacks, parsed_yellows, parsed_greens = parse_wordle_letters(
-            wordle_letters
-        )
+        _ = parse_wordle_letters(wordle_letters)
 
 
 def test_parse_wordle_letters_invalid_black_yellow():
@@ -151,9 +149,7 @@ def test_parse_wordle_letters_invalid_black_yellow():
     ]
     wordle_letters = [WordleLetter(*guess) for guess in guesses]
     with pytest.raises(InvalidWordleLetter):
-        parsed_blacks, parsed_yellows, parsed_greens = parse_wordle_letters(
-            wordle_letters
-        )
+        _ = parse_wordle_letters(wordle_letters)
 
 
 def test_parse_wordle_letters_invalid_green_black():
@@ -172,9 +168,7 @@ def test_parse_wordle_letters_invalid_green_black():
     ]
     wordle_letters = [WordleLetter(*guess) for guess in guesses]
     with pytest.raises(InvalidWordleLetter):
-        parsed_blacks, parsed_yellows, parsed_greens = parse_wordle_letters(
-            wordle_letters
-        )
+        _ = parse_wordle_letters(wordle_letters)
 
 
 def test_parse_wordle_letters_invalid_yellow_black():
@@ -193,9 +187,7 @@ def test_parse_wordle_letters_invalid_yellow_black():
     ]
     wordle_letters = [WordleLetter(*guess) for guess in guesses]
     with pytest.raises(InvalidWordleLetter):
-        parsed_blacks, parsed_yellows, parsed_greens = parse_wordle_letters(
-            wordle_letters
-        )
+        _ = parse_wordle_letters(wordle_letters)
 
 
 def test_parse_wordle_letters_invalid_yellow_green():
@@ -214,9 +206,7 @@ def test_parse_wordle_letters_invalid_yellow_green():
     ]
     wordle_letters = [WordleLetter(*guess) for guess in guesses]
     with pytest.raises(InvalidWordleLetter):
-        parsed_blacks, parsed_yellows, parsed_greens = parse_wordle_letters(
-            wordle_letters
-        )
+        _ = parse_wordle_letters(wordle_letters)
 
 
 def test_parse_wordle_letters_invalid_green_yellow():
@@ -235,6 +225,4 @@ def test_parse_wordle_letters_invalid_green_yellow():
     ]
     wordle_letters = [WordleLetter(*guess) for guess in guesses]
     with pytest.raises(InvalidWordleLetter):
-        parsed_blacks, parsed_yellows, parsed_greens = parse_wordle_letters(
-            wordle_letters
-        )
+        _ = parse_wordle_letters(wordle_letters)
