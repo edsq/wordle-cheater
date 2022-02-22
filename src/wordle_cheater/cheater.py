@@ -40,7 +40,13 @@ def _flatten(l):
 
 
 def check_word(
-    word, blacks=None, yellows=None, greens=None, hard=True, check_dict=True
+    word,
+    blacks=None,
+    yellows=None,
+    greens=None,
+    counts=None,
+    hard=True,
+    check_dict=True,
 ):
     """Check if `word` is a possible solution given previous guesses.
 
@@ -65,6 +71,16 @@ def check_word(
         Lowercase letters that are in the word and in the correct location.  For example, if our
         guesses tell us that the letter 'A' is the fourth letter of the word, we would pass
         `greens = [None, None, None, 'a', None]`.
+    counts : dict
+        Counts of letters that should appear in the solution.  For letters that are in
+        `blacks`, this is interpreted as the exact number of times the letter must
+        appear in the solution, and defaults to zero.  For letters that are in
+        `yellows` and/or `greens`, this is interpreted as the minimum number of times
+        the letter must appear in the solution, and defaults to one.
+        For example, if a previous guess was 'array' with the two 'r's colored, then we
+        would know the solution must have at least two 'r's and pass `counts = {'r': 2}`.
+        If a previous guess was 'array', with one 'r' marked black and one colored, then
+        we know the solution must have exactly one 'r' and pass `counts = {'r': 1}`.
     hard : boolean
         Whether or not to use wordle 'hard mode' rules, requiring that all letters in `yellows` and
         `greens` must be in `word`.
@@ -86,6 +102,9 @@ def check_word(
     if greens is None:
         greens = [None, None, None, None, None]
 
+    if counts is None:
+        counts = dict()
+
     assert len(blacks) == 5
     assert len(yellows) == 5
     assert len(greens) == 5
@@ -101,19 +120,19 @@ def check_word(
             if known_letter not in word:
                 return False
 
+            # Also check that there are enough repetitions if applicable
+            elif word.count(known_letter) < counts.get(known_letter, 1):
+                return False
+
     # Now check each letter for compatibility with known information
     for i, letter in enumerate(word):
         if letter in all_blacks:
             # If a letter appears as black in the previous guesses, we know how many
             # of that letter we must have - check that here.
-            # FIXME: This likely overestimates the number of occurrences of the letter
-            n_of_letter = all_yellows.count(letter) + greens.count(letter)
-            n_of_letter_word = word.count(letter)
+            n_of_letter_max = counts.get(letter, 0)
+            n_of_letter_in_word = word.count(letter)
 
-            # Technically, n_of_letter should be equal to n_of_letter_word, but if
-            # n_of_letter_word < n_of_letter, it's equivalent to not satisfying the
-            # hard mode rules, which we want to be optional (and check above).
-            if n_of_letter_word > n_of_letter:
+            if n_of_letter_in_word > n_of_letter_max:
                 return False
 
         if letter in blacks[i]:

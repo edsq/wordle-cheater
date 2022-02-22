@@ -99,7 +99,10 @@ def test_check_word_two_repeated_letters():
         [],
     ]  # second a marked yellow as it appears in answer in a different position
     greens = ["a", "r", None, None, None]
-    assert check_word("aroma", blacks=blacks, yellows=yellows, greens=greens)
+    counts = {"a": 2, "r": 1}
+    assert check_word(
+        "aroma", blacks=blacks, yellows=yellows, greens=greens, counts=counts
+    )
 
 
 def test_check_word_green_and_black():
@@ -114,7 +117,10 @@ def test_check_word_green_and_black():
         [],
     ]  # second a marked yellow as it appears in answer in a different position
     greens = [None, None, None, "r", None]
-    assert check_word("score", blacks=blacks, yellows=yellows, greens=greens)
+    counts = {"r": 1}
+    assert check_word(
+        "score", blacks=blacks, yellows=yellows, greens=greens, counts=counts
+    )
 
 
 def test_check_word_green_and_yellow():
@@ -129,6 +135,7 @@ def test_check_word_green_and_yellow():
         [],
     ]  # second a marked yellow as it appears in answer in a different position
     greens = [None, None, None, "r", None]
+    counts = {"r": 2}
     assert check_word("roars", blacks=blacks, yellows=yellows, greens=greens)
 
 
@@ -144,7 +151,10 @@ def test_check_word_yellow_and_black():
         [],
     ]  # second a marked yellow as it appears in answer in a different position
     greens = [None, None, None, None, None]
-    assert check_word("leash", blacks=blacks, yellows=yellows, greens=greens)
+    counts = {"a": 1}
+    assert check_word(
+        "leash", blacks=blacks, yellows=yellows, greens=greens, counts=counts
+    )
 
 
 def test_check_word_green_yellow_black():
@@ -159,7 +169,10 @@ def test_check_word_green_yellow_black():
         [],
     ]  # second a marked yellow as it appears in answer in a different position
     greens = ["s", None, None, None, None]
-    assert check_word("shops", blacks=blacks, yellows=yellows, greens=greens)
+    counts = {"s": 2}
+    assert check_word(
+        "shops", blacks=blacks, yellows=yellows, greens=greens, counts=counts
+    )
 
 
 def test_check_word_invalid_too_many_repeated():
@@ -176,8 +189,14 @@ def test_check_word_invalid_too_many_repeated():
         [],
     ]
     greens = [None, None, None, None, None]
+    counts = {"r": 1}
     assert not check_word(
-        "river", blacks=blacks, yellows=yellows, greens=greens, check_dict=False
+        "river",
+        blacks=blacks,
+        yellows=yellows,
+        greens=greens,
+        check_dict=False,
+        counts=counts,
     )
 
 
@@ -195,7 +214,10 @@ def test_check_word_invalid_not_enough_repeated():
         [],
     ]
     greens = [None, None, "r", None, None]
-    assert not check_word("strip", blacks=blacks, yellows=yellows, greens=greens)
+    counts = {"r": 2}
+    assert not check_word(
+        "strip", blacks=blacks, yellows=yellows, greens=greens, counts=counts
+    )
 
 
 def test_check_word_invalid_repeated_black_conflict():
