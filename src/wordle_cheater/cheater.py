@@ -28,9 +28,15 @@ class WordleLetter:
             raise ValueError("`index` must be integer in range [0, 5)")
 
 
-class InvalidWordleLetter(Exception):
-    def __init__(self, message, wordle_letter):
-        self.invalid_letter = wordle_letter
+class InvalidWordleLetters(Exception):
+    """Exception for when invalid letters are passed to parse_worlde_letters.
+
+    Includes the attribute `wordle_letters`, which is a list of the invalid
+    letters that caused the exception.
+    """
+
+    def __init__(self, message, wordle_letters):
+        self.invalid_letters = wordle_letters
         super().__init__(message)
 
 
@@ -255,70 +261,60 @@ def parse_wordle_letters(wordle_letters):
         for wl in these_yellows + these_greens:
             these_counts[wl.letter] = these_counts.get(wl.letter, 0) + 1
 
+        invalid_letters = []  # For letters incompatible with previous words
+
         # Validate black letters
         for wl in these_blacks:
-            if wl.letter in yellows[wl.index]:
-                raise InvalidWordleLetter(
-                    f"'{wl.letter.upper()}' marked black and yellow in the same location",
-                    wl,
-                )
-
-            if wl.letter == greens[wl.index]:
-                raise InvalidWordleLetter(
-                    f"'{wl.letter.upper()}' marked black and green in the same location",
-                    wl,
-                )
-
-            # A black character cannot be colored in this word fewer times than in any
-            # previous word
+            # A black letter cannot be colored in this word fewer times than in any
+            # previous word, and can't have been previously marked colored at this
+            # location
             curr_count = these_counts.get(wl.letter, 0)
             prev_count = counts.get(wl.letter, 0)
-            if curr_count < prev_count:
-                raise InvalidWordleLetter(
-                    f"'{wl.letter.upper()}' marked black but previously colored", wl
-                )
+            if (
+                curr_count < prev_count
+                or wl.letter in yellows[wl.index]
+                or wl.letter == greens[wl.index]
+            ):
+                invalid_letters.append(wl)
 
         # Validate yellow letters
         for wl in these_yellows:
-            if wl.letter in blacks[wl.index]:
-                raise InvalidWordleLetter(
-                    f"'{wl.letter.upper()}' marked yellow and black in the same location",
-                    wl,
-                )
-
-            if wl.letter == greens[wl.index]:
-                raise InvalidWordleLetter(
-                    f"'{wl.letter.upper()}' marked yellow and green in the same location",
-                    wl,
-                )
-
-            # A yellow character could have been previously marked black only if it was also previously colored
-            if wl.letter in _flatten(blacks) and counts.get(wl.letter, 0) == 0:
-                raise InvalidWordleLetter(
-                    f"'{wl.letter.upper()}' marked yellow but previously marked black",
-                    wl,
-                )
+            # A yellow letter can't have been previously marked black or green in
+            # this location, and if it was previously marked black (anywhere), it must
+            # have also been previously colored
+            if (
+                wl.letter in blacks[wl.index]
+                or wl.letter == greens[wl.index]
+                or wl.letter in _flatten(blacks)
+                and counts.get(wl.letter, 0) == 0
+            ):
+                invalid_letters.append(wl)
 
         # Validate green letters
         for wl in these_greens:
-            if wl.letter in blacks[wl.index]:
-                raise InvalidWordleLetter(
-                    f"'{wl.letter.upper()}' marked green and black in the same location",
-                    wl,
-                )
+            # A yellow letter can't have been previously marked black or green in
+            # this location, and if it was previously marked black (anywhere), it must
+            # have also been previously colored
+            if (
+                wl.letter in blacks[wl.index]
+                or wl.letter in yellows[wl.index]
+                or wl.letter in _flatten(blacks)
+                and counts.get(wl.letter, 0) == 0
+            ):
+                invalid_letters.append(wl)
 
-            if wl.letter in yellows[wl.index]:
-                raise InvalidWordleLetter(
-                    f"'{wl.letter.upper()}' marked green and yellow in the same location",
-                    wl,
-                )
-
-            # A green character could have been previously marked black only if it was also previously colored
-            if wl.letter in _flatten(blacks) and counts.get(wl.letter, 0) == 0:
-                raise InvalidWordleLetter(
-                    f"'{wl.letter.upper()}' marked green but previously marked black",
-                    wl,
-                )
+        # Raise an error, if necessary
+        if len(invalid_letters) > 0:
+            letters_str = ", ".join([wl.letter.upper() for wl in invalid_letters])
+            inds_str = ", ".join([str(wl.index) for wl in invalid_letters])
+            exc_str = (
+                "Letters "
+                + letters_str
+                + " (indices "
+                + inds_str
+                + ") incompatible with previous entries"
+            )
+            raise InvalidWordleLetters(exc_str, invalid_letters)
 
         # If we made it through all that validation, append these letters to output
         for wl in word:
