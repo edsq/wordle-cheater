@@ -27,6 +27,13 @@ class WordleLetter:
         if self.index not in range(5):
             raise ValueError("`index` must be integer in range [0, 5)")
 
+    def __lt__(self, other):
+        """'Less than' method so that sorted() can be called on lists of these.
+
+        Sorts by index.
+        """
+        return self.index < other.index
+
 
 class InvalidWordleLetters(Exception):
     """Exception for when invalid letters are passed to parse_worlde_letters.
