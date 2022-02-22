@@ -8,7 +8,7 @@ from wordle_cheater.interface import CursesInterface, ClickInterface
     "--use-curses/--no-curses",
     default=True,
     show_default=True,
-    help="Whether or not to use the Curses library for input and output.  Curses is much more widely supported, but prints to a buffer instead of stdout.",
+    help="Whether or not to use the Curses library for input and output.",
 )
 @click.option(
     "--rows",
