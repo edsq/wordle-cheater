@@ -3,13 +3,21 @@ from wordle_cheater.dictionary import letters as english_letters
 
 
 class WordleCheaterUI:
-    """Base class for handling logic of interface, independent of output method."""
+    """Base class for handling logic of interface, independent of output method.
+
+    Attributes
+    ----------
+    guesses : list of WordleLetter objects
+        The currently entered guesses.
+    entering_letters : bool
+        Whether or not we are currently entering guesses.
+    """
 
     def __init__(self):
         self.guesses = []  # List of WordleLetter objects representing current guesses.
         self.entering_letters = False  # Whether or not we're entering previous guesses
 
-    def main(self, *args, **kwargs):
+    def main(self):
         """Main entry point; called by the CLI."""
         self.print_title()
         self.enter_letters()

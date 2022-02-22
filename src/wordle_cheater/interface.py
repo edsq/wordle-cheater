@@ -5,7 +5,26 @@ from wordle_cheater.interface_base import WordleCheaterUI
 
 
 class CursesInterface(WordleCheaterUI):
+    """Interface for using the curses library to enter guesses and display solutions.
+
+    Attributes
+    ----------
+    guesses : list of WordleLetter objects
+        The currently entered guesses.
+    entering_letters : bool
+        Whether or not we are currently entering guesses.
+    """
+
     def main(self, stdscr):
+        """Main entry point.
+
+        Should typically be called using `curses.wrapper`.
+
+        Positional arguments
+        --------------------
+        stdscr : curses.Window object
+            The curses screen which the user interacts with.
+        """
         self.stdscr = stdscr
         curses.use_default_colors()
         curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)  # White on black
@@ -101,7 +120,42 @@ class CursesInterface(WordleCheaterUI):
 
 
 class ClickInterface(WordleCheaterUI):
-    """Interface for using Click alone to enter letters and see solutions."""
+    """Interface for using Click alone to enter letters and see solutions.
+
+    Keyword arguments
+    -----------------
+    max_rows : int, optional
+        The maximum rows of possible solutions to print.
+    max_cols : int, optional
+        The maximum columns of possible solutions to print.
+    x0 : int, optional
+        The leftmost position where guesses will be entered.
+    y0 : int, optional
+        The topmost position where guesses will be entered.
+    esc : str, optional
+        The ANSI escape code for the terminal.
+
+    Attributes
+    ----------
+    guesses : list of WordleLetter objects
+        The currently entered guesses.
+    entering_letters : bool
+        Whether or not we are currently entering guesses.
+    max_rows : int
+        The maximum rows of possible solutions to print.
+    max_cols : int
+        The maximum columns of possible solutions to print.
+    x0 : int
+        The leftmost position where guesses will be entered.
+    y0 : int
+        The topmost position where guesses will be entered.
+    esc : str
+        The ANSI escape code for the terminal.
+    line_lengths : list of int
+        The highest x value we've printed to per line.  For example, if we've printed
+        two lines, the first one up to x=5 and the second up to x=3, then
+        `line_lengths = [5, 3]`.
+    """
 
     def __init__(self, max_rows=10, max_cols=8, x0=4, y0=4, esc="\033"):
         self.max_rows = max_rows  # Maximum rows of results to print
