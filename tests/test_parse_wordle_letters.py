@@ -13,6 +13,7 @@ from wordle_cheater.cheater import (
 blacks = [["b", "o"], ["i"], ["a"], ["t"], ["s"]]
 yellows = [[], ["e"], ["l"], [], ["d"]]
 greens = [None, None, None, "e", None]
+counts = {"e": 1, "l": 1, "d": 1}
 
 
 def test_parse_wordle_letters():
@@ -29,10 +30,13 @@ def test_parse_wordle_letters():
         ("d", "yellow", 4),
     ]
     wordle_letters = [WordleLetter(*guess) for guess in guesses]
-    parsed_blacks, parsed_yellows, parsed_greens = parse_wordle_letters(wordle_letters)
+    parsed_blacks, parsed_yellows, parsed_greens, parsed_counts = parse_wordle_letters(
+        wordle_letters
+    )
     assert parsed_blacks == blacks
     assert parsed_yellows == yellows
     assert parsed_greens == greens
+    assert parsed_counts == counts
 
 
 def test_parse_wordle_letters_repeated_yellow_black():
@@ -49,11 +53,15 @@ def test_parse_wordle_letters_repeated_yellow_black():
         ("a", "black", 3),
         ("d", "black", 4),  # d marked black as it only appears once in "elder"
     ]
+    these_counts = {"e": 1, "d": 1, "r": 1}
     wordle_letters = [WordleLetter(*guess) for guess in guesses]
-    parsed_blacks, parsed_yellows, parsed_greens = parse_wordle_letters(wordle_letters)
+    parsed_blacks, parsed_yellows, parsed_greens, parsed_counts = parse_wordle_letters(
+        wordle_letters
+    )
     assert parsed_blacks == [["b"], [], ["a"], ["t", "a"], ["s", "d"]]
     assert parsed_yellows == [["d"], ["e", "r"], ["e"], [], []]
     assert parsed_greens == [None, None, None, None, None]
+    assert parsed_counts == these_counts
 
 
 def test_parse_wordle_letters_repeated_yellow_green():
@@ -70,11 +78,15 @@ def test_parse_wordle_letters_repeated_yellow_green():
         ("e", "green", 3),  # e marked green as it appears here in "elder"
         ("e", "yellow", 4),  # e also appears at beginning of "elder"
     ]
+    these_counts = {"e": 2}
     wordle_letters = [WordleLetter(*guess) for guess in guesses]
-    parsed_blacks, parsed_yellows, parsed_greens = parse_wordle_letters(wordle_letters)
+    parsed_blacks, parsed_yellows, parsed_greens, parsed_counts = parse_wordle_letters(
+        wordle_letters
+    )
     assert parsed_blacks == [["b", "w"], ["o"], ["a", "w"], ["t"], ["s"]]
     assert parsed_yellows == [[], ["e"], [], [], ["e"]]
     assert parsed_greens == [None, None, None, "e", None]
+    assert parsed_counts == these_counts
 
 
 def test_parse_wordle_letters_repeated_green_black():
@@ -91,11 +103,15 @@ def test_parse_wordle_letters_repeated_green_black():
         ("e", "green", 3),
         ("r", "green", 4),  # r marked green as it appears here in "elder"
     ]
+    these_counts = {"e": 1, "r": 1}
     wordle_letters = [WordleLetter(*guess) for guess in guesses]
-    parsed_blacks, parsed_yellows, parsed_greens = parse_wordle_letters(wordle_letters)
+    parsed_blacks, parsed_yellows, parsed_greens, parsed_counts = parse_wordle_letters(
+        wordle_letters
+    )
     assert parsed_blacks == [["b", "r"], ["i"], ["a", "v"], ["t"], ["s"]]
     assert parsed_yellows == [[], ["e"], [], [], []]
     assert parsed_greens == [None, None, None, "e", "r"]
+    assert parsed_counts == these_counts
 
 
 def test_parse_wordle_letters_invalid_black_green():
