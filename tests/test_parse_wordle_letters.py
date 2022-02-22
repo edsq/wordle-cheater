@@ -5,7 +5,7 @@ from wordle_cheater.dictionary import wordle_words
 from wordle_cheater.cheater import (
     WordleLetter,
     parse_wordle_letters,
-    InvalidWordleLetter,
+    InvalidWordleLetters,
 )
 
 # Wordle from 02-07-2022 (solution 'elder')
@@ -129,7 +129,7 @@ def test_parse_wordle_letters_invalid_black_green():
         ("r", "black", 4),
     ]
     wordle_letters = [WordleLetter(*guess) for guess in guesses]
-    with pytest.raises(InvalidWordleLetter):
+    with pytest.raises(InvalidWordleLetters):
         _ = parse_wordle_letters(wordle_letters)
 
 
@@ -148,7 +148,7 @@ def test_parse_wordle_letters_invalid_black_yellow():
         ("r", "black", 4),
     ]
     wordle_letters = [WordleLetter(*guess) for guess in guesses]
-    with pytest.raises(InvalidWordleLetter):
+    with pytest.raises(InvalidWordleLetters):
         _ = parse_wordle_letters(wordle_letters)
 
 
@@ -167,7 +167,7 @@ def test_parse_wordle_letters_invalid_green_black():
         ("r", "black", 4),
     ]
     wordle_letters = [WordleLetter(*guess) for guess in guesses]
-    with pytest.raises(InvalidWordleLetter):
+    with pytest.raises(InvalidWordleLetters):
         _ = parse_wordle_letters(wordle_letters)
 
 
@@ -186,7 +186,7 @@ def test_parse_wordle_letters_invalid_yellow_black():
         ("r", "black", 4),
     ]
     wordle_letters = [WordleLetter(*guess) for guess in guesses]
-    with pytest.raises(InvalidWordleLetter):
+    with pytest.raises(InvalidWordleLetters):
         _ = parse_wordle_letters(wordle_letters)
 
 
@@ -205,7 +205,7 @@ def test_parse_wordle_letters_invalid_yellow_green():
         ("l", "black", 4),
     ]
     wordle_letters = [WordleLetter(*guess) for guess in guesses]
-    with pytest.raises(InvalidWordleLetter):
+    with pytest.raises(InvalidWordleLetters):
         _ = parse_wordle_letters(wordle_letters)
 
 
@@ -224,5 +224,5 @@ def test_parse_wordle_letters_invalid_green_yellow():
         ("l", "black", 4),
     ]
     wordle_letters = [WordleLetter(*guess) for guess in guesses]
-    with pytest.raises(InvalidWordleLetter):
+    with pytest.raises(InvalidWordleLetters):
         _ = parse_wordle_letters(wordle_letters)
