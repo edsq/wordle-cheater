@@ -129,8 +129,9 @@ def test_parse_wordle_letters_invalid_black_green():
         ("r", "black", 4),
     ]
     wordle_letters = [WordleLetter(*guess) for guess in guesses]
-    with pytest.raises(InvalidWordleLetters):
+    with pytest.raises(InvalidWordleLetters) as exc_info:
         _ = parse_wordle_letters(wordle_letters)
+    assert sorted(exc_info.value.invalid_letters) == sorted([wordle_letters[-2]])
 
 
 def test_parse_wordle_letters_invalid_black_yellow():
@@ -148,8 +149,9 @@ def test_parse_wordle_letters_invalid_black_yellow():
         ("r", "black", 4),
     ]
     wordle_letters = [WordleLetter(*guess) for guess in guesses]
-    with pytest.raises(InvalidWordleLetters):
+    with pytest.raises(InvalidWordleLetters) as exc_info:
         _ = parse_wordle_letters(wordle_letters)
+    assert sorted(exc_info.value.invalid_letters) == sorted([wordle_letters[-2]])
 
 
 def test_parse_wordle_letters_invalid_green_black():
@@ -167,8 +169,9 @@ def test_parse_wordle_letters_invalid_green_black():
         ("r", "black", 4),
     ]
     wordle_letters = [WordleLetter(*guess) for guess in guesses]
-    with pytest.raises(InvalidWordleLetters):
+    with pytest.raises(InvalidWordleLetters) as exc_info:
         _ = parse_wordle_letters(wordle_letters)
+    assert sorted(exc_info.value.invalid_letters) == sorted([wordle_letters[-2]])
 
 
 def test_parse_wordle_letters_invalid_yellow_black():
@@ -186,8 +189,9 @@ def test_parse_wordle_letters_invalid_yellow_black():
         ("r", "black", 4),
     ]
     wordle_letters = [WordleLetter(*guess) for guess in guesses]
-    with pytest.raises(InvalidWordleLetters):
+    with pytest.raises(InvalidWordleLetters) as exc_info:
         _ = parse_wordle_letters(wordle_letters)
+    assert sorted(exc_info.value.invalid_letters) == sorted([wordle_letters[-2]])
 
 
 def test_parse_wordle_letters_invalid_yellow_green():
@@ -205,8 +209,9 @@ def test_parse_wordle_letters_invalid_yellow_green():
         ("l", "black", 4),
     ]
     wordle_letters = [WordleLetter(*guess) for guess in guesses]
-    with pytest.raises(InvalidWordleLetters):
+    with pytest.raises(InvalidWordleLetters) as exc_info:
         _ = parse_wordle_letters(wordle_letters)
+    assert sorted(exc_info.value.invalid_letters) == sorted([wordle_letters[-3]])
 
 
 def test_parse_wordle_letters_invalid_green_yellow():
@@ -224,5 +229,6 @@ def test_parse_wordle_letters_invalid_green_yellow():
         ("l", "black", 4),
     ]
     wordle_letters = [WordleLetter(*guess) for guess in guesses]
-    with pytest.raises(InvalidWordleLetters):
+    with pytest.raises(InvalidWordleLetters) as exc_info:
         _ = parse_wordle_letters(wordle_letters)
+    assert sorted(exc_info.value.invalid_letters) == sorted([wordle_letters[-3]])
