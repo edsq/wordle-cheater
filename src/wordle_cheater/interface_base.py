@@ -1,4 +1,3 @@
-import time
 import wordle_cheater.cheater as cheater
 from wordle_cheater.dictionary import letters as english_letters
 
@@ -58,20 +57,21 @@ class WordleCheaterUI:
                     try:
                         self.print_results()  # Show results thus far
 
-                    # If user entered an invalid word, color problem letter red
-                    except cheater.InvalidWordleLetter as exc:
-                        invalid_letter = exc.invalid_letter.letter
+                    # If user entered an invalid word, color problem letters red
+                    except cheater.InvalidWordleLetters as exc:
+                        invalid_letters = exc.invalid_letters
 
-                        # Find index of most recent occurence of invalid letter
-                        prev_letters = [guess.letter for guess in self.guesses]
-                        invalid_index = prev_letters[::-1].index(invalid_letter)
-
-                        # Color letter red
-                        prev_color = self.guesses[-invalid_index].color
-                        self.print(
-                            x - invalid_index - 1, y, invalid_letter.upper(), c="red"
-                        )
-                        self.move_cursor(x, y)
+                        for _ in range(2):
+                            for wl in invalid_letters:
+                                self.print(x0 + wl.index, y, wl.letter.upper(), c="red")
+                            self.move_cursor(x, y)
+                            self.sleep(150)
+                            for wl in invalid_letters:
+                                self.print(
+                                    x0 + wl.index, y, wl.letter.upper(), c=wl.color
+                                )
+                            self.move_cursor(x, y)
+                            self.sleep(150)
                         continue
 
                     x = x0  # Reset horizontal position
@@ -229,6 +229,16 @@ class WordleCheaterUI:
         c : str
             The color in which to print.  Must be one of ['black', 'yellow', 'green']
             or None. If `c` is None, it should print in the default color pair.
+        """
+        raise NotImplementedError
+
+    def sleep(self, ms):
+        """Temporarily suspend execution.
+
+        Positional arguments
+        --------------------
+        ms : int
+            Number of miliseconds before execution resumes.
         """
         raise NotImplementedError
 

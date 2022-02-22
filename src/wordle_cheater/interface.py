@@ -1,3 +1,4 @@
+import time
 import curses
 import click
 from wordle_cheater.interface_base import WordleCheaterUI
@@ -70,6 +71,10 @@ class CursesInterface(WordleCheaterUI):
             raise ValueError(
                 "`c` must be one of ['black', 'yellow', 'green', 'red'] or none."
             )
+
+    def sleep(self, ms):
+        curses.napms(ms)
+        self.stdscr.refresh()
 
     def move_cursor(self, x, y):
         self.stdscr.move(y, x)
@@ -177,6 +182,9 @@ class ClickInterface(WordleCheaterUI):
             )
 
         self.curs_xy = (self.curs_xy[0] + len(string), self.curs_xy[1])
+
+    def sleep(self, ms):
+        time.sleep(ms / 1000)
 
     def move_cursor(self, x, y):
         # Check if we want to move cursor up (decreasing y)
