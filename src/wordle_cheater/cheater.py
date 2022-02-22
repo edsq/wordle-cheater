@@ -319,12 +319,15 @@ def parse_wordle_letters(wordle_letters):
 
         # Validate green letters
         for wl in these_greens:
-            # A yellow letter can't have been previously marked black or green in
-            # this location, and if it was previously marked black (anywhere), it must
-            # have also been previously colored
+            # A green letter can't have been previously marked black or yellow in
+            # this location, a different letter can't have been marked green in this
+            # location, and if it was previously marked black (anywhere), it must have
+            # also been previously colored
             if (
                 wl.letter in blacks[wl.index]
                 or wl.letter in yellows[wl.index]
+                or wl.letter != greens[wl.index]
+                and greens[wl.index] is not None
                 or wl.letter in _flatten(blacks)
                 and counts.get(wl.letter, 0) == 0
             ):
