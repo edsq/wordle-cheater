@@ -254,3 +254,23 @@ def test_parse_wordle_letters_invalid_multiple():
     assert sorted(exc_info.value.invalid_letters) == sorted(
         [wordle_letters[-3], wordle_letters[-2]]
     )
+
+
+def test_parse_wordle_letters_invalid_green_conflict():
+    """Test when two different letters are marked green in the same location."""
+    guesses = [
+        ("d", "black", 0),
+        ("r", "black", 1),
+        ("e", "black", 2),
+        ("a", "green", 3),  # a marked as green
+        ("m", "black", 4),
+        ("d", "black", 0),
+        ("o", "black", 1),
+        ("u", "black", 2),
+        ("s", "green", 3),  # s marked green - conflicts with a
+        ("e", "black", 4),
+    ]
+    wordle_letters = [WordleLetter(*guess) for guess in guesses]
+    with pytest.raises(InvalidWordleLetters) as exc_info:
+        _ = parse_wordle_letters(wordle_letters)
+    assert sorted(exc_info.value.invalid_letters) == sorted([wordle_letters[-2]])
