@@ -155,6 +155,7 @@ class ClickInterface(WordleCheaterUI):
         The highest x value we've printed to per line.  For example, if we've printed
         two lines, the first one up to x=5 and the second up to x=3, then
         `line_lengths = [5, 3]`.
+    curs_xy
     """
 
     def __init__(self, max_rows=10, max_cols=8, x0=4, y0=4, esc="\033"):
