@@ -312,6 +312,7 @@ def parse_wordle_letters(wordle_letters):
 
         # Raise an error, if necessary
         if len(invalid_letters) > 0:
+            invalid_letters = sorted(invalid_letters)  # Sort by index
             letters_str = ", ".join([wl.letter.upper() for wl in invalid_letters])
             inds_str = ", ".join([str(wl.index) for wl in invalid_letters])
             exc_str = (
