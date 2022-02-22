@@ -232,3 +232,25 @@ def test_parse_wordle_letters_invalid_green_yellow():
     with pytest.raises(InvalidWordleLetters) as exc_info:
         _ = parse_wordle_letters(wordle_letters)
     assert sorted(exc_info.value.invalid_letters) == sorted([wordle_letters[-3]])
+
+
+def test_parse_wordle_letters_invalid_multiple():
+    """Test when more than one character is invalid."""
+    guesses = [
+        ("d", "black", 0),
+        ("r", "black", 1),
+        ("e", "green", 2),
+        ("a", "black", 3),
+        ("m", "black", 4),
+        ("s", "black", 0),
+        ("t", "black", 1),
+        ("e", "yellow", 2),  # e was marked green here in first word, but now is yellow
+        ("a", "green", 3),  # a was marked black here in first word, but now is green
+        ("l", "black", 4),
+    ]
+    wordle_letters = [WordleLetter(*guess) for guess in guesses]
+    with pytest.raises(InvalidWordleLetters) as exc_info:
+        _ = parse_wordle_letters(wordle_letters)
+    assert sorted(exc_info.value.invalid_letters) == sorted(
+        [wordle_letters[-3], wordle_letters[-2]]
+    )
