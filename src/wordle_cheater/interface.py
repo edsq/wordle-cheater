@@ -15,6 +15,26 @@ class CursesInterface(WordleCheaterUI):
         Whether or not we are currently entering guesses.
     """
 
+    @classmethod
+    def init_and_run(cls, *args, **kwargs):
+        """Instantiate and run `self.main()` using `curses.wrapper`.
+
+        Parameters
+        ----------
+        *args : tuple
+            Positional arguments to be passed to the CursesInterface constructor.
+        **kwargs : dict, optional
+            Keyword arguments to be passed to the CursesInterface constructor.
+
+        Returns
+        -------
+        CursesInterface object
+            An instance of the CursesInterface class.
+        """
+        ui = cls(*args, **kwargs)
+        curses.wrapper(ui.main)
+        return ui
+
     def main(self, stdscr):
         """Main entry point.
 
