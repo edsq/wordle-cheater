@@ -19,7 +19,7 @@ invalid_words = [
 ]
 
 # Parameters for testing valid words when letters in guesses repeat
-# Values are `(blacks, yellows, greens, counts, answer)`
+# Values are `(blacks, yellows, greens, counts, word)`
 valid_repeated_params = {
     "two_repeated_letters": (  # Guess: 'array', answer: 'aroma'
         [[], [], ["r"], [], ["y"]],
@@ -119,14 +119,14 @@ def test_check_word_invalid(word):
 
 
 @pytest.mark.parametrize(
-    "blacks,yellows,greens,counts,answer",
+    "blacks,yellows,greens,counts,word",
     valid_repeated_params.values(),
     ids=valid_repeated_params.keys(),
 )
-def test_check_word_valid_repeating(blacks, yellows, greens, counts, answer):
+def test_check_word_valid_repeating(blacks, yellows, greens, counts, word):
     """Test valid words when guesses have repeated letters."""
     assert check_word(
-        answer, blacks=blacks, yellows=yellows, greens=greens, counts=counts
+        word, blacks=blacks, yellows=yellows, greens=greens, counts=counts
     )
 
 
