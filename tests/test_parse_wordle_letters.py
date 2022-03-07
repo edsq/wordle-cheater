@@ -238,3 +238,15 @@ def test_parse_wordle_letters_invalid(guesses, invalid_indices):
     with pytest.raises(InvalidWordleLetters) as exc_info:
         _ = parse_wordle_letters(wordle_letters)
     assert sorted(exc_info.value.invalid_letters) == sorted(invalid_letters)
+
+
+def test_parse_wordle_letters_invalid_length():
+    """Test that we raise a ValueError when given an invalid number of letters."""
+    wordle_letters = [WordleLetter("a", "black", 0)]
+    with pytest.raises(ValueError) as exc_info:
+        _ = parse_wordle_letters(wordle_letters)
+    assert exc_info.type is ValueError
+    assert (
+        exc_info.value.args[0]
+        == "`len(wordle_letters)` must be an integer multiple of five"
+    )
