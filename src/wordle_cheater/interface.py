@@ -83,7 +83,7 @@ class CursesInterface(WordleCheaterUI):
         max_rows = height - 1  # -1 to account for "Possible solutions" header
         cols = width // (5 + len(sep))
 
-        out_str = self.get_results_string(max_rows=max_rows, cols=cols, sep=sep)
+        out_str = self.get_results_string(max_rows=max_rows, max_cols=cols, sep=sep)
 
         self.results_window.clear()
         self.results_window.addstr(0, 0, "Possible solutions:", curses.A_UNDERLINE)
@@ -225,7 +225,7 @@ class ClickInterface(WordleCheaterUI):
             return
 
         out_str = self.get_results_string(
-            max_rows=self.max_rows, cols=self.max_cols, sep="     "
+            max_rows=self.max_rows, max_cols=self.max_cols, sep="     "
         )
 
         self.move_cursor(0, self.curs_xy[1] + 1)
