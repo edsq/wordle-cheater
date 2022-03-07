@@ -365,3 +365,89 @@ def parse_wordle_letters(wordle_letters):
                 counts[wl.letter] = these_counts[wl.letter]
 
     return blacks, yellows, greens, counts
+
+
+def cheat(wordle_letters):
+    """Given a list of WordleLetter objects, return possible solutions.
+
+    Parameters
+    ----------
+    wordle_letters : list of WordleLetter
+        The previous guesses.  Every five WordleLetters are interpreted as one word.
+
+    Returns
+    -------
+    possible_words : list of str
+        A list of the possible solutions given `wordle_letters`, in random order.
+    """
+
+    blacks, yellows, greens, counts = parse_wordle_letters(wordle_letters)
+    possible_words = find_words(blacks, yellows, greens, counts)
+    return possible_words
+
+
+def get_wordle_letters(letters, colors):
+    """Convenience function for creating a list of WordleLetter objects.
+
+    Parameters
+    ----------
+    letters : str
+        The previous guesses.  Whitespace will be ignored.
+    colors : str
+        The colors corresponding to each letter.  Each character in this string must
+        be one of 'b', 'y', or 'g', which correspond to 'black', 'yellow', or 'green',
+        respectively.  Whitespace will be ignored.
+
+    Returns
+    -------
+    wordle_letters : list of WordleLetter
+        The WordleLetter objects corresponding to the input letters and colors.
+    """
+    # Remove whitespace
+    letters = "".join(letters.split())
+    colors = "".join(colors.split())
+
+    # Make lower case
+    letters = letters.lower()
+    colors = colors.lower()
+
+    # Create WordleLetter objects
+    wordle_letters = []
+    for i, (l, c) in enumerate(zip(letters, colors)):
+        if c == "b":
+            color = "black"
+
+        elif c == "y":
+            color = "yellow"
+
+        elif c == "g":
+            color = "green"
+
+        else:
+            raise ValueError(f"`colors` must contain only 'b', 'y', or 'g' (got {c}).")
+
+        wordle_letters.append(WordleLetter(letter=l, color=color, index=i % 5))
+
+    return wordle_letters
+
+
+def easy_cheat(letters, colors):
+    """Given previous guesses on Wordle, return a list of possible solutions.
+
+    Parameters
+    ----------
+    letters : str
+        The previous guesses.  Whitespace will be ignored.
+    colors : str
+        The colors corresponding to each letter.  Each character in this string must
+        be one of 'b', 'y', or 'g', which correspond to 'black', 'yellow', or 'green',
+        respectively.  Whitespace will be ignored.
+
+    Returns
+    -------
+    possible_words : list of str
+        A list of the possible solutions in random order.
+    """
+    wordle_letters = get_wordle_letters(letters, colors)
+    possible_words = cheat(wordle_letters)
+    return possible_words
