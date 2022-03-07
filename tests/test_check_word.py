@@ -1,4 +1,5 @@
 # Tests for cheater.check_word
+import pytest
 from wordle_cheater.cheater import check_word
 
 
@@ -7,6 +8,14 @@ from wordle_cheater.cheater import check_word
 blacks = [["b", "o"], ["i"], ["a"], ["t"], ["s"]]
 yellows = [[], ["e"], ["l"], [], ["d"]]
 greens = [None, None, None, "e", None]
+
+invalid_words = [
+    "craft",  # Invalid as letters marked black
+    "ruled",  # Invalid as yellow letters reused
+    "elude",  # Invalid as green letter doesn't appear
+    "cruel",  # Invalid as yellow letters don't appear (hard mode)
+    "eeeee",  # Invalid due to word not in word list
+]
 
 
 def test_check_word_valid():
@@ -21,63 +30,14 @@ def test_check_word_valid():
     )
 
 
-def test_check_word_invalid_black():
-    # An invalid guess due to letters being marked black
+@pytest.mark.parametrize("word", invalid_words)
+def test_check_word_invalid(word):
+    """Test words that should be invalid given blacks, yellows, greens."""
     assert not check_word(
-        "craft",
+        word,
         blacks=blacks,
         yellows=yellows,
         greens=greens,
-        hard=False,
-        check_dict=False,
-    )
-
-
-def test_check_word_invalid_yellow():
-    # An invalid guess due to yellow letters being reused
-    assert not check_word(
-        "ruled",
-        blacks=blacks,
-        yellows=yellows,
-        greens=greens,
-        hard=False,
-        check_dict=False,
-    )
-
-
-def test_check_word_invalid_green():
-    # An invalid guess due to a letter marked green not appearing
-    assert not check_word(
-        "elude",
-        blacks=blacks,
-        yellows=yellows,
-        greens=greens,
-        hard=False,
-        check_dict=False,
-    )
-
-
-def test_check_word_invalid_hardmode():
-    # An invalid guess due to not reusing yellow letters
-    assert not check_word(
-        "cruel",
-        blacks=blacks,
-        yellows=yellows,
-        greens=greens,
-        hard=True,
-        check_dict=False,
-    )
-
-
-def test_check_word_invalid_wordlist():
-    # An invalid guess due to the word not being in the dictionary
-    assert not check_word(
-        "eeeee",
-        blacks=blacks,
-        yellows=yellows,
-        greens=greens,
-        hard=False,
-        check_dict=True,
     )
 
 
