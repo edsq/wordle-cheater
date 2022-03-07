@@ -2,7 +2,12 @@
 import pytest
 from wordle_cheater import __version__
 from wordle_cheater.dictionary import wordle_words
-from wordle_cheater.cheater import find_words, WordleLetter
+from wordle_cheater.cheater import (
+    find_words,
+    WordleLetter,
+    get_wordle_letters,
+    easy_cheat,
+)
 
 # Wordle from 02-07-2022 (solution 'elder')
 # My guesses were 'beats', 'oiled', 'elder'
@@ -71,3 +76,29 @@ def test_invalid_wordle_letter_index_out_of_range():
         wl = WordleLetter("a", "black", 6)
     assert exc_info.type is ValueError
     assert exc_info.value.args[0] == "`index` must be integer in range [0, 5)"
+
+
+def test_get_wordle_letters():
+    """Test the get_wordle_letters convenience function."""
+    wls = get_wordle_letters("abc", "byg")
+    correct_wls = [
+        WordleLetter("a", "black", 0),
+        WordleLetter("b", "yellow", 1),
+        WordleLetter("c", "green", 2),
+    ]
+    assert wls == correct_wls
+
+
+def test_get_wordle_letters_invalid():
+    """Test when an invalid color character is given."""
+    with pytest.raises(ValueError) as exc_info:
+        wls = get_wordle_letters("a", "w")
+    assert (
+        exc_info.value.args[0] == "`colors` must contain only 'b', 'y', or 'g' (got w)."
+    )
+
+
+def test_easy_cheat():
+    """Test the easy_cheat convenience function."""
+    solutions = easy_cheat("beats oiled", "bybbb bbygy")
+    assert sorted(solutions) == sorted(["elder", "dynel"])
