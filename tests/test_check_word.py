@@ -9,6 +9,7 @@ blacks = [["b", "o"], ["i"], ["a"], ["t"], ["s"]]
 yellows = [[], ["e"], ["l"], [], ["d"]]
 greens = [None, None, None, "e", None]
 
+# Words that should be invalid given above blacks, yellows, greens
 invalid_words = [
     "craft",  # Invalid as letters marked black
     "ruled",  # Invalid as yellow letters reused
@@ -16,6 +17,46 @@ invalid_words = [
     "cruel",  # Invalid as yellow letters don't appear (hard mode)
     "eeeee",  # Invalid due to word not in word list
 ]
+
+# Parameters for testing valid words when letters in guesses repeat
+# Values are `(blacks, yellows, greens, counts, answer)`
+valid_repeated_params = {
+    "two_repeated_letters": (  # Guess: 'array', answer: 'aroma'
+        [[], [], ["r"], [], ["y"]],
+        [[], [], [], ["a"], []],
+        ["a", "r", None, None, None],
+        {"a": 2, "r": 1},
+        "aroma",
+    ),
+    "black_and_green": (  # Guess: "berry", answer: "score"
+        [["b"], [], ["r"], [], ["y"]],
+        [[], ["e"], [], [], []],
+        [None, None, None, "r", None],
+        {"r": 1},
+        "score",
+    ),
+    "yellow_and_green": (  # Guess: "berry", answer: "roars"
+        [["b"], ["e"], [], [], ["y"]],
+        [[], [], ["r"], [], []],
+        [None, None, None, "r", None],
+        {"r": 2},
+        "roars",
+    ),
+    "black_and_yellow": (  # Guess: "array", answer: "leash"
+        [["a"], ["r"], ["r"], [], ["y"]],
+        [[], [], [], ["a"], []],
+        [None, None, None, None, None],
+        {"a": 1},
+        "leash",
+    ),
+    "black_yellow_green": (  # Guess: "sassy", answer: "shops"
+        [[], ["a"], [], ["s"], ["y"]],
+        [[], [], ["s"], [], []],
+        ["s", None, None, None, None],
+        {"s": 2},
+        "shops",
+    ),
+}
 
 
 def test_check_word_valid():
@@ -41,97 +82,15 @@ def test_check_word_invalid(word):
     )
 
 
-def test_check_word_two_repeated_letters():
-    # Test if check_word properly handles when two letters repeat
-    # Guess: "array", answer: "aroma"
-    blacks = [
-        [],
-        [],
-        ["r"],
-        [],
-        ["y"],
-    ]  # second r marked black as it only appears in answer once
-    yellows = [
-        [],
-        [],
-        [],
-        ["a"],
-        [],
-    ]  # second a marked yellow as it appears in answer in a different position
-    greens = ["a", "r", None, None, None]
-    counts = {"a": 2, "r": 1}
+@pytest.mark.parametrize(
+    "blacks,yellows,greens,counts,answer",
+    valid_repeated_params.values(),
+    ids=valid_repeated_params.keys(),
+)
+def test_check_word_valid_repeating(blacks, yellows, greens, counts, answer):
+    """Test valid words when guesses have repeated letters."""
     assert check_word(
-        "aroma", blacks=blacks, yellows=yellows, greens=greens, counts=counts
-    )
-
-
-def test_check_word_green_and_black():
-    # Test if check_word properly handles when a letter is marked both green and black
-    # Guess: "berry", answer: "score"
-    blacks = [["b"], [], ["r"], [], ["y"]]
-    yellows = [
-        [],
-        ["e"],
-        [],
-        [],
-        [],
-    ]  # second a marked yellow as it appears in answer in a different position
-    greens = [None, None, None, "r", None]
-    counts = {"r": 1}
-    assert check_word(
-        "score", blacks=blacks, yellows=yellows, greens=greens, counts=counts
-    )
-
-
-def test_check_word_green_and_yellow():
-    # Test if check_word properly handles when a letter is marked both green and yellow
-    # Guess: "berry", answer: "roars"
-    blacks = [["b"], ["e"], [], [], ["y"]]
-    yellows = [
-        [],
-        [],
-        ["r"],
-        [],
-        [],
-    ]  # second a marked yellow as it appears in answer in a different position
-    greens = [None, None, None, "r", None]
-    counts = {"r": 2}
-    assert check_word("roars", blacks=blacks, yellows=yellows, greens=greens)
-
-
-def test_check_word_yellow_and_black():
-    # Test if check_word properly handles when a letter is marked both green and yellow
-    # Guess: "array", answer: "leash"
-    blacks = [["a"], ["r"], ["r"], [], ["y"]]
-    yellows = [
-        [],
-        [],
-        [],
-        ["a"],
-        [],
-    ]  # second a marked yellow as it appears in answer in a different position
-    greens = [None, None, None, None, None]
-    counts = {"a": 1}
-    assert check_word(
-        "leash", blacks=blacks, yellows=yellows, greens=greens, counts=counts
-    )
-
-
-def test_check_word_green_yellow_black():
-    # Test if check_word properly handles when a letter is marked all three colors
-    # Guess: "sassy", answer: "shops"
-    blacks = [[], ["a"], [], ["s"], ["y"]]
-    yellows = [
-        [],
-        [],
-        ["s"],
-        [],
-        [],
-    ]  # second a marked yellow as it appears in answer in a different position
-    greens = ["s", None, None, None, None]
-    counts = {"s": 2}
-    assert check_word(
-        "shops", blacks=blacks, yellows=yellows, greens=greens, counts=counts
+        answer, blacks=blacks, yellows=yellows, greens=greens, counts=counts
     )
 
 
