@@ -6,6 +6,7 @@ from wordle_cheater.cheater import (
     InvalidWordleLetters,
 )
 
+
 # Parameters for testing valid entries into parse_wordle_letters
 # Values are (guesses, blacks, yellows, greens, counts)
 valid_params = {
@@ -86,6 +87,132 @@ valid_params = {
 }
 
 
+# Parameters for testing invalid sets of WordleLetters
+# Values are (guesses, invalid_indices)
+invalid_params = {
+    "black_green": (  # Black letter marked green
+        [
+            ("d", "black", 0),
+            ("r", "black", 1),
+            ("e", "black", 2),
+            ("a", "black", 3),
+            ("m", "black", 4),
+            ("r", "black", 0),
+            ("i", "black", 1),
+            ("v", "black", 2),
+            ("e", "green", 3),  # e was marked black in first word, but here is green
+            ("r", "black", 4),
+        ],
+        [3],
+    ),
+    "black_yellow": (  # Black letter marked yellow
+        [
+            ("d", "black", 0),
+            ("r", "black", 1),
+            ("e", "black", 2),
+            ("a", "black", 3),
+            ("m", "black", 4),
+            ("r", "black", 0),
+            ("i", "black", 1),
+            ("v", "black", 2),
+            ("e", "yellow", 3),  # e was marked black in first word, but here is yellow
+            ("r", "black", 4),
+        ],
+        [3],
+    ),
+    "green_black": (  # Green letter marked black
+        [
+            ("d", "black", 0),
+            ("r", "black", 1),
+            ("e", "green", 2),
+            ("a", "black", 3),
+            ("m", "black", 4),
+            ("r", "black", 0),
+            ("i", "black", 1),
+            ("v", "black", 2),
+            ("e", "black", 3),  # e was marked green in first word, but here is black
+            ("r", "black", 4),
+        ],
+        [3],
+    ),
+    "yellow_black": (  # Yellow letter marked black
+        [
+            ("d", "black", 0),
+            ("r", "black", 1),
+            ("e", "yellow", 2),
+            ("a", "black", 3),
+            ("m", "black", 4),
+            ("r", "black", 0),
+            ("i", "black", 1),
+            ("v", "black", 2),
+            ("e", "black", 3),  # e was marked yellow in first word, but here is black
+            ("r", "black", 4),
+        ],
+        [3],
+    ),
+    "yellow_green": (  # Yellow letter marked green
+        [
+            ("d", "black", 0),
+            ("r", "black", 1),
+            ("e", "yellow", 2),
+            ("a", "black", 3),
+            ("m", "black", 4),
+            ("s", "black", 0),
+            ("t", "black", 1),
+            ("e", "green", 2),  # e was marked yellow in first word, but now is green
+            ("a", "black", 3),
+            ("l", "black", 4),
+        ],
+        [2],
+    ),
+    "green_yellow": (  # Green letter marked yellow
+        [
+            ("d", "black", 0),
+            ("r", "black", 1),
+            ("e", "green", 2),
+            ("a", "black", 3),
+            ("m", "black", 4),
+            ("s", "black", 0),
+            ("t", "black", 1),
+            ("e", "yellow", 2),  # e was marked green in first word, but now is yellow
+            ("a", "black", 3),
+            ("l", "black", 4),
+        ],
+        [2],
+    ),
+    "multiple": (  # Two conflicting guesses
+        [
+            ("d", "black", 0),
+            ("r", "black", 1),
+            ("e", "green", 2),
+            ("a", "black", 3),
+            ("m", "black", 4),
+            ("s", "black", 0),
+            ("t", "black", 1),
+            ("e", "yellow", 2),  # e was marked green in first word, but now is yellow
+            ("a", "green", 3),  # a was marked black in first word, but now is green
+            ("l", "black", 4),
+        ],
+        [2, 3],
+    ),
+    "green_conflict": (  # Two different letters marked green in same location
+        [
+            ("d", "black", 0),
+            ("r", "black", 1),
+            ("e", "black", 2),
+            ("a", "green", 3),  # a marked as green
+            ("m", "black", 4),
+            ("d", "black", 0),
+            ("o", "black", 1),
+            ("u", "black", 2),
+            ("s", "green", 3),  # s marked green - conflicts with a
+            ("e", "black", 4),
+        ],
+        [3],
+    ),
+}
+
+
 @pytest.mark.parametrize(
     "guesses,blacks,yellows,greens,counts",
     valid_params.values(),
@@ -102,163 +229,12 @@ def test_parse_wordle_letters_valid(guesses, blacks, yellows, greens, counts):
     assert parsed_counts == counts
 
 
-def test_parse_wordle_letters_invalid_black_green():
-    """Test when a character is marked black and then green in two different words."""
-    guesses = [
-        ("d", "black", 0),
-        ("r", "black", 1),
-        ("e", "black", 2),
-        ("a", "black", 3),
-        ("m", "black", 4),
-        ("r", "black", 0),
-        ("i", "black", 1),
-        ("v", "black", 2),
-        ("e", "green", 3),  # e was marked black in first word, but here is green
-        ("r", "black", 4),
-    ]
+@pytest.mark.parametrize(
+    "guesses,invalid_indices", invalid_params.values(), ids=invalid_params.keys()
+)
+def test_parse_wordle_letters_invalid(guesses, invalid_indices):
     wordle_letters = [WordleLetter(*guess) for guess in guesses]
+    invalid_letters = [wordle_letters[5 + i] for i in invalid_indices]
     with pytest.raises(InvalidWordleLetters) as exc_info:
         _ = parse_wordle_letters(wordle_letters)
-    assert sorted(exc_info.value.invalid_letters) == sorted([wordle_letters[-2]])
-
-
-def test_parse_wordle_letters_invalid_black_yellow():
-    """Test when a character is marked black and then yellow in two different words."""
-    guesses = [
-        ("d", "black", 0),
-        ("r", "black", 1),
-        ("e", "black", 2),
-        ("a", "black", 3),
-        ("m", "black", 4),
-        ("r", "black", 0),
-        ("i", "black", 1),
-        ("v", "black", 2),
-        ("e", "yellow", 3),  # e was marked black in first word, but here is yellow
-        ("r", "black", 4),
-    ]
-    wordle_letters = [WordleLetter(*guess) for guess in guesses]
-    with pytest.raises(InvalidWordleLetters) as exc_info:
-        _ = parse_wordle_letters(wordle_letters)
-    assert sorted(exc_info.value.invalid_letters) == sorted([wordle_letters[-2]])
-
-
-def test_parse_wordle_letters_invalid_green_black():
-    """Test when a character is marked green and then black in two different words."""
-    guesses = [
-        ("d", "black", 0),
-        ("r", "black", 1),
-        ("e", "green", 2),
-        ("a", "black", 3),
-        ("m", "black", 4),
-        ("r", "black", 0),
-        ("i", "black", 1),
-        ("v", "black", 2),
-        ("e", "black", 3),  # e was marked green in first word, but here is black
-        ("r", "black", 4),
-    ]
-    wordle_letters = [WordleLetter(*guess) for guess in guesses]
-    with pytest.raises(InvalidWordleLetters) as exc_info:
-        _ = parse_wordle_letters(wordle_letters)
-    assert sorted(exc_info.value.invalid_letters) == sorted([wordle_letters[-2]])
-
-
-def test_parse_wordle_letters_invalid_yellow_black():
-    """Test when a character is marked yellow and then black in two different words."""
-    guesses = [
-        ("d", "black", 0),
-        ("r", "black", 1),
-        ("e", "yellow", 2),
-        ("a", "black", 3),
-        ("m", "black", 4),
-        ("r", "black", 0),
-        ("i", "black", 1),
-        ("v", "black", 2),
-        ("e", "black", 3),  # e was marked yellow in first word, but here is black
-        ("r", "black", 4),
-    ]
-    wordle_letters = [WordleLetter(*guess) for guess in guesses]
-    with pytest.raises(InvalidWordleLetters) as exc_info:
-        _ = parse_wordle_letters(wordle_letters)
-    assert sorted(exc_info.value.invalid_letters) == sorted([wordle_letters[-2]])
-
-
-def test_parse_wordle_letters_invalid_yellow_green():
-    """Test when a character is marked yellow and then green in two different words."""
-    guesses = [
-        ("d", "black", 0),
-        ("r", "black", 1),
-        ("e", "yellow", 2),
-        ("a", "black", 3),
-        ("m", "black", 4),
-        ("s", "black", 0),
-        ("t", "black", 1),
-        ("e", "green", 2),  # e was marked yellow here in first word, but now is green
-        ("a", "black", 3),
-        ("l", "black", 4),
-    ]
-    wordle_letters = [WordleLetter(*guess) for guess in guesses]
-    with pytest.raises(InvalidWordleLetters) as exc_info:
-        _ = parse_wordle_letters(wordle_letters)
-    assert sorted(exc_info.value.invalid_letters) == sorted([wordle_letters[-3]])
-
-
-def test_parse_wordle_letters_invalid_green_yellow():
-    """Test when a character is marked green and then yellow in two different words."""
-    guesses = [
-        ("d", "black", 0),
-        ("r", "black", 1),
-        ("e", "green", 2),
-        ("a", "black", 3),
-        ("m", "black", 4),
-        ("s", "black", 0),
-        ("t", "black", 1),
-        ("e", "yellow", 2),  # e was marked green here in first word, but now is yellow
-        ("a", "black", 3),
-        ("l", "black", 4),
-    ]
-    wordle_letters = [WordleLetter(*guess) for guess in guesses]
-    with pytest.raises(InvalidWordleLetters) as exc_info:
-        _ = parse_wordle_letters(wordle_letters)
-    assert sorted(exc_info.value.invalid_letters) == sorted([wordle_letters[-3]])
-
-
-def test_parse_wordle_letters_invalid_multiple():
-    """Test when more than one character is invalid."""
-    guesses = [
-        ("d", "black", 0),
-        ("r", "black", 1),
-        ("e", "green", 2),
-        ("a", "black", 3),
-        ("m", "black", 4),
-        ("s", "black", 0),
-        ("t", "black", 1),
-        ("e", "yellow", 2),  # e was marked green here in first word, but now is yellow
-        ("a", "green", 3),  # a was marked black here in first word, but now is green
-        ("l", "black", 4),
-    ]
-    wordle_letters = [WordleLetter(*guess) for guess in guesses]
-    with pytest.raises(InvalidWordleLetters) as exc_info:
-        _ = parse_wordle_letters(wordle_letters)
-    assert sorted(exc_info.value.invalid_letters) == sorted(
-        [wordle_letters[-3], wordle_letters[-2]]
-    )
-
-
-def test_parse_wordle_letters_invalid_green_conflict():
-    """Test when two different letters are marked green in the same location."""
-    guesses = [
-        ("d", "black", 0),
-        ("r", "black", 1),
-        ("e", "black", 2),
-        ("a", "green", 3),  # a marked as green
-        ("m", "black", 4),
-        ("d", "black", 0),
-        ("o", "black", 1),
-        ("u", "black", 2),
-        ("s", "green", 3),  # s marked green - conflicts with a
-        ("e", "black", 4),
-    ]
-    wordle_letters = [WordleLetter(*guess) for guess in guesses]
-    with pytest.raises(InvalidWordleLetters) as exc_info:
-        _ = parse_wordle_letters(wordle_letters)
-    assert sorted(exc_info.value.invalid_letters) == sorted([wordle_letters[-2]])
+    assert sorted(exc_info.value.invalid_letters) == sorted(invalid_letters)
