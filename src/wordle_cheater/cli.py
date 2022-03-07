@@ -6,7 +6,7 @@ from wordle_cheater.cheater import cheat, get_wordle_letters
 
 
 @click.command()
-@click.argument("letters", default="")
+@click.argument("words", default="")
 @click.argument("colors", default="")
 @click.option(
     "--print/--no-print",
@@ -40,26 +40,26 @@ from wordle_cheater.cheater import cheat, get_wordle_letters
     show_default=True,
     help="Use the Curses library for interactive input and output.",
 )
-def wordle_cheat(letters, colors, print_, rows, cols, simple_print, use_curses):
+def wordle_cheat(words, colors, print_, rows, cols, simple_print, use_curses):
     """Cheat on wordle :(
 
-    Given your current guesses (LETTERS) and their colors (COLORS), this utility prints
-    a list of possible solutions in random order.  If either LETTERS or COLORS are not
+    Given your current guesses (WORDS) and their colors (COLORS), this utility prints
+    a list of possible solutions in random order.  If either WORDS or COLORS are not
     provided, wordle-cheater has you interactively enter your guesses.
 
     COLORS must be a string of 'b', 'y', or 'g' characters, corresponding to black,
     yellow, and green, respectively.
 
-    LETTERS and COLORS both ignore whitespace.
+    WORDS and COLORS both ignore whitespace.
 
     When interactively entering guesses, press space once before a letter to mark it as
     yellow, or press space twice to mark it as green.
 
     Note that no-curses mode is poorly supported and may not work on your terminal.
     """
-    # If letters & colors were already given, no need to spawn a UI
-    if letters != "" and colors != "":
-        guesses = get_wordle_letters(letters, colors)
+    # If words & colors were already given, no need to spawn a UI
+    if words != "" and colors != "":
+        guesses = get_wordle_letters(words, colors)
         print_ = True  # Ensure we print results
 
     elif use_curses:
