@@ -195,8 +195,7 @@ class WordleCheaterUI:
         out_str : str
             The possible solutions formatted into a single string of rows and columns.
         """
-        blacks, yellows, greens, counts = cheater.parse_wordle_letters(self.guesses)
-        possible_words = cheater.find_words(blacks, yellows, greens, counts)
+        possible_words = cheater.cheat(self.guesses)
 
         lines = [
             sep.join(possible_words[i : i + cols])
