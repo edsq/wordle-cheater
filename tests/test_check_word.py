@@ -10,13 +10,13 @@ yellows = [[], ["e"], ["l"], [], ["d"]]
 greens = [None, None, None, "e", None]
 
 # Words that should be invalid given above blacks, yellows, greens
-invalid_words = [
-    "craft",  # Invalid as letters marked black
-    "ruled",  # Invalid as yellow letters reused
-    "elude",  # Invalid as green letter doesn't appear
-    "cruel",  # Invalid as yellow letters don't appear (hard mode)
-    "eeeee",  # Invalid due to word not in word list
-]
+invalid_words = {
+    "black_conflict": "craft",  # Invalid as letters marked black
+    "yellow_conflict": "ruled",  # Invalid as yellow letters reused
+    "no_green": "elude",  # Invalid as green letter doesn't appear
+    "hard_mode": "cruel",  # Invalid as yellow letters don't appear (hard mode)
+    "word_list": "eeeee",  # Invalid due to word not in word list
+}
 
 # Parameters for testing valid words when letters in guesses repeat
 # Values are `(blacks, yellows, greens, counts, word)`
@@ -107,7 +107,7 @@ def test_check_word_valid():
     )
 
 
-@pytest.mark.parametrize("word", invalid_words)
+@pytest.mark.parametrize("word", invalid_words.values(), ids=invalid_words.keys())
 def test_check_word_invalid(word):
     """Test words that should be invalid given blacks, yellows, greens."""
     assert not check_word(
