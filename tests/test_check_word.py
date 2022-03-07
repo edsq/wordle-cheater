@@ -9,6 +9,7 @@ blacks = [["b", "o"], ["i"], ["a"], ["t"], ["s"]]
 yellows = [[], ["e"], ["l"], [], ["d"]]
 greens = [None, None, None, "e", None]
 
+
 # Words that should be invalid given above blacks, yellows, greens
 invalid_words = {
     "black_conflict": "craft",  # Invalid as letters marked black
@@ -17,6 +18,7 @@ invalid_words = {
     "hard_mode": "cruel",  # Invalid as yellow letters don't appear (hard mode)
     "word_list": "eeeee",  # Invalid due to word not in word list
 }
+
 
 # Parameters for testing valid words when letters in guesses repeat
 # Values are `(blacks, yellows, greens, counts, word)`
@@ -57,6 +59,7 @@ valid_repeated_params = {
         "shops",
     ),
 }
+
 
 # Parameters for testing invalid words due to repeated letters in guesses
 # Values are `(blacks, yellows, greens, counts, word)`
