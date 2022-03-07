@@ -1,3 +1,4 @@
+import pytest
 from wordle_cheater.interface_base import WordleCheaterUI
 from wordle_cheater.cheater import WordleLetter
 
@@ -96,114 +97,103 @@ correct_output = ["BEATS", "OILED", "     "]
 correct_output_colors = ["bybbb", "bbygy", "     "]
 
 
-def test_enter_letters():
-    """Basic test of enter_letters()."""
-    inputs = [
-        "B",
-        " ",
-        "e",
-        "a",
-        "T",
-        "s",
-        "X",  # Should do nothing as we've already entered five characters
-        "\r",
-        "o",
-        "i",
-        " ",
-        "l",
-        " ",
-        " ",
-        "e",
-        " ",
-        "D",
-        "\r",
-        "\r",
-    ]
+test_inputs = {
+    "basic": (
+        [
+            "B",
+            " ",
+            "e",
+            "a",
+            "T",
+            "s",
+            "X",  # Should do nothing as we've already entered five characters
+            "\r",
+            "o",
+            "i",
+            " ",
+            "l",
+            " ",
+            " ",
+            "e",
+            " ",
+            "D",
+            "\r",
+            "\r",
+        ]
+    ),
+    "backspace": (  # Test handling of backspace
+        [
+            "X",  # wrong character
+            "\b",  # delete X
+            "b",  # right character
+            " ",
+            "X",  # wrong character, colored yellow
+            "\b",  # delete yellow X
+            " ",
+            "e",  # enter yellow E
+            "a",
+            "t",
+            "X",  # wrong character
+            "\r",  # enter pressed
+            "\b",  # go back to previous line
+            "\b",  # delete X
+            "s",  # correct character
+            "\r",
+            "o",
+            "X",  # wrong character
+            "X",  # second wrong character
+            "\b",
+            "\b",  # delete both wrong characters
+            "i",
+            " ",
+            "l",
+            " ",
+            " ",
+            "X",  # wrong character, colored green
+            "\b",  # delete green X
+            " ",
+            " ",
+            "e",  # correct character
+            " ",
+            "d",
+            "\r",
+            "\r",
+        ]
+    ),
+    "non_alpha": (  # Test handling of non-alpha characters
+        [
+            "&",  # Should be ignored
+            " ",
+            "&",  # Should cancel the yellow colored character
+            "B",
+            " ",
+            "e",
+            " ",
+            " ",
+            "&",  # Should cancel the green colored character
+            "a",
+            "T",
+            "s",
+            "&",  # Should do nothing
+            "\r",
+            "o",
+            "i",
+            " ",
+            "l",
+            " ",
+            " ",
+            "e",
+            " ",
+            "D",
+            "\r",
+            "\r",
+        ]
+    ),
+}
 
-    test_ui = NoInterfaceUI(inputs=inputs)
-    wordle_letters = test_ui.enter_letters()
-    assert wordle_letters == correct_wordle_letters
-    assert test_ui.output == correct_output
-    assert test_ui.output_colors == correct_output_colors
 
-
-def test_enter_letters_backspace():
-    """Test handling of backspace and non-alpha characters in enter_letters()."""
-    inputs = [
-        "X",  # wrong character
-        "\b",  # delete X
-        "b",  # right character
-        " ",
-        "X",  # wrong character, colored yellow
-        "\b",  # delete yellow X
-        " ",
-        "e",  # enter yellow E
-        "a",
-        "t",
-        "X",  # wrong character
-        "\r",  # enter pressed
-        "\b",  # go back to previous line
-        "\b",  # delete X
-        "s",  # correct character
-        "\r",
-        "o",
-        "X",  # wrong character
-        "X",  # second wrong character
-        "\b",
-        "\b",  # delete both wrong characters
-        "i",
-        " ",
-        "l",
-        " ",
-        " ",
-        "X",  # wrong character, colored green
-        "\b",  # delete green X
-        " ",
-        " ",
-        "e",  # correct character
-        " ",
-        "d",
-        "\r",
-        "\r",
-    ]
-
-    test_ui = NoInterfaceUI(inputs=inputs)
-    wordle_letters = test_ui.enter_letters()
-    assert wordle_letters == correct_wordle_letters
-    assert test_ui.output == correct_output
-    assert test_ui.output_colors == correct_output_colors
-
-
-def test_enter_letters_non_alpha():
-    """Test handling of non-alpha characters in get_letters()."""
-    inputs = [
-        "&",  # Should be ignored
-        " ",
-        "&",  # Should cancel the yellow colored character
-        "B",
-        " ",
-        "e",
-        " ",
-        " ",
-        "&",  # Should cancel the green colored character
-        "a",
-        "T",
-        "s",
-        "&",  # Should do nothing
-        "\r",
-        "o",
-        "i",
-        " ",
-        "l",
-        " ",
-        " ",
-        "e",
-        " ",
-        "D",
-        "\r",
-        "\r",
-    ]
-
+@pytest.mark.parametrize("inputs", test_inputs.values(), ids=test_inputs.keys())
+def test_enter_letters(inputs):
     test_ui = NoInterfaceUI(inputs=inputs)
     wordle_letters = test_ui.enter_letters()
     assert wordle_letters == correct_wordle_letters
