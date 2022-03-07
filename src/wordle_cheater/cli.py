@@ -52,8 +52,8 @@ def wordle_cheat(letters, colors, print_, rows, cols, simple_print, use_curses):
 
     LETTERS and COLORS both ignore whitespace.
 
-    When interactively entering previous guesses, press space once before a letter to
-    mark it as yellow, or press space twice to mark it as green.
+    When interactively entering guesses, press space once before a letter to mark it as
+    yellow, or press space twice to mark it as green.
 
     Note that no-curses mode is poorly supported and may not work on your terminal.
     """
@@ -69,17 +69,17 @@ def wordle_cheat(letters, colors, print_, rows, cols, simple_print, use_curses):
     else:
         ui = ClickInterface(max_rows=rows, max_cols=cols)
         ui.main()
+        return  # ClickInterface prints solutions automatically, so we're done
 
     # Get possible words
     possible_words = cheat(guesses)
 
     # Now print the entered guesses and results, if requested
-    # If we're in no-curses mode, don't bother (as they've already been printed)
-    if simple_print and use_curses:
+    if simple_print:
         out_str = " ".join(possible_words)
         click.echo(out_str)
 
-    elif print_ and use_curses:
+    elif print_:
         out_str = format_words(possible_words, max_rows=rows, max_cols=cols)
         click.secho("Wordle Cheater :(", bold=True)
         click.echo()  # Get a new line
