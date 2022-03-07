@@ -16,7 +16,7 @@ invalid_words = {
     "yellow_conflict": "ruled",  # Invalid as yellow letters reused
     "no_green": "elude",  # Invalid as green letter doesn't appear
     "hard_mode": "cruel",  # Invalid as yellow letters don't appear (hard mode)
-    "word_list": "eeeee",  # Invalid due to word not in word list
+    "word_list": "ldzez",  # Invalid due to word not in word list
 }
 
 
@@ -142,4 +142,16 @@ def test_check_word_valid_repeating(blacks, yellows, greens, counts, word):
     """Test invalid words due to repeated letters in guesses."""
     assert not check_word(
         word, blacks=blacks, yellows=yellows, greens=greens, counts=counts
+    )
+
+
+def test_check_word_no_guesses():
+    """Test that check_word works even if we don't supply any guesses."""
+    assert check_word("beats")
+
+
+def test_check_word_no_dict():
+    """Test that check_word works when we don't require a real word."""
+    assert check_word(
+        "ldzez", blacks=blacks, yellows=yellows, greens=greens, check_dict=False
     )
