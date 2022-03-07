@@ -71,7 +71,6 @@ def check_word(
     yellows=None,
     greens=None,
     counts=None,
-    hard=True,
     check_dict=True,
 ):
     """Check if `word` is a possible solution given previous guesses.
@@ -109,9 +108,6 @@ def check_word(
         `counts = {'r': 2}`.
         If a previous guess was 'array', with one 'r' marked black and one colored, then
         we know the solution must have exactly one 'r' and pass `counts = {'r': 1}`.
-    hard : bool, optional
-        Whether or not to use wordle 'hard mode' rules, requiring that all letters in
-        `yellows` and `greens` must be in `word`.
     check_dict : bool, optional
         Whether or not to check if `word` is a real five letter english word.
 
@@ -142,16 +138,15 @@ def check_word(
     all_blacks = _flatten(blacks)
     all_yellows = _flatten(yellows)
 
-    # Check for hard mode compliance
-    if hard:
-        known_letters = all_yellows + [l for l in greens if l is not None]
-        for known_letter in known_letters:
-            if known_letter not in word:
-                return False
+    # Check for "hard mode compliance"
+    known_letters = all_yellows + [l for l in greens if l is not None]
+    for known_letter in known_letters:
+        if known_letter not in word:
+            return False
 
-            # Also check that there are enough repetitions if applicable
-            elif word.count(known_letter) < counts.get(known_letter, 1):
-                return False
+        # Also check that there are enough repetitions if applicable
+        elif word.count(known_letter) < counts.get(known_letter, 1):
+            return False
 
     # Now check each letter for compatibility with known information
     for i, letter in enumerate(word):
@@ -227,7 +222,6 @@ def find_words(blacks=None, yellows=None, greens=None, counts=None):
             yellows=yellows,
             greens=greens,
             counts=counts,
-            hard=True,
         ):
             possible_words.append(word)
 

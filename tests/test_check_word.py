@@ -105,7 +105,6 @@ def test_check_word_valid():
         blacks=blacks,
         yellows=yellows,
         greens=greens,
-        hard=True,
         check_dict=True,
     )
 
