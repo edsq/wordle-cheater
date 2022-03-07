@@ -13,6 +13,8 @@ pytest = "^5.2"
 ipython = "^7.0"
 pre-commit = "^2.17.0"
 black = "^22.1.0"
+coverage = {extras = ["toml"], version = "^6.3.2"}
+pytest-cov = "^3.0.0"
 
 [tool.poetry.scripts]
 wordle-cheater = "wordle_cheater.cli:wordle_cheat"
@@ -20,3 +22,15 @@ wordle-cheater = "wordle_cheater.cli:wordle_cheat"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.coverage.paths]
+source = ["src", "*/site-packages"]
+
+[tool.coverage.run]
+branch = true
+source = ["wordle_cheater"]
+omit = ["*/interface.py"]
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 100
