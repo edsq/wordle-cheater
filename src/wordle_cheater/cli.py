@@ -26,7 +26,13 @@ from wordle_cheater.cheater import cheat, get_wordle_letters
     "--cols",
     default=8,
     show_default=True,
-    help="Number of columns to print when '--print' is given.",
+    help="Maximum number of columns to print when '--print' is given.",
+)
+@click.option(
+    "--simple-print/--no-simple-print",
+    default=False,
+    show_default=True,
+    help="Print all solutions, separated by a space.  Useful for machine-parsing.",
 )
 @click.option(
     "--use-curses/--no-curses",
@@ -34,7 +40,7 @@ from wordle_cheater.cheater import cheat, get_wordle_letters
     show_default=True,
     help="Use the Curses library for interactive input and output.",
 )
-def wordle_cheat(letters, colors, print_, use_curses, rows, cols):
+def wordle_cheat(letters, colors, print_, rows, cols, simple_print, use_curses):
     """Cheat on wordle :(
 
     Given your current guesses (LETTERS) and their colors (COLORS), this utility prints
@@ -54,22 +60,27 @@ def wordle_cheat(letters, colors, print_, use_curses, rows, cols):
     # If letters & colors were already given, no need to spawn a UI
     if letters != "" and colors != "":
         guesses = get_wordle_letters(letters, colors)
-        possible_words = cheat(guesses)
-        out_str = format_words(possible_words, max_rows=rows, max_cols=cols)
-        print_ = True
+        print_ = True  # Ensure we print results
 
     elif use_curses:
         ui = CursesInterface.init_and_run()
         guesses = ui.guesses
-        out_str = ui.get_results_string(max_rows=rows, max_cols=cols)
 
     else:
         ui = ClickInterface(max_rows=rows, max_cols=cols)
         ui.main()
 
+    # Get possible words
+    possible_words = cheat(guesses)
+
     # Now print the entered guesses and results, if requested
     # If we're in no-curses mode, don't bother (as they've already been printed)
-    if print_ and use_curses:
+    if simple_print and use_curses:
+        out_str = " ".join(possible_words)
+        click.echo(out_str)
+
+    elif print_ and use_curses:
+        out_str = format_words(possible_words, max_rows=rows, max_cols=cols)
         click.secho("Wordle Cheater :(", bold=True)
         click.echo()  # Get a new line
         click.echo("    ", nl=False)  # Indent by four spaces
