@@ -58,6 +58,42 @@ valid_repeated_params = {
     ),
 }
 
+# Parameters for testing invalid words due to repeated letters in guesses
+# Values are `(blacks, yellows, greens, counts, word)`
+invalid_repeated_params = {
+    "too_many_repeated": (  # Guess: "array", answer: "right"
+        # Test if repeating a letter too many times is marked as invalid
+        # The word "river" should be found invalid, since only one of the two "r"s was
+        # colored, thus we know the answer has only one r
+        [["a"], [], ["r"], ["a"], ["y"]],
+        [[], ["r"], [], [], []],
+        [None, None, None, None, None],
+        {"r": 1},
+        "river",
+    ),
+    "not_enough_repeated": (  # Guess: "array", answer: "corer"
+        # Test if repeating a letter not enough times is marked as invalid
+        # The word "strip" should be found invalid, since we know the answer
+        # should have two "r"s
+        [["a"], [], [], ["a"], ["y"]],
+        [[], ["r"], [], [], []],
+        [None, None, "r", None, None],
+        {"r": 2},
+        "strip",
+    ),
+    "repeated_black_conflict": (  # Guess: "array", answer: "right"
+        # Test that when repeated letters appear in the previous guesses, words with
+        # a character marked black at the same location will still be invalid
+        # The word "lores" should be marked invalid, as the second "r" in array was
+        # marked black
+        [["a"], [], ["r"], ["a"], ["y"]],
+        [[], ["r"], [], [], []],
+        [None, None, None, None, None],
+        {"r": 1},
+        "lores",
+    ),
+}
+
 
 def test_check_word_valid():
     # Testing with solution from 02-07-2022
@@ -94,64 +130,13 @@ def test_check_word_valid_repeating(blacks, yellows, greens, counts, answer):
     )
 
 
-def test_check_word_invalid_too_many_repeated():
-    # Test if repeating a letter too many times is marked as invalid
-    # Guess: "array", answer: "right"
-    # The word "river" should be found invalid, since only one of the two "r"s was
-    # colored, thus we know the answer has only one r
-    blacks = [["a"], [], ["r"], ["a"], ["y"]]
-    yellows = [
-        [],
-        ["r"],
-        [],
-        [],
-        [],
-    ]
-    greens = [None, None, None, None, None]
-    counts = {"r": 1}
+@pytest.mark.parametrize(
+    "blacks,yellows,greens,counts,word",
+    invalid_repeated_params.values(),
+    ids=invalid_repeated_params.keys(),
+)
+def test_check_word_valid_repeating(blacks, yellows, greens, counts, word):
+    """Test invalid words due to repeated letters in guesses."""
     assert not check_word(
-        "river",
-        blacks=blacks,
-        yellows=yellows,
-        greens=greens,
-        check_dict=False,
-        counts=counts,
+        word, blacks=blacks, yellows=yellows, greens=greens, counts=counts
     )
-
-
-def test_check_word_invalid_not_enough_repeated():
-    # Test if repeating a letter not enough times is marked as invalid
-    # Guess: "array", answer: "corer"
-    # The word "strip" should be found invalid, since we know the answer
-    # should have two "r"s
-    blacks = [["a"], [], [], ["a"], ["y"]]
-    yellows = [
-        [],
-        ["r"],
-        [],
-        [],
-        [],
-    ]
-    greens = [None, None, "r", None, None]
-    counts = {"r": 2}
-    assert not check_word(
-        "strip", blacks=blacks, yellows=yellows, greens=greens, counts=counts
-    )
-
-
-def test_check_word_invalid_repeated_black_conflict():
-    # Test that when repeated letters appear in the previous guesses, words with
-    # a character marked black at the same location will still be invalid
-    # Guess: "array", answer: "right"
-    # The word "lores" should be marked invalid, as the second "r" in array was
-    # Marked black
-    blacks = [["a"], [], ["r"], ["a"], ["y"]]
-    yellows = [
-        [],
-        ["r"],
-        [],
-        [],
-        [],
-    ]
-    greens = [None, None, None, None, None]
-    assert not check_word("lores", blacks=blacks, yellows=yellows, greens=greens)
