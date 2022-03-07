@@ -355,7 +355,7 @@ def parse_wordle_letters(wordle_letters):
             elif wl.color == "yellow":
                 yellows[wl.index].append(wl.letter)
 
-            elif wl.color == "green":
+            else:  # Color is green
                 greens[wl.index] = wl.letter
 
             # Also update counts if necessary
