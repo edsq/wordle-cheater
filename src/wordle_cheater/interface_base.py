@@ -2,6 +2,43 @@ import wordle_cheater.cheater as cheater
 from wordle_cheater.dictionary import letters as english_letters
 
 
+def format_words(words, max_rows=10, max_cols=8, sep="     "):
+    """Format a list of strings into columns.
+
+    If `len(words) > max_rows * max_cols`, then the last line of the output string will
+    instead indicate how many words are not included.  Note that this line counts
+    against the row limit.
+
+    Parameters
+    ----------
+    max_rows : int, optional
+        The maximum number of rows to display.  If the full string would require
+        more than `max_rows` rows, show an ellipsis and the number of missing
+        words on the last line instead.
+    max_cols : int, optional
+        The number of words per row.
+    sep : str, optional
+        The character(s) to put in between each column.  Defaults to '     '
+        (five spaces) so the space in between each column is the same as the width
+        of each column.
+
+    Returns
+    -------
+    out_str : str
+        `words` formatted into a single string of rows and columns.
+    """
+    lines = [sep.join(words[i : i + max_cols]) for i in range(0, len(words), max_cols)]
+    if len(lines) > max_rows:
+        lines = lines[: max_rows - 1]
+        n_missing = int(len(words) - (max_cols * len(lines)))
+        out_str = "\n".join(lines)
+        out_str += f"\n...({n_missing} more)"
+    else:
+        out_str = "\n".join(lines)
+
+    return out_str
+
+
 class WordleCheaterUI:
     """Base class for handling logic of interface, independent of output method.
 
@@ -174,7 +211,7 @@ class WordleCheaterUI:
 
         return self.guesses
 
-    def get_results_string(self, max_rows=10, cols=8, sep="     "):
+    def get_results_string(self, max_rows=10, max_cols=8, sep="     "):
         """Get possible solutions formatted into columns.
 
         Parameters
@@ -183,7 +220,7 @@ class WordleCheaterUI:
             The maximum number of rows to display.  If the full string would require
             more than `max_rows` rows, show an ellipsis and the number of missing
             words on the last line instead.
-        cols : int, optional
+        max_cols : int, optional
             The number of words per row.
         sep : str, optional
             The character(s) to put in between each column.  Defaults to '     '
@@ -196,19 +233,9 @@ class WordleCheaterUI:
             The possible solutions formatted into a single string of rows and columns.
         """
         possible_words = cheater.cheat(self.guesses)
-
-        lines = [
-            sep.join(possible_words[i : i + cols])
-            for i in range(0, len(possible_words), cols)
-        ]
-        if len(lines) > max_rows:
-            lines = lines[: max_rows - 1]
-            n_missing = int(len(possible_words) - (cols * len(lines)))
-            out_str = "\n".join(lines)
-            out_str += f"\n...({n_missing} more)"
-        else:
-            out_str = "\n".join(lines)
-
+        out_str = format_words(
+            possible_words, max_rows=max_rows, max_cols=max_cols, sep=sep
+        )
         return out_str
 
     def print_title(self):
