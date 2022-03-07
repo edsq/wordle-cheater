@@ -20,13 +20,13 @@ from wordle_cheater.cheater import cheat, get_wordle_letters
     "--rows",
     default=10,
     show_default=True,
-    help="Maximum number of rows to print when '--print' is given.",
+    help="Maximum rows of possible solutions to print.",
 )
 @click.option(
     "--cols",
     default=8,
     show_default=True,
-    help="Maximum number of columns to print when '--print' is given.",
+    help="Maximum columns of possible solutions to print.",
 )
 @click.option(
     "--simple-print/--no-simple-print",
@@ -41,7 +41,7 @@ from wordle_cheater.cheater import cheat, get_wordle_letters
     help="Use the Curses library for interactive input and output.",
 )
 def wordle_cheat(words, colors, print_, rows, cols, simple_print, use_curses):
-    """Cheat on wordle :(
+    """Cheat on Wordle :(
 
     Given your current guesses (WORDS) and their colors (COLORS), this utility prints
     a list of possible solutions in random order.  If either WORDS or COLORS are not
