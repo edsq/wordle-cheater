@@ -11,3 +11,4 @@ repos:
         entry: poetry run flake8
         language: system
         types: [python]
+        args: [--darglint-ignore-regex, .*]
