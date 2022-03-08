@@ -238,15 +238,15 @@ class WordleCheaterUI:
         )
         return out_str
 
-    def print_title(self):
+    def print_title(self):  # pragma: no cover
         """Print title and instructions."""
         raise NotImplementedError
 
-    def print_results(self):
+    def print_results(self):  # pragma: no cover
         """Print possible solutions given guesses."""
         raise NotImplementedError
 
-    def print(self, x, y, string, c=None):
+    def print(self, x, y, string, c=None):  # pragma: no cover
         """Print a string at coordinates x, y.
 
         Parameters
@@ -263,7 +263,7 @@ class WordleCheaterUI:
         """
         raise NotImplementedError
 
-    def sleep(self, ms):
+    def sleep(self, ms):  # pragma: no cover
         """Temporarily suspend execution.
 
         Parameters
@@ -273,7 +273,7 @@ class WordleCheaterUI:
         """
         raise NotImplementedError
 
-    def move_cursor(self, x, y):
+    def move_cursor(self, x, y):  # pragma: no cover
         """Move cursor to position x, y.
 
         Parameters
@@ -285,7 +285,7 @@ class WordleCheaterUI:
         """
         raise NotImplementedError
 
-    def set_cursor_visibility(self, visible):
+    def set_cursor_visibility(self, visible):  # pragma: no cover
         """Set cursor visibility.
 
         Parameters
@@ -295,7 +295,7 @@ class WordleCheaterUI:
         """
         raise NotImplementedError
 
-    def get_key(self):
+    def get_key(self):  # pragma: no cover
         """Get a key press.
 
         Returns
@@ -305,7 +305,7 @@ class WordleCheaterUI:
         """
         raise NotImplementedError
 
-    def is_enter(self, key):
+    def is_enter(self, key):  # pragma: no cover
         """Check if `key` is the enter/return key.
 
         Parameters
@@ -320,7 +320,7 @@ class WordleCheaterUI:
         """
         raise NotImplementedError
 
-    def is_backspace(self, key):
+    def is_backspace(self, key):  # pragma: no cover
         """Check if `key` is the backspace/delete key.
 
         Parameters
