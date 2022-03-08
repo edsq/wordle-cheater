@@ -49,5 +49,6 @@ def lint(session):
 @session(python="3.7")
 def docs(session):
     """Build the documentation."""
-    session.install("sphinx")
+    session.install("sphinx", "numpydoc")
+    session.install(".")
     session.run("sphinx-build", "docs", "docs/_build")

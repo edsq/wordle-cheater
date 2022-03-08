@@ -465,6 +465,21 @@ packaging = ">=20.9"
 tomlkit = ">=0.7.0,<0.8.0"
 
 [[package]]
+name = "numpydoc"
+version = "1.2"
+description = "Sphinx extension to support docstrings in Numpy format"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+Jinja2 = ">=2.10"
+sphinx = ">=1.8"
+
+[package.extras]
+testing = ["pytest", "pytest-cov", "matplotlib"]
+
+[[package]]
 name = "packaging"
 version = "21.3"
 description = "Core utilities for Python packages"
@@ -929,7 +944,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "656e7ca184daa620d9a074812c3748311bda3ebca0ca07a51f010d564770484a"
+content-hash = "1e7284e538699edfda3ad7dc11454c58ffa06759c486d1062f657478b14230bb"
 
 [metadata.files]
 alabaster = [
@@ -1189,6 +1204,10 @@ nox = [
 nox-poetry = [
     {file = "nox-poetry-0.9.0.tar.gz", hash = "sha256:ea48fa535cd048854da35af7c6c3e92046fbed9b9023bb81193fb4d2d3a47c92"},
     {file = "nox_poetry-0.9.0-py3-none-any.whl", hash = "sha256:33423c855fb47e2901faf9e15937326bc20c6e356eef825903eed4f8bbda69d3"},
+]
+numpydoc = [
+    {file = "numpydoc-1.2-py3-none-any.whl", hash = "sha256:3ecbb9feae080031714b63128912988ebdfd4c582a085d25b8d9f7ac23c2d9ef"},
+    {file = "numpydoc-1.2.tar.gz", hash = "sha256:0cec233740c6b125913005d16e8a9996e060528afcb8b7cad3f2706629dfd6f7"},
 ]
 packaging = [
     {file = "packaging-21.3-py3-none-any.whl", hash = "sha256:ef103e05f519cdc783ae24ea4e2e0f508a9c99b2d4969652eed6a2e1ea5bd522"},
