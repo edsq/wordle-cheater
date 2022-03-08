@@ -1,3 +1,4 @@
+"""Command-line interface for wordle-cheater."""
 import click
 from wordle_cheater.cheater import cheat, get_wordle_letters
 from wordle_cheater.interface import ClickInterface, CursesInterface
@@ -55,7 +56,7 @@ def wordle_cheat(words, colors, print_, rows, cols, simple_print, use_curses):
     yellow, or press space twice to mark it as green.
 
     Note that no-curses mode is poorly supported and may not work on your terminal.
-    """
+    """  # noqa: D400
     # If words & colors were already given, no need to spawn a UI
     if words != "" and colors != "":
         guesses = get_wordle_letters(words, colors)

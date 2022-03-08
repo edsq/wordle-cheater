@@ -1,32 +1,42 @@
+"""Tests of interface_base logic."""
 import pytest
 from wordle_cheater.cheater import parse_wordle_letters, WordleLetter
 from wordle_cheater.interface_base import format_words, WordleCheaterUI
 
 
 class NoInterfaceUI(WordleCheaterUI):
-    """Class for testing WordleCheaterUI."""
+    """Class for testing WordleCheaterUI.
+
+    Parameters
+    ----------
+    inputs : list
+        A list of characters, to be read off sequentially as inputs by get_key().
+
+    Attributes
+    ----------
+    output : list of str
+        List of strings of output, each element a new line.
+    output_colors : list of str
+        List of colors of output.
+    """
 
     def __init__(self, inputs):
-        """Constructor for TestUI class.
-
-        Positional Arguments
-        --------------------
-        inputs : list
-            A list of characters, to be read off sequentially as inputs by get_key().
-        """
         self.inputs = inputs[::-1]  # Reverse order so we can just pop to get inputs
         self.output = [""]  # List of strings of output, each element a new line.
         self.output_colors = [""]  # List of colors of output
         super().__init__()
 
     def print_title(self):
+        """Don't print anything for the title."""
         pass
 
     def print_results(self):
+        """Try to parse current guesses, but don't print anything."""
         # Have to try parsing guesses to look for invalid entries
         blacks, yellows, greens, counts = parse_wordle_letters(self.guesses)
 
     def print(self, x, y, string, c=None):
+        """Add `string` and its color in `self.output` and `self.output_colors`."""
         if c is None:
             color_str = " " * len(string)
 
@@ -62,15 +72,19 @@ class NoInterfaceUI(WordleCheaterUI):
         )
 
     def move_cursor(self, x, y):
+        """Don't do anything."""
         pass
 
     def set_cursor_visibility(self, visible):
+        """Don't do anything."""
         pass
 
     def get_key(self):
+        """Get next key from `self.inputs`."""
         return self.inputs.pop()
 
     def is_enter(self, key):
+        r"""Check if `key` is enter ('\r')."""
         if key == "\r":
             return True
 
@@ -78,6 +92,7 @@ class NoInterfaceUI(WordleCheaterUI):
             return False
 
     def is_backspace(self, key):
+        r"""Check if `key` is backspace ('\r')."""
         if key == "\b":
             return True
 
@@ -85,6 +100,7 @@ class NoInterfaceUI(WordleCheaterUI):
             return False
 
     def sleep(self, ms):
+        """Don't do anything."""
         pass
 
 

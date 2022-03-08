@@ -1,4 +1,4 @@
-# Tests for cheater.parse_wordle_letters
+"""Tests for cheater.parse_wordle_letters."""
 import pytest
 from wordle_cheater.cheater import (
     InvalidWordleLetters,
@@ -219,6 +219,7 @@ invalid_params = {
     ids=valid_params.keys(),
 )
 def test_parse_wordle_letters_valid(guesses, blacks, yellows, greens, counts):
+    """It returns `(blacks, yellows, greens, counts)`."""
     wordle_letters = [WordleLetter(*guess) for guess in guesses]
     parsed_blacks, parsed_yellows, parsed_greens, parsed_counts = parse_wordle_letters(
         wordle_letters
@@ -233,6 +234,7 @@ def test_parse_wordle_letters_valid(guesses, blacks, yellows, greens, counts):
     "guesses,invalid_indices", invalid_params.values(), ids=invalid_params.keys()
 )
 def test_parse_wordle_letters_invalid(guesses, invalid_indices):
+    """It raises an `InvalidWordleLetters` exception."""
     wordle_letters = [WordleLetter(*guess) for guess in guesses]
     invalid_letters = [wordle_letters[5 + i] for i in invalid_indices]
     with pytest.raises(InvalidWordleLetters) as exc_info:

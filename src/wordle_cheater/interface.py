@@ -1,3 +1,4 @@
+"""Interfaces for interactively entering guesses."""
 import curses
 import time
 
@@ -37,7 +38,7 @@ class CursesInterface(WordleCheaterUI):
         return ui
 
     def main(self, stdscr):
-        """Main entry point.
+        """Run the interface.
 
         Should typically be called using `curses.wrapper`.
 
@@ -67,6 +68,19 @@ class CursesInterface(WordleCheaterUI):
         self.get_key()
 
     def center_print(self, y, string, *args, **kwargs):
+        """Print in the center of the screen.
+
+        Parameters
+        ----------
+        y : int
+            The vertical location at which to print.
+        string : str
+            The string to print.
+        *args : tuple
+            Additional arguments to be passed to `stdscr.addstr`.
+        **kwargs : dict, optional
+            Keyword arguments to be passed to `stdscr.addstr`.
+        """
         height, width = self.stdscr.getmaxyx()
 
         str_length = len(string)
@@ -75,11 +89,13 @@ class CursesInterface(WordleCheaterUI):
         self.stdscr.addstr(y, x_mid - str_length // 2, string, *args, **kwargs)
 
     def print_title(self):
+        """Print title and instructions."""
         self.center_print(1, "Wordle Cheater :(", curses.A_BOLD)
         self.center_print(2, "Enter guesses below.")
         self.center_print(3, "spacebar: change color", curses.A_DIM)
 
     def print_results(self, sep="     "):
+        """Print possible solutions given guesses."""
         height, width = self.results_window.getmaxyx()
         max_rows = height - 1  # -1 to account for "Possible solutions" header
         cols = width // (5 + len(sep))
@@ -92,6 +108,21 @@ class CursesInterface(WordleCheaterUI):
         self.results_window.refresh()
 
     def print(self, x, y, string, c=None):
+        """Print a string at coordinates x, y.
+
+        Parameters
+        ----------
+        x : int
+            Horizontal position at which to print the string.
+        y : int
+            Height at which to print the string.
+        string : str
+            The string to print.
+        c : str, {None, 'black', 'yellow', 'green', 'red'}
+            The color in which to print.  Must be one of
+            ['black', 'yellow', 'green', 'red'] or None. If `c` is None, it should
+            print in the default color pair.
+        """
         if c is None:
             self.stdscr.addstr(y, x, string)
 
@@ -113,19 +144,61 @@ class CursesInterface(WordleCheaterUI):
             )
 
     def sleep(self, ms):
+        """Temporarily suspend execution.
+
+        Parameters
+        ----------
+        ms : int
+            Number of miliseconds before execution resumes.
+        """
         curses.napms(ms)
         self.stdscr.refresh()
 
     def move_cursor(self, x, y):
+        """Move cursor to position x, y.
+
+        Parameters
+        ----------
+        x : int
+            Desired horizontal position of cursor.
+        y : int
+            Desired vertical position of cursor.
+        """
         self.stdscr.move(y, x)
 
     def set_cursor_visibility(self, visible):
+        """Set cursor visibility.
+
+        Parameters
+        ----------
+        visible : bool
+            Whether or not the cursor is visible.
+        """
         curses.curs_set(visible)
 
     def get_key(self):
+        """Get a key press.
+
+        Returns
+        -------
+        key : str
+            The key that was pressed.
+        """
         return self.stdscr.getkey()
 
     def is_enter(self, key):
+        """Check if `key` is the enter/return key.
+
+        Parameters
+        ----------
+        key : str
+            The key to check.
+
+        Returns
+        -------
+        is_enter : bool
+            True if `key` is the enter or return key, False otherwise.
+        """
         if key == curses.KEY_ENTER or key == "\n" or key == "\r":
             return True
 
@@ -133,6 +206,18 @@ class CursesInterface(WordleCheaterUI):
             return False
 
     def is_backspace(self, key):
+        """Check if `key` is the backspace/delete key.
+
+        Parameters
+        ----------
+        key : str
+            The key to check.
+
+        Returns
+        -------
+        is_backspace : bool
+            True if `key` is the backspace or delete key, False otherwise.
+        """
         if key == curses.KEY_BACKSPACE or key == "\b" or key == "\x7f":
             return True
 
@@ -207,6 +292,7 @@ class ClickInterface(WordleCheaterUI):
         self._curs_xy = xy
 
     def main(self):
+        """Run the interface."""
         try:
             self.print_title()
             self.enter_letters(x0=self.x0, y0=self.y0)
@@ -216,11 +302,13 @@ class ClickInterface(WordleCheaterUI):
             self.set_cursor_visibility(True)
 
     def print_title(self):
+        """Print title and instructions."""
         self.print(0, 0, "Wordle Cheater :(", bold=True)
         self.print(0, 1, "Enter guesses below.")
         self.print(0, 2, "spacebar: change color", dim=True)
 
     def print_results(self):
+        """Print possible solutions given guesses."""
         # If we're still entering letters, don't do anything
         if self.entering_letters:
             return
@@ -234,6 +322,21 @@ class ClickInterface(WordleCheaterUI):
         click.echo(out_str)
 
     def print(self, x, y, string, c=None, *args, **kwargs):
+        """Print a string at coordinates x, y.
+
+        Parameters
+        ----------
+        x : int
+            Horizontal position at which to print the string.
+        y : int
+            Height at which to print the string.
+        string : str
+            The string to print.
+        c : str, {None, 'black', 'yellow', 'green', 'red'}
+            The color in which to print.  Must be one of
+            ['black', 'yellow', 'green', 'red'] or None. If `c` is None, it should
+            print in the default color pair.
+        """
         # Move cursor to x, y so we can print there
         self.move_cursor(x, y)
 
@@ -260,9 +363,25 @@ class ClickInterface(WordleCheaterUI):
         self.curs_xy = (self.curs_xy[0] + len(string), self.curs_xy[1])
 
     def sleep(self, ms):
+        """Temporarily suspend execution.
+
+        Parameters
+        ----------
+        ms : int
+            Number of miliseconds before execution resumes.
+        """
         time.sleep(ms / 1000)
 
     def move_cursor(self, x, y):
+        """Move cursor to position x, y.
+
+        Parameters
+        ----------
+        x : int
+            Desired horizontal position of cursor.
+        y : int
+            Desired vertical position of cursor.
+        """
         # Check if we want to move cursor up (decreasing y)
         if self.curs_xy[1] > y:
             click.echo(f"{self.esc}[{self.curs_xy[1] - y}A", nl=False)
@@ -312,6 +431,13 @@ class ClickInterface(WordleCheaterUI):
         self.curs_xy = (x, y)
 
     def set_cursor_visibility(self, visible):
+        """Set cursor visibility.
+
+        Parameters
+        ----------
+        visible : bool
+            Whether or not the cursor is visible.
+        """
         if visible:
             click.echo(f"{self.esc}[?25h", nl=False)
 
@@ -319,9 +445,28 @@ class ClickInterface(WordleCheaterUI):
             click.echo(f"{self.esc}[?25l", nl=False)
 
     def get_key(self):
+        """Get a key press.
+
+        Returns
+        -------
+        key : str
+            The key that was pressed.
+        """
         return click.getchar()
 
     def is_enter(self, key):
+        """Check if `key` is the enter/return key.
+
+        Parameters
+        ----------
+        key : str
+            The key to check.
+
+        Returns
+        -------
+        is_enter : bool
+            True if `key` is the enter or return key, False otherwise.
+        """
         if key == "\r" or key == "\n":
             return True
 
@@ -329,6 +474,18 @@ class ClickInterface(WordleCheaterUI):
             return False
 
     def is_backspace(self, key):
+        """Check if `key` is the backspace/delete key.
+
+        Parameters
+        ----------
+        key : str
+            The key to check.
+
+        Returns
+        -------
+        is_backspace : bool
+            True if `key` is the backspace or delete key, False otherwise.
+        """
         if key == "\b" or key == "\x7f":
             return True
 

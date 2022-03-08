@@ -1,3 +1,4 @@
+"""Nox sessions."""
 # Using nox_poetry:
 # https://github.com/cjolowicz/nox-poetry
 from nox_poetry import session
@@ -14,6 +15,7 @@ def tests(session):
 
 @session(python=["3.7", "3.8", "3.9", "3.10"])
 def lint(session):
+    """Lint using flake8."""
     if session.posargs:
         args = session.posargs
     else:

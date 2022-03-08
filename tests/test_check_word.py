@@ -1,4 +1,4 @@
-# Tests for cheater.check_word
+"""Tests for cheater.check_word()."""
 import pytest
 from wordle_cheater.cheater import check_word
 
@@ -99,6 +99,7 @@ invalid_repeated_params = {
 
 
 def test_check_word_valid():
+    """A valid word given `blacks`, `yellows`, `greens`, `counts` is 'elder'."""
     # Testing with solution from 02-07-2022
     assert check_word(
         "elder",

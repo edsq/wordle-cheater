@@ -1,4 +1,4 @@
-# Miscellaneous tests for cheater.py
+"""Miscellaneous tests for cheater.py."""
 import pytest
 from wordle_cheater import __version__
 from wordle_cheater.cheater import (
@@ -17,14 +17,17 @@ greens = [None, None, None, "e", None]
 
 
 def test_version():
+    """Version is correct."""
     assert __version__ == "0.1.0"
 
 
 def test_wordle_dictionary():
+    """Length of the Wordle dictionary is correct."""
     assert len(wordle_words) == 12972
 
 
 def test_find_words():
+    """It returns 'dynel' and 'elder'."""
     words = find_words(blacks=blacks, yellows=yellows, greens=greens)
     assert sorted(words) == ["dynel", "elder"]
 

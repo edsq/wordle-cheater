@@ -1,5 +1,6 @@
-# Uppercase English alphabet
+"""Wordle dictionary and English alphabet."""
 
+# Uppercase English alphabet
 letters = [
     "A",
     "B",
@@ -31,7 +32,6 @@ letters = [
 
 # This is the actual wordle dictionary (as of 02-07-2022), taken from
 # https://www.powerlanguage.co.uk/wordle/main.e65ce0a5.js
-
 wordle_words = {
     "cigar",
     "rebut",

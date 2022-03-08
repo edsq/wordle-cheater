@@ -1,3 +1,4 @@
+"""Base class & utilities for interfaces."""
 import wordle_cheater.cheater as cheater
 from wordle_cheater.dictionary import letters as english_letters
 
@@ -55,13 +56,16 @@ class WordleCheaterUI:
         self.entering_letters = False  # Whether or not we're entering previous guesses
 
     def main(self):
-        """Main entry point; called by the CLI."""
+        """Run the interface.
+
+        Main entry point; called by the CLI.
+        """
         self.print_title()
         self.enter_letters()
         self.print_results()
 
     def enter_letters(self, x0=0, y0=0):
-        """Base method for entering previous guesses with a wordle-like interface.
+        """Enter previous guesses with a wordle-like interface.
 
         This method both returns and sets `self.guesses`.
 

@@ -1,3 +1,4 @@
+"""Utilities for generating solutions to Wordle given previous guesses."""
 from dataclasses import dataclass
 
 from wordle_cheater.dictionary import letters
@@ -23,7 +24,7 @@ class WordleLetter:
     index: int
 
     def __post_init__(self):
-        # Parameter validation
+        """Do parameter validation."""
         if self.letter.upper() not in letters:
             raise ValueError("`letter` must be an english letter.")
 
@@ -40,7 +41,7 @@ class WordleLetter:
             raise ValueError("`index` must be integer in range [0, 5)")
 
     def __lt__(self, other):
-        """'Less than' method so that sorted() can be called on lists of these.
+        """Deterimine if `self` is less than `other`.
 
         Sorts by index.
         """
@@ -118,7 +119,6 @@ def check_word(
         Whether or not `word` is a possible solution given `blacks`, `yellows`, and
         `greens`.
     """
-
     if blacks is None:
         blacks = [[], [], [], [], []]
 
@@ -263,7 +263,6 @@ def parse_wordle_letters(wordle_letters):
         If a previous guess was 'array', with one 'r' marked black and one colored, then
         we know the solution must have exactly one 'r' and so `counts = {'r': 1}`.
     """
-
     blacks = [[], [], [], [], []]
     yellows = [[], [], [], [], []]
     greens = [None, None, None, None, None]
@@ -375,14 +374,13 @@ def cheat(wordle_letters):
     possible_words : list of str
         A list of the possible solutions given `wordle_letters`, in random order.
     """
-
     blacks, yellows, greens, counts = parse_wordle_letters(wordle_letters)
     possible_words = find_words(blacks, yellows, greens, counts)
     return possible_words
 
 
 def get_wordle_letters(letters, colors):
-    """Convenience function for creating a list of WordleLetter objects.
+    """Create a list of WordleLetter objects.
 
     Parameters
     ----------
