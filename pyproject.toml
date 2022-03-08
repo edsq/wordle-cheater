@@ -15,6 +15,8 @@ pre-commit = "^2.17.0"
 black = "^22.1.0"
 coverage = {extras = ["toml"], version = "^6.3.2"}
 pytest-cov = "^3.0.0"
+nox = "^2022.1.7"
+nox-poetry = "^0.9.0"
 
 [tool.poetry.scripts]
 wordle-cheater = "wordle_cheater.cli:wordle_cheat"
