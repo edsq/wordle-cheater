@@ -12,6 +12,8 @@ def format_words(words, max_rows=10, max_cols=8, sep="     "):
 
     Parameters
     ----------
+    words : list of str
+        The words to be formatted.
     max_rows : int, optional
         The maximum number of rows to display.  If the full string would require
         more than `max_rows` rows, show an ellipsis and the number of missing
@@ -307,6 +309,8 @@ class WordleCheaterUI:
         -------
         key : str
             The key that was pressed.
+
+        # noqa : DAR202
         """
         raise NotImplementedError
 
@@ -322,6 +326,8 @@ class WordleCheaterUI:
         -------
         is_enter : bool
             True if `key` is the enter or return key, False otherwise.
+
+        # noqa : DAR202
         """
         raise NotImplementedError
 
@@ -337,5 +343,7 @@ class WordleCheaterUI:
         -------
         is_backspace : bool
             True if `key` is the backspace or delete key, False otherwise.
+
+        # noqa : DAR202
         """
         raise NotImplementedError

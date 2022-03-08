@@ -336,6 +336,10 @@ class ClickInterface(WordleCheaterUI):
             The color in which to print.  Must be one of
             ['black', 'yellow', 'green', 'red'] or None. If `c` is None, it should
             print in the default color pair.
+        *args : tuple
+            Additional arguments to be passed to `click.secho`.
+        **kwargs : dict, optional
+            Keyword arguments to be passed to `click.secho`.
         """
         # Move cursor to x, y so we can print there
         self.move_cursor(x, y)

@@ -44,6 +44,16 @@ class WordleLetter:
         """Deterimine if `self` is less than `other`.
 
         Sorts by index.
+
+        Parameters
+        ----------
+        other : WordleLetter
+            The other WordleLetter to compare against.
+
+        Returns
+        -------
+        bool
+            Whether `self.index` is less than `other.index`.
         """
         return self.index < other.index
 
@@ -262,6 +272,8 @@ def parse_wordle_letters(wordle_letters):
         would know the solution must have at least two 'r's and so `counts = {'r': 2}`.
         If a previous guess was 'array', with one 'r' marked black and one colored, then
         we know the solution must have exactly one 'r' and so `counts = {'r': 1}`.
+
+    # noqa : DAR000
     """
     blacks = [[], [], [], [], []]
     yellows = [[], [], [], [], []]

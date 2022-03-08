@@ -56,7 +56,8 @@ def wordle_cheat(words, colors, print_, rows, cols, simple_print, use_curses):
     yellow, or press space twice to mark it as green.
 
     Note that no-curses mode is poorly supported and may not work on your terminal.
-    """  # noqa: D400
+
+    """  # noqa: D400 DAR101
     # If words & colors were already given, no need to spawn a UI
     if words != "" and colors != "":
         guesses = get_wordle_letters(words, colors)
