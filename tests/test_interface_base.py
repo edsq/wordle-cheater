@@ -1,5 +1,5 @@
 import pytest
-from wordle_cheater.interface_base import WordleCheaterUI
+from wordle_cheater.interface_base import WordleCheaterUI, format_words
 from wordle_cheater.cheater import WordleLetter
 
 
@@ -110,6 +110,7 @@ test_inputs = {
             "\r",
             "o",
             "i",
+            "\r",  # Should do nothing as we aren't at the end of a word
             " ",
             "l",
             " ",
@@ -123,6 +124,7 @@ test_inputs = {
     ),
     "backspace": (  # Test handling of backspace
         [
+            "\b",  # Shouldn't do anything, as we're at the beginning of first line
             "X",  # wrong character
             "\b",  # delete X
             "b",  # right character
@@ -194,8 +196,25 @@ test_inputs = {
 
 @pytest.mark.parametrize("inputs", test_inputs.values(), ids=test_inputs.keys())
 def test_enter_letters(inputs):
+    """Test that inputs are correctly parsed."""
     test_ui = NoInterfaceUI(inputs=inputs)
-    wordle_letters = test_ui.enter_letters()
+    test_ui.main()
+    wordle_letters = test_ui.guesses
+    assert wordle_letters == correct_wordle_letters
+    assert test_ui.output == correct_output
+    assert test_ui.output_colors == correct_output_colors
+
+
+def test_enter_letters_six_words():
+    """Test that we exit after entering six words."""
+    correct_wordle_letters = 6 * [WordleLetter("a", "black", i) for i in range(5)]
+    correct_output = 6 * ["AAAAA"]
+    correct_output_colors = 6 * ["bbbbb"]
+
+    inputs = 6 * ["a", "a", "a", "a", "a", "\r"]
+    test_ui = NoInterfaceUI(inputs=inputs)
+    test_ui.main()
+    wordle_letters = test_ui.guesses
     assert wordle_letters == correct_wordle_letters
     assert test_ui.output == correct_output
     assert test_ui.output_colors == correct_output_colors
@@ -207,3 +226,19 @@ def test_get_results_string():
     test_ui.guesses = correct_wordle_letters
     out_str = test_ui.get_results_string()
     assert out_str == "elder     dynel" or out_str == "dynel     elder"
+
+
+def test_format_words():
+    """Basic test of format_words."""
+    out_str = format_words(
+        ["a", "b", "c", "d", "e", "f", "g"], max_rows=3, max_cols=3, sep=" "
+    )
+    assert out_str == "a b c\nd e f\ng"
+
+
+def test_format_words_truncate():
+    """Test when format_words must truncate some words."""
+    out_str = format_words(
+        ["a", "b", "c", "d", "e", "f", "g"], max_rows=2, max_cols=3, sep=" "
+    )
+    assert out_str == "a b c\n...(4 more)"
