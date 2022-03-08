@@ -257,9 +257,10 @@ class WordleCheaterUI:
             Height at which to print the string.
         string : str
             The string to print.
-        c : str, {None, 'black', 'yellow', 'green'}
-            The color in which to print.  Must be one of ['black', 'yellow', 'green']
-            or None. If `c` is None, it should print in the default color pair.
+        c : str, {None, 'black', 'yellow', 'green', 'red'}
+            The color in which to print.  Must be one of
+            ['black', 'yellow', 'green', 'red'] or None. If `c` is None, it should
+            print in the default color pair.
         """
         raise NotImplementedError
 
