@@ -62,11 +62,11 @@ def wordle_cheat(words, colors, print_, rows, cols, simple_print, use_curses):
         guesses = get_wordle_letters(words, colors)
         print_ = True  # Ensure we print results
 
-    elif use_curses:
+    elif use_curses:  # pragma: no cover
         ui = CursesInterface.init_and_run()
         guesses = ui.guesses
 
-    else:
+    else:  # pragma: no cover
         ui = ClickInterface(max_rows=rows, max_cols=cols)
         ui.main()
         return  # ClickInterface prints solutions automatically, so we're done
@@ -101,6 +101,9 @@ def wordle_cheat(words, colors, print_, rows, cols, simple_print, use_curses):
         click.secho("Possible solutions:", underline=True)
         click.secho(out_str)
 
+    else:  # pragma: no cover
+        return
+
 
 if __name__ == "__main__":
-    wordle_cheat()
+    wordle_cheat()  # pragma: no cover
