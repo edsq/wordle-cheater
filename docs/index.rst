@@ -1,6 +1,12 @@
 wordle-cheater
 ==============
 
+.. toctree::
+   :hidden:
+   :maxdepth: 1
+
+   license
+
 Cheat on Wordle :(
 
 This is a utility for cheating on Wordle.  If you use this utility to cheat on Wordle,
