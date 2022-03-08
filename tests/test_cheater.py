@@ -39,7 +39,7 @@ def test_wordle_letter_comparison():
 def test_invalid_wordle_letter_non_alpha():
     """Test that WordleLetter raises an error when given a non-alpha character."""
     with pytest.raises(ValueError) as exc_info:
-        wl = WordleLetter("$", "black", 0)
+        _ = WordleLetter("$", "black", 0)
     assert exc_info.type is ValueError
     assert exc_info.value.args[0] == "`letter` must be an english letter."
 
@@ -47,7 +47,7 @@ def test_invalid_wordle_letter_non_alpha():
 def test_invalid_wordle_letter_uppercase():
     """Test that WordleLetter raises an error when given an uppercase character."""
     with pytest.raises(ValueError) as exc_info:
-        wl = WordleLetter("A", "black", 0)
+        _ = WordleLetter("A", "black", 0)
     assert exc_info.type is ValueError
     assert exc_info.value.args[0] == "`letter` must be lowercase."
 
@@ -55,7 +55,7 @@ def test_invalid_wordle_letter_uppercase():
 def test_invalid_wordle_letter_color():
     """Test that WordleLetter raises an error when given an invalid color."""
     with pytest.raises(ValueError) as exc_info:
-        wl = WordleLetter("a", "white", 0)
+        _ = WordleLetter("a", "white", 0)
     assert exc_info.type is ValueError
     assert (
         exc_info.value.args[0] == "`color` must be one of ['black', 'yellow', 'green']"
@@ -65,7 +65,7 @@ def test_invalid_wordle_letter_color():
 def test_invalid_wordle_letter_non_int():
     """Test that WordleLetter raises an error when given a non-integer."""
     with pytest.raises(ValueError) as exc_info:
-        wl = WordleLetter("a", "black", 1.5)
+        _ = WordleLetter("a", "black", 1.5)
     assert exc_info.type is ValueError
     assert exc_info.value.args[0] == "`index` must be integer in range [0, 5)"
 
@@ -73,7 +73,7 @@ def test_invalid_wordle_letter_non_int():
 def test_invalid_wordle_letter_index_out_of_range():
     """Test that WordleLetter raises an error when given an index too high."""
     with pytest.raises(ValueError) as exc_info:
-        wl = WordleLetter("a", "black", 6)
+        _ = WordleLetter("a", "black", 6)
     assert exc_info.type is ValueError
     assert exc_info.value.args[0] == "`index` must be integer in range [0, 5)"
 
@@ -92,7 +92,7 @@ def test_get_wordle_letters():
 def test_get_wordle_letters_invalid():
     """Test when an invalid color character is given."""
     with pytest.raises(ValueError) as exc_info:
-        wls = get_wordle_letters("a", "w")
+        _ = get_wordle_letters("a", "w")
     assert (
         exc_info.value.args[0] == "`colors` must contain only 'b', 'y', or 'g' (got w)."
     )

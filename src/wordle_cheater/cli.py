@@ -1,4 +1,3 @@
-import curses
 import click
 from wordle_cheater.interface import CursesInterface, ClickInterface
 from wordle_cheater.interface_base import format_words

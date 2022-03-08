@@ -60,9 +60,9 @@ class InvalidWordleLetters(Exception):
         super().__init__(message)
 
 
-def _flatten(l):
+def _flatten(list_):
     """Flatten a list of lists into a 1D list."""
-    return [item for sublist in l for item in sublist]
+    return [item for sublist in list_ for item in sublist]
 
 
 def check_word(
@@ -139,7 +139,7 @@ def check_word(
     all_yellows = _flatten(yellows)
 
     # Check for "hard mode compliance"
-    known_letters = all_yellows + [l for l in greens if l is not None]
+    known_letters = all_yellows + [l_ for l_ in greens if l_ is not None]
     for known_letter in known_letters:
         if known_letter not in word:
             return False
