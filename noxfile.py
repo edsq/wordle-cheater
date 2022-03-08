@@ -5,7 +5,7 @@ import nox
 from nox_poetry import session
 
 nox.options.sessions = ("tests", "lint")
-locations = ("src", "tests", "noxfile.py")
+locations = ("src", "tests", "noxfile.py", "docs/conf.py")
 
 
 @session(python=["3.7", "3.8", "3.9", "3.10"])
@@ -44,3 +44,10 @@ def lint(session):
         "darglint",
     )
     session.run("flake8", *args)
+
+
+@session(python="3.7")
+def docs(session):
+    """Build the documentation."""
+    session.install("sphinx")
+    session.run("sphinx-build", "docs", "docs/_build")
