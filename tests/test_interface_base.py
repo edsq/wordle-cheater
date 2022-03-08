@@ -1,6 +1,6 @@
 import pytest
 from wordle_cheater.interface_base import WordleCheaterUI, format_words
-from wordle_cheater.cheater import WordleLetter
+from wordle_cheater.cheater import WordleLetter, parse_wordle_letters
 
 
 class NoInterfaceUI(WordleCheaterUI):
@@ -23,7 +23,8 @@ class NoInterfaceUI(WordleCheaterUI):
         pass
 
     def print_results(self):
-        pass
+        # Have to try parsing guesses to look for invalid entries
+        blacks, yellows, greens, counts = parse_wordle_letters(self.guesses)
 
     def print(self, x, y, string, c=None):
         if c is None:
@@ -38,8 +39,13 @@ class NoInterfaceUI(WordleCheaterUI):
         elif c == "green":
             color_str = "g" * len(string)
 
+        elif c == "red":
+            color_str = "r" * len(string)
+
         else:
-            raise ValueError("`c` must be one of ['black', 'yellow', 'green'] or None.")
+            raise ValueError(
+                "`c` must be one of ['black', 'yellow', 'green', 'red'] or None."
+            )
 
         # Add new lines if needed
         if y >= len(self.output):
@@ -77,6 +83,9 @@ class NoInterfaceUI(WordleCheaterUI):
 
         else:
             return False
+
+    def sleep(self, ms):
+        pass
 
 
 guesses = [
@@ -187,6 +196,41 @@ test_inputs = {
             "e",
             " ",
             "D",
+            "\r",
+            "\r",
+        ]
+    ),
+    "invalid": (  # Try entering an invalid word, then delete it
+        [
+            "b",
+            " ",
+            "e",  # E colored yellow,
+            "a",
+            "t",
+            "s",
+            "\r",
+            "b",
+            " ",
+            " ",
+            "e",  # E colored green - invalid!
+            "a",
+            "t",
+            "s",
+            "\r",  # This should effectively do nothing, since E is invalid
+            "\b",
+            "\b",
+            "\b",
+            "\b",
+            "\b",  # Delete this word
+            "o",
+            "i",
+            " ",
+            "l",
+            " ",
+            " ",
+            "e",
+            " ",
+            "d",
             "\r",
             "\r",
         ]
