@@ -19,5 +19,5 @@ def lint(session):
     else:
         args = locations
 
-    session.install("flake8", "flake8-black")
+    session.install("flake8", "flake8-black", "flake8-import-order")
     session.run("flake8", *args)

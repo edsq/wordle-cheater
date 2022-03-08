@@ -1,5 +1,6 @@
-import time
 import curses
+import time
+
 import click
 from wordle_cheater.interface_base import WordleCheaterUI
 

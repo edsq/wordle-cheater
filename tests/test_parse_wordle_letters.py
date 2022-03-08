@@ -1,9 +1,9 @@
 # Tests for cheater.parse_wordle_letters
 import pytest
 from wordle_cheater.cheater import (
-    WordleLetter,
-    parse_wordle_letters,
     InvalidWordleLetters,
+    parse_wordle_letters,
+    WordleLetter,
 )
 
 

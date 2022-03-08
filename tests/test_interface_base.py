@@ -1,6 +1,6 @@
 import pytest
-from wordle_cheater.interface_base import WordleCheaterUI, format_words
-from wordle_cheater.cheater import WordleLetter, parse_wordle_letters
+from wordle_cheater.cheater import parse_wordle_letters, WordleLetter
+from wordle_cheater.interface_base import format_words, WordleCheaterUI
 
 
 class NoInterfaceUI(WordleCheaterUI):

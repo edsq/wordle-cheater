@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+
 from wordle_cheater.dictionary import letters
 from wordle_cheater.dictionary import wordle_words
 

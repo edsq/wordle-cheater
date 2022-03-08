@@ -1,4 +1,6 @@
 [flake8]
-select = BLK,E,F,W
+select = BLK,E,F,I,W
 ignore = E203,W503
 max-line-length = 88
+application-import-names = wordle-cheater,tests
+import-order-style = google

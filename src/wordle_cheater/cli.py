@@ -1,7 +1,7 @@
 import click
-from wordle_cheater.interface import CursesInterface, ClickInterface
-from wordle_cheater.interface_base import format_words
 from wordle_cheater.cheater import cheat, get_wordle_letters
+from wordle_cheater.interface import ClickInterface, CursesInterface
+from wordle_cheater.interface_base import format_words
 
 
 @click.command()

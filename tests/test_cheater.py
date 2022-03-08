@@ -1,13 +1,13 @@
 # Miscellaneous tests for cheater.py
 import pytest
 from wordle_cheater import __version__
-from wordle_cheater.dictionary import wordle_words
 from wordle_cheater.cheater import (
-    find_words,
-    WordleLetter,
-    get_wordle_letters,
     easy_cheat,
+    find_words,
+    get_wordle_letters,
+    WordleLetter,
 )
+from wordle_cheater.dictionary import wordle_words
 
 # Wordle from 02-07-2022 (solution 'elder')
 # My guesses were 'beats', 'oiled', 'elder'
