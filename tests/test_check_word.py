@@ -137,7 +137,7 @@ def test_check_word_valid_repeating(blacks, yellows, greens, counts, word):
     invalid_repeated_params.values(),
     ids=invalid_repeated_params.keys(),
 )
-def test_check_word_valid_repeating(blacks, yellows, greens, counts, word):
+def test_check_word_invalid_repeating(blacks, yellows, greens, counts, word):
     """Test invalid words due to repeated letters in guesses."""
     assert not check_word(
         word, blacks=blacks, yellows=yellows, greens=greens, counts=counts
