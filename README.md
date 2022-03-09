@@ -1,3 +1,5 @@
+[![Tests](https://github.com/edsq/wordle-cheater/workflows/Tests/badge.svg)](https://github.com/edsq/wordle-cheater/actions?workflow=Tests)
+
 # Wordle Cheater
 
 Utitlities for cheating on Wordle :(
