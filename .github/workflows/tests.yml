@@ -32,7 +32,10 @@ jobs:
       uses: "actions/upload-artifact@v3"
       with:
         name: coverage-data
-        path: ".coverage.*"
+        if-no-files-found: error
+        path: |
+          ".coverage"
+          ".coverage.*"
 
   coverage: 
     runs-on: ubuntu-latest
