@@ -26,4 +26,4 @@ jobs:
         pip install nox-poetry==0.9.0
     
     - name: Run nox
-      run: nox
+      run: nox --python=${{ matrix.python-version }}
