@@ -28,11 +28,6 @@ jobs:
     - name: Run nox
       run: nox --python=${{ matrix.python-version }}
 
-    - name: List files
-      run: |
-        pwd
-        ls -la
-
     - name: Upload coverage data
       if: always()
       uses: "actions/upload-artifact@v3"
