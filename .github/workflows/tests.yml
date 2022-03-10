@@ -28,7 +28,13 @@ jobs:
     - name: Run nox
       run: nox --python=${{ matrix.python-version }}
 
+    - name: List files
+      run: |
+        pwd
+        ls -l
+
     - name: Upload coverage data
+      if: always()
       uses: "actions/upload-artifact@v3"
       with:
         name: coverage-data
@@ -67,7 +73,7 @@ jobs:
       run: nox --session=coverage
 
     - name: Create xml coverage report
-      run: nox --session=coverage --xml
+      run: nox --session=coverage -- xml
 
     - name: Codecov
       uses: codecov/codecov-action@v2.1.0
