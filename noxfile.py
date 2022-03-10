@@ -54,17 +54,19 @@ def lint(session):
 @session(python=python_versions[0])
 def coverage(session):
     """Produce the coverage report."""
+    session.install("coverage[toml]")
+
     if session.posargs:
         args = session.posargs
 
     elif any(Path().glob(".coverage.*")):
         # Combine reports produced in parallel
         session.run("coverage", "combine")
+        args = ["report", "--fail-under=0"]
 
     else:
         args = ["report", "--fail-under=0"]
 
-    session.install("coverage[toml]")
     session.run("coverage", *args)
 
 
