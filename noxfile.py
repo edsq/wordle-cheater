@@ -1,6 +1,8 @@
 """Nox sessions."""
 # Using nox_poetry:
 # https://github.com/cjolowicz/nox-poetry
+from pathlib import Path
+
 import nox
 from nox_poetry import session
 
@@ -21,6 +23,7 @@ def black(session):
     """Run the black formatter."""
     if session.posargs:
         args = session.posargs
+
     else:
         args = locations
 
@@ -33,6 +36,7 @@ def lint(session):
     """Lint using flake8."""
     if session.posargs:
         args = session.posargs
+
     else:
         args = locations
 
@@ -52,6 +56,10 @@ def coverage(session):
     """Produce the coverage report."""
     if session.posargs:
         args = session.posargs
+
+    elif any(Path().glob(".coverage.*")):
+        # Combine reports produced in parallel
+        session.run("coverage", "combine")
 
     else:
         args = ["report"]
