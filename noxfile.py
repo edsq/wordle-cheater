@@ -46,6 +46,19 @@ def lint(session):
     session.run("flake8", *args)
 
 
+@session(python="3.10")
+def coverage(session):
+    """Produce the coverage report."""
+    if session.posargs:
+        args = session.posargs
+
+    else:
+        args = ["report"]
+
+    session.install("coverage[toml]")
+    session.run("coverage", *args)
+
+
 @session(python="3.7")
 def docs(session):
     """Build the documentation."""
