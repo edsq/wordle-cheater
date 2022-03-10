@@ -1,6 +1,5 @@
 """Miscellaneous tests for cheater.py."""
 import pytest
-from wordle_cheater import __version__
 from wordle_cheater.cheater import (
     easy_cheat,
     find_words,
@@ -14,11 +13,6 @@ from wordle_cheater.dictionary import wordle_words
 blacks = [["b", "o"], ["i"], ["a"], ["t"], ["s"]]
 yellows = [[], ["e"], ["l"], [], ["d"]]
 greens = [None, None, None, "e", None]
-
-
-def test_version():
-    """Version is correct."""
-    assert __version__ == "0.1.0"
 
 
 def test_wordle_dictionary():
