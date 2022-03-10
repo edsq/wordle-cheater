@@ -71,7 +71,7 @@ jobs:
       run: nox --session=coverage
 
     - name: Create xml coverage report
-      run: nox --session=coverage -- xml
+      run: nox --session=coverage -- xml --fail-under=0
 
     - name: Codecov
       uses: codecov/codecov-action@v2.1.0

@@ -62,7 +62,7 @@ def coverage(session):
         session.run("coverage", "combine")
 
     else:
-        args = ["report"]
+        args = ["report", "--fail-under=0"]
 
     session.install("coverage[toml]")
     session.run("coverage", *args)
