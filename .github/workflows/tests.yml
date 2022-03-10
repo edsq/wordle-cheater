@@ -34,7 +34,7 @@ jobs:
       with:
         name: coverage-data
         if-no-files-found: error
-        path: ".coverage"
+        path: ".coverage.*"
 
   coverage: 
     runs-on: ubuntu-latest
