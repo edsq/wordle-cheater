@@ -4,18 +4,19 @@
 import nox
 from nox_poetry import session
 
+python_versions = ["3.10", "3.9", "3.8", "3.7"]
 nox.options.sessions = ("tests", "lint")
 locations = ("src", "tests", "noxfile.py", "docs/conf.py")
 
 
-@session(python=["3.7", "3.8", "3.9", "3.10"])
+@session(python=python_versions)
 def tests(session):
     """Run test suite for each supported python version."""
     session.install("pytest", "coverage[toml]", "pytest-cov", ".")
     session.run("pytest", "--cov")
 
 
-@session(python="3.7")
+@session(python=python_versions[0])
 def black(session):
     """Run the black formatter."""
     if session.posargs:
@@ -27,7 +28,7 @@ def black(session):
     session.run("black", *args)
 
 
-@session(python=["3.7", "3.8", "3.9", "3.10"])
+@session(python=python_versions)
 def lint(session):
     """Lint using flake8."""
     if session.posargs:
@@ -46,7 +47,7 @@ def lint(session):
     session.run("flake8", *args)
 
 
-@session(python="3.10")
+@session(python=python_versions[0])
 def coverage(session):
     """Produce the coverage report."""
     if session.posargs:
@@ -59,7 +60,7 @@ def coverage(session):
     session.run("coverage", *args)
 
 
-@session(python="3.7")
+@session(python=python_versions[0])
 def docs(session):
     """Build the documentation."""
     session.install("sphinx", "numpydoc")
