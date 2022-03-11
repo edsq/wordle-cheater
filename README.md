@@ -1,7 +1,7 @@
+# wordle-cheater
+
 [![Tests](https://github.com/edsq/wordle-cheater/workflows/Tests/badge.svg)](https://github.com/edsq/wordle-cheater/actions?workflow=Tests)
 [![codecov](https://codecov.io/gh/edsq/wordle-cheater/branch/main/graph/badge.svg?token=5G6XN19YDV)](https://codecov.io/gh/edsq/wordle-cheater)
-
-# wordle-cheater
 
 ![interactive-screenshot](docs/_static/wordle-cheater_interactive.png)
 
