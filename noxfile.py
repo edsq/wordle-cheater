@@ -73,6 +73,6 @@ def coverage(session):
 @session(python=python_versions[0])
 def docs(session):
     """Build the documentation."""
-    session.install("sphinx", "numpydoc")
+    session.install("sphinx", "numpydoc", "sphinx-click")
     session.install(".")
     session.run("sphinx-build", "docs", "docs/_build")

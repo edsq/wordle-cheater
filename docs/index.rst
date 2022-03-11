@@ -5,6 +5,7 @@ wordle-cheater
    :hidden:
    :maxdepth: 2
 
+   cli_interface
    api
    license
 
