@@ -1,5 +1,6 @@
 # wordle-cheater
 
+[![PyPI](https://img.shields.io/pypi/v/wordle-cheater.svg)](https://pypi.org/project/wordle-cheater/)
 [![Documentation Status](https://readthedocs.org/projects/wordle-cheater/badge/?version=latest)](https://wordle-cheater.readthedocs.io/en/latest/?badge=latest)
 [![Tests](https://github.com/edsq/wordle-cheater/workflows/Tests/badge.svg)](https://github.com/edsq/wordle-cheater/actions?workflow=Tests)
 [![codecov](https://codecov.io/gh/edsq/wordle-cheater/branch/main/graph/badge.svg?token=5G6XN19YDV)](https://codecov.io/gh/edsq/wordle-cheater)
