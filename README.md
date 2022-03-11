@@ -16,7 +16,7 @@ actually cheat on Wordle, you go straight to the naughty list.
 
 Install with pip or [pipx](https://pypa.github.io/pipx/):
 ```console
-$ pipx install wordle-cheater
+pipx install wordle-cheater
 ```
 
 Requires Python >=3.7, <4.0.
@@ -33,6 +33,6 @@ Note that we use "b" (for "black") for letters that don't appear in the solution
 
 See
 ```console
-$ wordle-cheater --help
+wordle-cheater --help
 ```
 for more information and options.
