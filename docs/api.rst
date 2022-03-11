@@ -1,10 +1,6 @@
 API
 ===
 
-.. contents::
-    :local:
-    :backlinks: none
-
 
 wordle_cheater.cheater
 ----------------------
