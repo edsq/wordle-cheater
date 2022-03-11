@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "wordle-cheater"
-version = "0.1.0"
+version = "0.2.0"
 description = "Utilities for cheating on Wordle :("
 authors = ["Edward Eskew <eeskew@gatech.edu>"]
 readme = "README.md"
