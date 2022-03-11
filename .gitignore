@@ -4,4 +4,4 @@ dist
 .coverage
 .coverage.*
 .python-version
-docs/_*
+docs/_build
