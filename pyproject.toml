@@ -5,6 +5,7 @@ description = "Utilities for cheating on Wordle :("
 authors = ["Edward Eskew <eeskew@gatech.edu>"]
 readme = "README.md"
 repository = "https://github.com/edsq/wordle-cheater"
+documentation = "http://wordle-cheater.readthedocs.io/"
 license = "MIT"
 
 [tool.poetry.dependencies]
