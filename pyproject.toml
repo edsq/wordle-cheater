@@ -1,8 +1,11 @@
 [tool.poetry]
 name = "wordle-cheater"
 version = "0.1.0"
-description = ""
-authors = ["Edward Eskew <edward.eskew@wsu.edu>"]
+description = "Utilities for cheating on Wordle :("
+authors = ["Edward Eskew <eeskew@gatech.edu>"]
+readme = "README.md"
+repository = "https://github.com/edsq/wordle-cheater"
+license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.7"
