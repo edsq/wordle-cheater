@@ -78,7 +78,9 @@ def coverage(session):
     session.run("coverage", *args)
 
 
-@session(python=python_versions[0])
+# readthedocs only seems to support up to python3.8, so make sure we build our local
+# copy with the same python version
+@session(python="3.8")
 def docs(session):
     """Build the documentation."""
     session.install("sphinx", "myst-parser", "numpydoc", "sphinx-click", "furo")
