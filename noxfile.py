@@ -15,7 +15,15 @@ locations = ("src", "tests", "noxfile.py", "docs/conf.py")
 def tests(session):
     """Run test suite for each supported python version."""
     session.install("pytest", "coverage[toml]", "pytest-cov", ".")
-    session.run("coverage", "run", "--parallel", "-m", "pytest", *session.posargs)
+    try:
+        session.run("coverage", "run", "--parallel", "-m", "pytest", *session.posargs)
+
+    finally:
+        # If we're running on an interactive terminal (not CI), run coverage session
+        # so the parallel coverage reports are combined and human-readable output is
+        # printed.
+        if session.interactive:
+            session.notify("coverage", posargs=[])
 
 
 @session(python=python_versions[0])
@@ -62,10 +70,10 @@ def coverage(session):
     elif any(Path().glob(".coverage.*")):
         # Combine reports produced in parallel
         session.run("coverage", "combine")
-        args = ["report", "--fail-under=0"]
+        args = ["report"]
 
     else:
-        args = ["report", "--fail-under=0"]
+        args = ["report"]
 
     session.run("coverage", *args)
 
