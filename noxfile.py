@@ -66,10 +66,10 @@ def coverage(session):
     elif any(Path().glob(".coverage.*")):
         # Combine reports produced in parallel
         session.run("coverage", "combine")
-        args = ["report", "--fail-under=0"]
+        args = ["report"]
 
     else:
-        args = ["report", "--fail-under=0"]
+        args = ["report"]
 
     session.run("coverage", *args)
 
