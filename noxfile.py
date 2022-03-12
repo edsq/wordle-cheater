@@ -15,7 +15,11 @@ locations = ("src", "tests", "noxfile.py", "docs/conf.py")
 def tests(session):
     """Run test suite for each supported python version."""
     session.install("pytest", "coverage[toml]", "pytest-cov", ".")
-    session.run("coverage", "run", "--parallel", "-m", "pytest", *session.posargs)
+    try:
+        session.run("coverage", "run", "--parallel", "-m", "pytest", *session.posargs)
+    finally:
+        if session.interactive:
+            session.notify("coverage", posargs=[])
 
 
 @session(python=python_versions[0])
