@@ -17,7 +17,11 @@ def tests(session):
     session.install("pytest", "coverage[toml]", "pytest-cov", ".")
     try:
         session.run("coverage", "run", "--parallel", "-m", "pytest", *session.posargs)
+
     finally:
+        # If we're running on an interactive terminal (not CI), run coverage session
+        # so the parallel coverage reports are combined and human-readable output is
+        # printed.
         if session.interactive:
             session.notify("coverage", posargs=[])
 
