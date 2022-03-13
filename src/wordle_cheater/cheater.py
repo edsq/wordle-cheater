@@ -2,7 +2,7 @@
 from dataclasses import dataclass
 
 from wordle_cheater.dictionary import letters
-from wordle_cheater.dictionary import wordle_words
+from wordle_cheater.dictionary import wordle_dictionary
 
 
 class InvalidWordleLetters(Exception):
@@ -342,7 +342,7 @@ def check_word(word, guesses, check_dict=True):
 
     # Check if guess is a real word
     if check_dict:
-        if word not in wordle_words:
+        if word not in wordle_dictionary:
             return False
 
     # If we've made it this far, the word is a possible solution
@@ -363,7 +363,7 @@ def find_words(guesses):
         List of possible solutions that match the given guesses.
     """
     possible_words = []
-    for word in wordle_words:
+    for word in wordle_dictionary:
         if check_word(word, guesses):
             possible_words.append(word)
 

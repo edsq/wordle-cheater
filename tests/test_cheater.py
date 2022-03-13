@@ -6,7 +6,7 @@ from wordle_cheater.cheater import (
     get_wordle_letters,
     WordleLetter,
 )
-from wordle_cheater.dictionary import wordle_words
+from wordle_cheater.dictionary import wordle_dictionary
 
 # Wordle from 02-07-2022 (solution 'elder')
 # My guesses were 'beats', 'oiled', 'elder'
@@ -17,7 +17,7 @@ greens = [None, None, None, "e", None]
 
 def test_wordle_dictionary():
     """Length of the Wordle dictionary is correct."""
-    assert len(wordle_words) == 12972
+    assert len(wordle_dictionary) == 12972
 
 
 def test_find_words():
