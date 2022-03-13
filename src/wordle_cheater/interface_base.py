@@ -97,22 +97,7 @@ class WordleCheaterUI:
 
             # Check if user pressed backspace
             elif self.is_backspace(c):
-                # Don't do anything if we're at the beginning of the first line
-                if x == x0 and y == y0:
-                    continue
-
-                # Check if we're at the beginning of a line
-                if x == x0:
-                    self.print(x, y, "     ")  # Clear line of underscores
-                    x = x0 + 5  # Go to end of last line
-                    y -= 1  # Go up one line
-                    self.move_cursor(x, y)  # Move cursor to end of last line
-
-                else:
-                    x -= 1  # Move cursor back one
-                    self.guesses.pop()  # Delete last guess
-                    self.print(x, y, "_")  # Print underscore where letter used to be
-                    self.move_cursor(x, y)  # Move cursor back over underscore
+                x, y = self._handle_backspace(x, y, x0, y0)
 
             # If we've typed five characters, only enter or backspace should do
             # anything, so ignore all other characters in this case.
@@ -191,6 +176,47 @@ class WordleCheaterUI:
         # If enter pressed in any other situation, do nothing
         else:
             return x, y
+
+    def _handle_backspace(self, x, y, x0, y0):
+        """Handle when user presses backspace.
+
+        Parameters
+        ----------
+        x : int
+            The current x position of the cursor.
+        y : int
+            The current y position of the cursor.
+        x0 : int
+            The horizontal position of the upper-left corner of the words to enter.
+        y0 : int
+            The vertical position of the upper-left corner of the words to enter.
+
+        Returns
+        -------
+        x : int
+            The x position of the cursor after handling the backspace.
+        y : int
+            The y position of the cursor after handling the backspace.
+        """
+        # Don't do anything if we're at the beginning of the first line
+        if x == x0 and y == y0:
+            pass
+
+        # Check if we're at the beginning of a line
+        elif x == x0:
+            self.print(x, y, "     ")  # Clear line of underscores
+            x = x0 + 5  # Go to end of last line
+            y -= 1  # Go up one line
+            self.move_cursor(x, y)  # Move cursor to end of last line
+
+        # Delete last character
+        else:
+            x -= 1  # Move cursor back one
+            self.guesses.pop()  # Delete last guess
+            self.print(x, y, "_")  # Print underscore where letter used to be
+            self.move_cursor(x, y)  # Move cursor back over underscore
+
+        return x, y
 
     def _print_and_add_letter(self, letter, color, x, y, x0):
         """Print `letter` in `color` and add it to `self.guesses`."""
