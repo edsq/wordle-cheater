@@ -131,8 +131,10 @@ class WordleCheaterUI:
 
         Returns
         -------
-        print_new_line : bool
-            Whether or not to print a new line for entering another word.
+        x : int
+            The x position of the cursor after handling enter.
+        y : int
+            The y position of the cursor after handling enter.
         """
         # Check if we've entered all 6 words
         if y == y0 + 5 and x == x0 + 5:
