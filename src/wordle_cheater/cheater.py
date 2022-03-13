@@ -5,6 +5,20 @@ from wordle_cheater.dictionary import letters
 from wordle_cheater.dictionary import wordle_words
 
 
+class InvalidWordleLetters(Exception):
+    """Exception for when invalid letters are passed to parse_worlde_letters.
+
+    Attributes
+    ----------
+    invalid_letters : list of WordleLetter objects
+        The relevant letters that were found to be invalid.
+    """
+
+    def __init__(self, message, wordle_letters):
+        self.invalid_letters = wordle_letters
+        super().__init__(message)
+
+
 @dataclass
 class WordleLetter:
     """Class describing a single letter in a Wordle guess.
@@ -58,18 +72,188 @@ class WordleLetter:
         return self.index < other.index
 
 
-class InvalidWordleLetters(Exception):
-    """Exception for when invalid letters are passed to parse_worlde_letters.
+class WordleGuesses:
+    """Class representing all current guesses and their colors.
+
+    Parameters
+    ----------
+    wordle_letters : list of WordleLetters
+        The initial words to add.  Length must be an integer multiple of five.
 
     Attributes
     ----------
-    invalid_letters : list of WordleLetter objects
-        The relevant letters that were found to be invalid.
+    letters : list of WordleLetters
+        All the letters that have been entered so far.
+    blacks : length-5 list of lists
+        A list of lowercase letters that are not in the word.  For example, if our
+        guesses have the letter 'A' marked black at the second character,
+        `blacks = [[], ['A'], [], [], []]`.
+    yellows : length-5 list of lists
+        Lowercase letters that are in the word, but not in the correct location.  For
+        example, if our guesses tell us that the letter 'A' was in the word, but it was
+        not the third letter, `yellows = [[], [], ['a'], [], []]`.
+    greens : length-5 list
+        Lowercase letters that are in the word and in the correct location.  For
+        example, if our guesses tell us that the letter 'A' is the fourth letter of the
+        word, `greens = [None, None, None, 'a', None]`.
+    counts : dict
+        Counts of letters that should appear in the solution.  For letters that are in
+        `blacks`, this is interpreted as the exact number of times the letter must
+        appear in the solution, and defaults to zero.  For letters that are in
+        `yellows` and/or `greens`, this is interpreted as the minimum number of times
+        the letter must appear in the solution, and defaults to one.
+        For example, if a previous guess was 'array' with the two 'r's colored, then we
+        would know the solution must have at least two 'r's and so `counts = {'r': 2}`.
+        If a previous guess was 'array', with one 'r' marked black and one colored, then
+        we know the solution must have exactly one 'r' and so `counts = {'r': 1}`.
     """
 
-    def __init__(self, message, wordle_letters):
-        self.invalid_letters = wordle_letters
-        super().__init__(message)
+    def __init__(self, wordle_letters):
+        self.letters = wordle_letters
+        self.blacks = [[], [], [], [], []]
+        self.yellows = [[], [], [], [], []]
+        self.greens = [None, None, None, None, None]
+        self.counts = dict()
+
+        if len(wordle_letters) % 5 != 0:
+            raise ValueError(
+                "`len(wordle_letters)` must be an integer multiple of five"
+            )
+
+        words = [
+            wordle_letters[i * 5 : i * 5 + 5] for i in range(len(wordle_letters) // 5)
+        ]
+
+        for word in words:
+            self.add_word(word)
+
+    def add_word(self, word):
+        """Update `self.blacks`, `self.yellows`, `self.greens`, `self.counts`.
+
+        Parameters
+        ----------
+        word : length-5 list of WordleLetters
+            The word to add to the current guesses.
+
+        Raises
+        ------
+        InvalidWordleLetters
+            If `word` contains WordleLetters that are impossible given previous guesses.
+        """
+        if len(word) != 5 or any([not isinstance(wl, WordleLetter) for wl in word]):
+            raise ValueError("`word` must be a length-5 list of WordleLetter objects.")
+
+        # Get any invalid letters in the word
+        invalid_letters = self.get_invalid_letters(word)
+
+        # Raise an error, if necessary
+        if len(invalid_letters) > 0:
+            invalid_letters = sorted(invalid_letters)  # Sort by index
+            letters_str = ", ".join([wl.letter.upper() for wl in invalid_letters])
+            inds_str = ", ".join([str(wl.index) for wl in invalid_letters])
+            exc_str = (
+                "Letters "
+                + letters_str
+                + " (indices "
+                + inds_str
+                + ") incompatible with previous entries"
+            )
+            raise InvalidWordleLetters(exc_str, invalid_letters)
+
+        # If we made it this far, update current list of letters
+        self.wordle_letters += word
+
+        # Add the word to self.blacks, self.yellows, self.greens, self.counts
+        these_counts = dict()  # colored letters in this word and their counts
+        for wl in word:
+            if wl.color == "black":
+                self.blacks[wl.index].append(wl.letter)
+
+            elif wl.color == "yellow":
+                self.yellows[wl.index].append(wl.letter)
+                these_counts[wl.letter] = these_counts.get(wl.letter, 0) + 1
+
+            else:  # Color is green
+                self.greens[wl.index] = wl.letter
+                these_counts[wl.letter] = these_counts.get(wl.letter, 0) + 1
+
+            # Also update counts if necessary
+            # If not playing hard mode, the current count of a letter could be less
+            # than the final count, so only update count if it has increased
+            if these_counts.get(wl.letter, 0) > self.counts.get(wl.letter, 0):
+                self.counts[wl.letter] = these_counts[wl.letter]
+
+    def get_invalid_letters(self, word):
+        """Get which of letters in `word` (if any) are invalid given current guesses.
+
+        Parameters
+        ----------
+        word : length-5 list of WordleLetters
+            The word to check.
+
+        Returns
+        -------
+        list of WordleLetters
+            The invalid letters of `wordle_letters`, an empty list if there were none.
+        """
+        if len(word) != 5:
+            raise ValueError("`word` must be a length-5 list of WordleLetter objects.")
+
+        these_blacks = [wl for wl in word if wl.color == "black"]
+        these_yellows = [wl for wl in word if wl.color == "yellow"]
+        these_greens = [wl for wl in word if wl.color == "green"]
+
+        # Get the counts of colored letters in this word
+        these_counts = dict()
+        for wl in these_yellows + these_greens:
+            these_counts[wl.letter] = these_counts.get(wl.letter, 0) + 1
+
+        invalid_letters = []  # For letters incompatible with previous words
+
+        # Validate black letters
+        for wl in these_blacks:
+            # A black letter cannot be colored in this word fewer times than in any
+            # previous word, and can't have been previously marked colored at this
+            # location
+            curr_count = these_counts.get(wl.letter, 0)
+            prev_count = self.counts.get(wl.letter, 0)
+            if (
+                curr_count < prev_count
+                or wl.letter in self.yellows[wl.index]
+                or wl.letter == self.greens[wl.index]
+            ):
+                invalid_letters.append(wl)
+
+        # Validate yellow letters
+        for wl in these_yellows:
+            # A yellow letter can't have been previously marked black or green in
+            # this location, and if it was previously marked black (anywhere), it must
+            # have also been previously colored
+            if (
+                wl.letter in self.blacks[wl.index]
+                or wl.letter == self.greens[wl.index]
+                or wl.letter in _flatten(self.blacks)
+                and self.counts.get(wl.letter, 0) == 0
+            ):
+                invalid_letters.append(wl)
+
+        # Validate green letters
+        for wl in these_greens:
+            # A green letter can't have been previously marked black or yellow in
+            # this location, a different letter can't have been marked green in this
+            # location, and if it was previously marked black (anywhere), it must have
+            # also been previously colored
+            if (
+                wl.letter in self.blacks[wl.index]
+                or wl.letter in self.yellows[wl.index]
+                or wl.letter != self.greens[wl.index]
+                and self.greens[wl.index] is not None
+                or wl.letter in _flatten(self.blacks)
+                and self.counts.get(wl.letter, 0) == 0
+            ):
+                invalid_letters.append(wl)
+
+        return invalid_letters
 
 
 def _flatten(list_):
