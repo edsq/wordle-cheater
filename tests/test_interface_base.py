@@ -1,6 +1,6 @@
 """Tests of interface_base logic."""
 import pytest
-from wordle_cheater.cheater import parse_wordle_letters, WordleLetter
+from wordle_cheater.cheater import WordleGuesses, WordleLetter
 from wordle_cheater.interface_base import format_words, WordleCheaterUI
 
 
@@ -33,7 +33,7 @@ class NoInterfaceUI(WordleCheaterUI):
     def print_results(self):
         """Try to parse current guesses, but don't print anything."""
         # Have to try parsing guesses to look for invalid entries
-        blacks, yellows, greens, counts = parse_wordle_letters(self.guesses)
+        _ = WordleGuesses(self.guesses)
 
     def print(self, x, y, string, c=None):
         """Add `string` and its color in `self.output` and `self.output_colors`."""
@@ -198,6 +198,9 @@ test_inputs = {
             " ",
             " ",
             "&",  # Should cancel the green colored character
+            " ",
+            " ",
+            " ",  # Should also cancel the green colored character
             "a",
             "T",
             "s",

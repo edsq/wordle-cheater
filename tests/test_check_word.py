@@ -1,6 +1,16 @@
 """Tests for cheater.check_word()."""
 import pytest
-from wordle_cheater.cheater import check_word
+from wordle_cheater.cheater import check_word, WordleGuesses
+
+
+def get_wordle_guesses(blacks, yellows, greens, counts):
+    """Get the appropriate WordleGuesses object."""
+    wordle_guesses = WordleGuesses()
+    wordle_guesses.blacks = blacks
+    wordle_guesses.yellows = yellows
+    wordle_guesses.greens = greens
+    wordle_guesses.counts = counts
+    return wordle_guesses
 
 
 # Wordle from 02-07-2022 (solution 'elder')
@@ -101,24 +111,15 @@ invalid_repeated_params = {
 def test_check_word_valid():
     """A valid word given `blacks`, `yellows`, `greens`, `counts` is 'elder'."""
     # Testing with solution from 02-07-2022
-    assert check_word(
-        "elder",
-        blacks=blacks,
-        yellows=yellows,
-        greens=greens,
-        check_dict=True,
-    )
+    wordle_guesses = get_wordle_guesses(blacks, yellows, greens, counts=dict())
+    assert check_word("elder", wordle_guesses, check_dict=True)
 
 
 @pytest.mark.parametrize("word", invalid_words.values(), ids=invalid_words.keys())
 def test_check_word_invalid(word):
     """Test words that should be invalid given blacks, yellows, greens."""
-    assert not check_word(
-        word,
-        blacks=blacks,
-        yellows=yellows,
-        greens=greens,
-    )
+    wordle_guesses = get_wordle_guesses(blacks, yellows, greens, counts=dict())
+    assert not check_word(word, wordle_guesses)
 
 
 @pytest.mark.parametrize(
@@ -128,9 +129,8 @@ def test_check_word_invalid(word):
 )
 def test_check_word_valid_repeating(blacks, yellows, greens, counts, word):
     """Test valid words when guesses have repeated letters."""
-    assert check_word(
-        word, blacks=blacks, yellows=yellows, greens=greens, counts=counts
-    )
+    wordle_guesses = get_wordle_guesses(blacks, yellows, greens, counts)
+    assert check_word(word, wordle_guesses)
 
 
 @pytest.mark.parametrize(
@@ -140,18 +140,17 @@ def test_check_word_valid_repeating(blacks, yellows, greens, counts, word):
 )
 def test_check_word_invalid_repeating(blacks, yellows, greens, counts, word):
     """Test invalid words due to repeated letters in guesses."""
-    assert not check_word(
-        word, blacks=blacks, yellows=yellows, greens=greens, counts=counts
-    )
+    wordle_guesses = get_wordle_guesses(blacks, yellows, greens, counts)
+    assert not check_word(word, wordle_guesses)
 
 
 def test_check_word_no_guesses():
     """Test that check_word works even if we don't supply any guesses."""
-    assert check_word("beats")
+    wordle_guesses = WordleGuesses()
+    assert check_word("beats", wordle_guesses)
 
 
 def test_check_word_no_dict():
     """Test that check_word works when we don't require a real word."""
-    assert check_word(
-        "ldzez", blacks=blacks, yellows=yellows, greens=greens, check_dict=False
-    )
+    wordle_guesses = get_wordle_guesses(blacks, yellows, greens, counts=dict())
+    assert check_word("ldzez", wordle_guesses, check_dict=False)

@@ -4,25 +4,33 @@ from wordle_cheater.cheater import (
     easy_cheat,
     find_words,
     get_wordle_letters,
+    WordleGuesses,
     WordleLetter,
 )
-from wordle_cheater.dictionary import wordle_words
+from wordle_cheater.dictionary import wordle_dictionary
 
 # Wordle from 02-07-2022 (solution 'elder')
 # My guesses were 'beats', 'oiled', 'elder'
 blacks = [["b", "o"], ["i"], ["a"], ["t"], ["s"]]
 yellows = [[], ["e"], ["l"], [], ["d"]]
 greens = [None, None, None, "e", None]
+counts = dict()
+
+wordle_guesses = WordleGuesses()
+wordle_guesses.blacks = blacks
+wordle_guesses.yellows = yellows
+wordle_guesses.greens = greens
+wordle_guesses.counts = counts
 
 
 def test_wordle_dictionary():
     """Length of the Wordle dictionary is correct."""
-    assert len(wordle_words) == 12972
+    assert len(wordle_dictionary) == 12972
 
 
 def test_find_words():
     """It returns 'dynel' and 'elder'."""
-    words = find_words(blacks=blacks, yellows=yellows, greens=greens)
+    words = find_words(wordle_guesses)
     assert sorted(words) == ["dynel", "elder"]
 
 
