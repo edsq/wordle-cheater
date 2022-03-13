@@ -7,7 +7,7 @@ from wordle_cheater.cheater import (
 )
 
 
-# Parameters for testing valid entries into parse_wordle_letters
+# Parameters for testing valid entries into WordleGuesses
 # Values are (guesses, blacks, yellows, greens, counts)
 valid_params = {
     "basic_parse": (
@@ -231,7 +231,7 @@ def test_wordle_guesses_valid(guesses, blacks, yellows, greens, counts):
 @pytest.mark.parametrize(
     "guesses,invalid_indices", invalid_params.values(), ids=invalid_params.keys()
 )
-def test_parse_wordle_letters_invalid(guesses, invalid_indices):
+def test_wordle_guesses_invalid(guesses, invalid_indices):
     """It raises an `InvalidWordleLetters` exception."""
     wordle_letters = [WordleLetter(*guess) for guess in guesses]
     invalid_letters = [wordle_letters[5 + i] for i in invalid_indices]
@@ -240,7 +240,7 @@ def test_parse_wordle_letters_invalid(guesses, invalid_indices):
     assert sorted(exc_info.value.invalid_letters) == sorted(invalid_letters)
 
 
-def test_parse_wordle_letters_invalid_length():
+def test_wordle_guesses_invalid_length():
     """Test that we raise a ValueError when given an invalid number of letters."""
     wordle_letters = [WordleLetter("a", "black", 0)]
     with pytest.raises(ValueError) as exc_info:
