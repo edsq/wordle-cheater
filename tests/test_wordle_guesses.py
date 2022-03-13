@@ -7,7 +7,7 @@ from wordle_cheater.cheater import (
 )
 
 
-# Parameters for testing valid entries into parse_wordle_letters
+# Parameters for testing valid entries into WordleGuesses
 # Values are (guesses, blacks, yellows, greens, counts)
 valid_params = {
     "basic_parse": (
@@ -231,7 +231,7 @@ def test_wordle_guesses_valid(guesses, blacks, yellows, greens, counts):
 @pytest.mark.parametrize(
     "guesses,invalid_indices", invalid_params.values(), ids=invalid_params.keys()
 )
-def test_parse_wordle_letters_invalid(guesses, invalid_indices):
+def test_wordle_guesses_invalid(guesses, invalid_indices):
     """It raises an `InvalidWordleLetters` exception."""
     wordle_letters = [WordleLetter(*guess) for guess in guesses]
     invalid_letters = [wordle_letters[5 + i] for i in invalid_indices]
@@ -240,7 +240,7 @@ def test_parse_wordle_letters_invalid(guesses, invalid_indices):
     assert sorted(exc_info.value.invalid_letters) == sorted(invalid_letters)
 
 
-def test_parse_wordle_letters_invalid_length():
+def test_wordle_guesses_invalid_length():
     """Test that we raise a ValueError when given an invalid number of letters."""
     wordle_letters = [WordleLetter("a", "black", 0)]
     with pytest.raises(ValueError) as exc_info:
@@ -249,4 +249,33 @@ def test_parse_wordle_letters_invalid_length():
     assert (
         exc_info.value.args[0]
         == "`len(wordle_letters)` must be an integer multiple of five"
+    )
+
+
+def test_add_word_invalid_length():
+    """It raises a ValueError when given an invalid number of letters."""
+    wordle_letters = [WordleLetter("a", "black", 0)]
+    wordle_guesses = WordleGuesses()
+    with pytest.raises(ValueError) as exc_info:
+        wordle_guesses.add_word(wordle_letters)
+    assert exc_info.type is ValueError
+    assert (
+        exc_info.value.args[0]
+        == "`word` must be a length-5 list of WordleLetter objects."
+    )
+
+
+def test_get_invalid_letters_invalid_length():
+    """It raises a ValueError when given an invalid number of letters."""
+    guesses = valid_params["basic_parse"][0]
+    wordle_letters = [WordleLetter(*guess) for guess in guesses]
+    wordle_guesses = WordleGuesses(wordle_letters)
+
+    word_to_check = [WordleLetter("a", "black", 0)]  # should be length 5
+    with pytest.raises(ValueError) as exc_info:
+        _ = wordle_guesses.get_invalid_letters(word_to_check)
+    assert exc_info.type is ValueError
+    assert (
+        exc_info.value.args[0]
+        == "`word` must be a length-5 list of WordleLetter objects."
     )

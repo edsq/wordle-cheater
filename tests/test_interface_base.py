@@ -198,6 +198,9 @@ test_inputs = {
             " ",
             " ",
             "&",  # Should cancel the green colored character
+            " ",
+            " ",
+            " ",  # Should also cancel the green colored character
             "a",
             "T",
             "s",
