@@ -112,7 +112,7 @@ class WordleGuesses:
         if wordle_letters is None:
             wordle_letters = []
 
-        self.wordle_letters = wordle_letters
+        self.wordle_letters = wordle_letters.copy()
         self.blacks = [[], [], [], [], []]
         self.yellows = [[], [], [], [], []]
         self.greens = [None, None, None, None, None]
