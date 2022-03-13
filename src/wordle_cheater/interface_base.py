@@ -135,6 +135,8 @@ class WordleCheaterUI:
             The x position of the cursor after handling enter.
         y : int
             The y position of the cursor after handling enter.
+
+        # noqa : DAR000
         """
         # Check if we've entered all 6 words
         if y == y0 + 5 and x == x0 + 5:
@@ -199,6 +201,8 @@ class WordleCheaterUI:
             The x position of the cursor after handling the backspace.
         y : int
             The y position of the cursor after handling the backspace.
+
+        # noqa : DAR000
         """
         # Don't do anything if we're at the beginning of the first line
         if x == x0 and y == y0:
@@ -246,6 +250,8 @@ class WordleCheaterUI:
             The x position of the cursor after handling the spacebar.
         y : int
             The y position of the cursor after handling the spacebar.
+
+        # noqa : DAR000
         """
 
         def cancel_colored_letter():
