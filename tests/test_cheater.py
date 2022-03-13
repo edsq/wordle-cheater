@@ -4,6 +4,7 @@ from wordle_cheater.cheater import (
     easy_cheat,
     find_words,
     get_wordle_letters,
+    WordleGuesses,
     WordleLetter,
 )
 from wordle_cheater.dictionary import wordle_dictionary
@@ -13,6 +14,13 @@ from wordle_cheater.dictionary import wordle_dictionary
 blacks = [["b", "o"], ["i"], ["a"], ["t"], ["s"]]
 yellows = [[], ["e"], ["l"], [], ["d"]]
 greens = [None, None, None, "e", None]
+counts = dict()
+
+wordle_guesses = WordleGuesses()
+wordle_guesses.blacks = blacks
+wordle_guesses.yellows = yellows
+wordle_guesses.greens = greens
+wordle_guesses.counts = counts
 
 
 def test_wordle_dictionary():
@@ -22,7 +30,7 @@ def test_wordle_dictionary():
 
 def test_find_words():
     """It returns 'dynel' and 'elder'."""
-    words = find_words(blacks=blacks, yellows=yellows, greens=greens)
+    words = find_words(wordle_guesses)
     assert sorted(words) == ["dynel", "elder"]
 
 
