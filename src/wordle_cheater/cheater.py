@@ -290,22 +290,6 @@ def check_word(word, guesses, check_dict=True):
     greens = guesses.greens
     counts = guesses.counts
 
-    if blacks is None:
-        blacks = [[], [], [], [], []]
-
-    if yellows is None:
-        yellows = [[], [], [], [], []]
-
-    if greens is None:
-        greens = [None, None, None, None, None]
-
-    if counts is None:
-        counts = dict()
-
-    assert len(blacks) == 5
-    assert len(yellows) == 5
-    assert len(greens) == 5
-
     # Get unraveled lists
     all_blacks = _flatten(blacks)
     all_yellows = _flatten(yellows)
