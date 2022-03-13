@@ -93,38 +93,9 @@ class WordleCheaterUI:
 
             # Check if user pressed return
             if self.is_enter(c):
-                # Check if we've entered all 6 words
-                if y == y0 + 5 and x == x0 + 5:
-                    self.entering_letters = False  # Exit loop
+                print_new_line = self._handle_enter(x, y, x0, y0)
 
-                # Check if user pressed return on an empty line and wants to exit
-                elif x == x0:
-                    self.set_cursor_visibility(False)  # Hide cursor
-                    self.print(x, y, "     ")  # Clear line of underscores
-                    self.entering_letters = False  # Exit loop
-
-                # Check if user pressed return on a full line and wants another
-                elif x == x0 + 5:
-                    try:
-                        self.print_results()  # Show results thus far
-
-                    # If user entered an invalid word, color problem letters red
-                    except cheater.InvalidWordleLetters as exc:
-                        invalid_letters = exc.invalid_letters
-
-                        for _ in range(2):
-                            for wl in invalid_letters:
-                                self.print(x0 + wl.index, y, wl.letter.upper(), c="red")
-                            self.move_cursor(x, y)
-                            self.sleep(150)
-                            for wl in invalid_letters:
-                                self.print(
-                                    x0 + wl.index, y, wl.letter.upper(), c=wl.color
-                                )
-                            self.move_cursor(x, y)
-                            self.sleep(150)
-                        continue
-
+                if print_new_line:
                     x = x0  # Reset horizontal position
                     y += 1  # Increment vertical position
                     self.print(x, y, "_____")  # Print blank line of underscores
@@ -210,12 +181,74 @@ class WordleCheaterUI:
 
             # If we enter a letter without first pressing space, color it black
             elif c.upper() in english_letters:
-                self.print(x, y, c.upper(), c="black")  # Show letter colored black
-                wl = cheater.WordleLetter(letter=c.lower(), color="black", index=x - x0)
-                self.guesses.append(wl)  # Add letter to list
+                self._print_and_add_letter(c, "black", x, y, x0)
                 x += 1
 
         return self.guesses
+
+    def _handle_enter(self, x, y, x0, y0):
+        """Handle when the enter key is pressed.
+
+        Parameters
+        ----------
+        x : int
+            The current x position of the cursor.
+        y : int
+            The current y position of the cursor.
+        x0 : int
+            The horizontal position of the upper-left corner of the words to enter.
+        y0 : int
+            The vertical position of the upper-left corner of the words to enter.
+
+        Returns
+        -------
+        print_new_line : bool
+            Whether or not to print a new line for entering another word.
+        """
+        # Check if we've entered all 6 words
+        if y == y0 + 5 and x == x0 + 5:
+            self.entering_letters = False  # Exit loop
+            return False
+
+        # Check if user pressed return on an empty line and wants to exit
+        elif x == x0:
+            self.set_cursor_visibility(False)  # Hide cursor
+            self.print(x, y, "     ")  # Clear line of underscores
+            self.entering_letters = False  # Exit loop
+            return False
+
+        # Check if user pressed return on a full line and wants another
+        elif x == x0 + 5:
+            try:
+                self.print_results()  # Show results thus far
+                return True
+
+            # If user entered an invalid word, color problem letters red
+            except cheater.InvalidWordleLetters as exc:
+                invalid_letters = exc.invalid_letters
+
+                # Flash invalid letters red
+                for _ in range(2):
+                    for wl in invalid_letters:
+                        self.print(x0 + wl.index, y, wl.letter.upper(), c="red")
+                    self.move_cursor(x, y)
+                    self.sleep(150)
+                    for wl in invalid_letters:
+                        self.print(x0 + wl.index, y, wl.letter.upper(), c=wl.color)
+                    self.move_cursor(x, y)
+                    self.sleep(150)
+
+                return False
+
+        # If enter pressed in any other situation, do nothing
+        else:
+            return False
+
+    def _print_and_add_letter(self, letter, color, x, y, x0):
+        """Print `letter` in `color` and add it to `self.guesses`."""
+        self.print(x, y, letter.upper(), c=color)
+        wl = cheater.WordleLetter(letter=letter.lower(), color=color, index=x - x0)
+        self.guesses.append(wl)  # Add letter to list
 
     def get_results_string(self, max_rows=10, max_cols=8, sep="     "):
         """Get possible solutions formatted into columns.
