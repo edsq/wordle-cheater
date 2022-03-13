@@ -315,19 +315,17 @@ def check_word(word, guesses, check_dict=True):
             if n_of_letter_in_word > n_of_letter_max:
                 return False
 
-        if letter in blacks[i]:
+        # Letter can't have been previously colored black or yellow at this index
+        if letter in blacks[i] or letter in yellows[i]:
             return False
 
-        elif letter in yellows[i]:
-            return False
-
+        # A different letter can't have been previously colored green at this index
         elif letter != greens[i] and greens[i] is not None:
             return False
 
     # Check if guess is a real word
-    if check_dict:
-        if word not in wordle_dictionary:
-            return False
+    if check_dict and word not in wordle_dictionary:
+        return False
 
     # If we've made it this far, the word is a possible solution
     return True
