@@ -1,9 +1,9 @@
-"""Tests for cheater.parse_wordle_letters."""
+"""Tests for cheater.WordleGuesses."""
 import pytest
 from wordle_cheater.cheater import (
     InvalidWordleLetters,
-    WordleLetter,
     WordleGuesses,
+    WordleLetter,
 )
 
 
@@ -219,7 +219,7 @@ invalid_params = {
     ids=valid_params.keys(),
 )
 def test_wordle_guesses_valid(guesses, blacks, yellows, greens, counts):
-    """WordleGuesses object has self.blacks, self.yellows, self.greens, self.counts."""
+    """`WordleGuesses` has correct `blacks`, `yellows`, `greens`, `counts`."""
     wordle_letters = [WordleLetter(*guess) for guess in guesses]
     wordle_guesses = WordleGuesses(wordle_letters)
     assert wordle_guesses.blacks == blacks
