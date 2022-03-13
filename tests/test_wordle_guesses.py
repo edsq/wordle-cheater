@@ -2,8 +2,8 @@
 import pytest
 from wordle_cheater.cheater import (
     InvalidWordleLetters,
-    parse_wordle_letters,
     WordleLetter,
+    WordleGuesses,
 )
 
 
@@ -218,16 +218,14 @@ invalid_params = {
     valid_params.values(),
     ids=valid_params.keys(),
 )
-def test_parse_wordle_letters_valid(guesses, blacks, yellows, greens, counts):
-    """It returns `(blacks, yellows, greens, counts)`."""
+def test_wordle_guesses_valid(guesses, blacks, yellows, greens, counts):
+    """WordleGuesses object has self.blacks, self.yellows, self.greens, self.counts."""
     wordle_letters = [WordleLetter(*guess) for guess in guesses]
-    parsed_blacks, parsed_yellows, parsed_greens, parsed_counts = parse_wordle_letters(
-        wordle_letters
-    )
-    assert parsed_blacks == blacks
-    assert parsed_yellows == yellows
-    assert parsed_greens == greens
-    assert parsed_counts == counts
+    wordle_guesses = WordleGuesses(wordle_letters)
+    assert wordle_guesses.blacks == blacks
+    assert wordle_guesses.yellows == yellows
+    assert wordle_guesses.greens == greens
+    assert wordle_guesses.counts == counts
 
 
 @pytest.mark.parametrize(
@@ -238,7 +236,7 @@ def test_parse_wordle_letters_invalid(guesses, invalid_indices):
     wordle_letters = [WordleLetter(*guess) for guess in guesses]
     invalid_letters = [wordle_letters[5 + i] for i in invalid_indices]
     with pytest.raises(InvalidWordleLetters) as exc_info:
-        _ = parse_wordle_letters(wordle_letters)
+        _ = WordleGuesses(wordle_letters)
     assert sorted(exc_info.value.invalid_letters) == sorted(invalid_letters)
 
 
@@ -246,7 +244,7 @@ def test_parse_wordle_letters_invalid_length():
     """Test that we raise a ValueError when given an invalid number of letters."""
     wordle_letters = [WordleLetter("a", "black", 0)]
     with pytest.raises(ValueError) as exc_info:
-        _ = parse_wordle_letters(wordle_letters)
+        _ = WordleGuesses(wordle_letters)
     assert exc_info.type is ValueError
     assert (
         exc_info.value.args[0]
