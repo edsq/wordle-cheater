@@ -286,58 +286,8 @@ def parse_wordle_letters(wordle_letters):
     words = [wordle_letters[i * 5 : i * 5 + 5] for i in range(len(wordle_letters) // 5)]
 
     for word in words:
-        these_blacks = [wl for wl in word if wl.color == "black"]
-        these_yellows = [wl for wl in word if wl.color == "yellow"]
-        these_greens = [wl for wl in word if wl.color == "green"]
-
-        these_counts = dict()
-        for wl in these_yellows + these_greens:
-            these_counts[wl.letter] = these_counts.get(wl.letter, 0) + 1
-
-        invalid_letters = []  # For letters incompatible with previous words
-
-        # Validate black letters
-        for wl in these_blacks:
-            # A black letter cannot be colored in this word fewer times than in any
-            # previous word, and can't have been previously marked colored at this
-            # location
-            curr_count = these_counts.get(wl.letter, 0)
-            prev_count = counts.get(wl.letter, 0)
-            if (
-                curr_count < prev_count
-                or wl.letter in yellows[wl.index]
-                or wl.letter == greens[wl.index]
-            ):
-                invalid_letters.append(wl)
-
-        # Validate yellow letters
-        for wl in these_yellows:
-            # A yellow letter can't have been previously marked black or green in
-            # this location, and if it was previously marked black (anywhere), it must
-            # have also been previously colored
-            if (
-                wl.letter in blacks[wl.index]
-                or wl.letter == greens[wl.index]
-                or wl.letter in _flatten(blacks)
-                and counts.get(wl.letter, 0) == 0
-            ):
-                invalid_letters.append(wl)
-
-        # Validate green letters
-        for wl in these_greens:
-            # A green letter can't have been previously marked black or yellow in
-            # this location, a different letter can't have been marked green in this
-            # location, and if it was previously marked black (anywhere), it must have
-            # also been previously colored
-            if (
-                wl.letter in blacks[wl.index]
-                or wl.letter in yellows[wl.index]
-                or wl.letter != greens[wl.index]
-                and greens[wl.index] is not None
-                or wl.letter in _flatten(blacks)
-                and counts.get(wl.letter, 0) == 0
-            ):
-                invalid_letters.append(wl)
+        # Get any invalid letters in this word
+        invalid_letters = get_invalid_letters(word, blacks, yellows, greens, counts)
 
         # Raise an error, if necessary
         if len(invalid_letters) > 0:
@@ -354,15 +304,18 @@ def parse_wordle_letters(wordle_letters):
             raise InvalidWordleLetters(exc_str, invalid_letters)
 
         # If we made it through all that validation, append these letters to output
+        these_counts = dict()  # colored letters in this word and their counts
         for wl in word:
             if wl.color == "black":
                 blacks[wl.index].append(wl.letter)
 
             elif wl.color == "yellow":
                 yellows[wl.index].append(wl.letter)
+                these_counts[wl.letter] = these_counts.get(wl.letter, 0) + 1
 
             else:  # Color is green
                 greens[wl.index] = wl.letter
+                these_counts[wl.letter] = these_counts.get(wl.letter, 0) + 1
 
             # Also update counts if necessary
             # If not playing hard mode, the current count of a letter could be less
@@ -371,6 +324,106 @@ def parse_wordle_letters(wordle_letters):
                 counts[wl.letter] = these_counts[wl.letter]
 
     return blacks, yellows, greens, counts
+
+
+def get_invalid_letters(wordle_letters, blacks, yellows, greens, counts):
+    """Get invalid WordleLetters given blacks, yellows, greens, counts.
+
+    Given previous guesses, this function returns which of wordle_letters are not
+    possible entries, if any.  Note that this is different from whether or not a word is
+    a possible solution given previous guesses, as wordle_letters contains extra
+    information (the colors of each letter) which we have to validate.
+
+    Parameters
+    ----------
+    wordle_letters : list of WordleLetters
+        The WordleLetters to check.
+    blacks : length-5 list of lists, optional
+        A list of lowercase letters that are not in the word.  For example, if our
+        guesses have the letter 'A' marked black at the second character,
+        `blacks = [[], ['A'], [], [], []]`.  Defaults to no letters marked black.
+    yellows : length-5 list of lists, optional
+        Lowercase letters that are in the word, but not in the correct location.  For
+        example, if our guesses tell us that the letter 'A' was in the word, but it was
+        not the third letter, we
+        would pass `yellows = [[], [], ['a'], [], []]`.  Defaults to no letters marked
+        yellow.
+    greens : length-5 list, optional
+        Lowercase letters that are in the word and in the correct location.  For
+        example, if our guesses tell us that the letter 'A' is the fourth letter of the
+        word, we would pass `greens = [None, None, None, 'a', None]`.  Defaults to no
+        letters marked green.
+    counts : dict, optional
+        Counts of letters that should appear in the solution.  For letters that are in
+        `blacks`, this is interpreted as the exact number of times the letter must
+        appear in the solution, and defaults to zero.  For letters that are in
+        `yellows` and/or `greens`, this is interpreted as the minimum number of times
+        the letter must appear in the solution, and defaults to one.
+        For example, if a previous guess was 'array' with the two 'r's colored, then we
+        would know the solution must have at least two 'r's and pass
+        `counts = {'r': 2}`.  If a previous guess was 'array', with one 'r' marked black
+        and one colored, then
+        we know the solution must have exactly one 'r' and pass `counts = {'r': 1}`.
+
+    Returns
+    -------
+    list of WordleLetters
+        The WordleLetter objects in wordle_letters that were invalid, if there were any.
+    """
+    these_blacks = [wl for wl in wordle_letters if wl.color == "black"]
+    these_yellows = [wl for wl in wordle_letters if wl.color == "yellow"]
+    these_greens = [wl for wl in wordle_letters if wl.color == "green"]
+
+    these_counts = dict()
+    for wl in these_yellows + these_greens:
+        these_counts[wl.letter] = these_counts.get(wl.letter, 0) + 1
+
+    invalid_letters = []  # For letters incompatible with previous words
+
+    # Validate black letters
+    for wl in these_blacks:
+        # A black letter cannot be colored in this word fewer times than in any
+        # previous word, and can't have been previously marked colored at this
+        # location
+        curr_count = these_counts.get(wl.letter, 0)
+        prev_count = counts.get(wl.letter, 0)
+        if (
+            curr_count < prev_count
+            or wl.letter in yellows[wl.index]
+            or wl.letter == greens[wl.index]
+        ):
+            invalid_letters.append(wl)
+
+    # Validate yellow letters
+    for wl in these_yellows:
+        # A yellow letter can't have been previously marked black or green in
+        # this location, and if it was previously marked black (anywhere), it must
+        # have also been previously colored
+        if (
+            wl.letter in blacks[wl.index]
+            or wl.letter == greens[wl.index]
+            or wl.letter in _flatten(blacks)
+            and counts.get(wl.letter, 0) == 0
+        ):
+            invalid_letters.append(wl)
+
+    # Validate green letters
+    for wl in these_greens:
+        # A green letter can't have been previously marked black or yellow in
+        # this location, a different letter can't have been marked green in this
+        # location, and if it was previously marked black (anywhere), it must have
+        # also been previously colored
+        if (
+            wl.letter in blacks[wl.index]
+            or wl.letter in yellows[wl.index]
+            or wl.letter != greens[wl.index]
+            and greens[wl.index] is not None
+            or wl.letter in _flatten(blacks)
+            and counts.get(wl.letter, 0) == 0
+        ):
+            invalid_letters.append(wl)
+
+    return invalid_letters
 
 
 def cheat(wordle_letters):
