@@ -82,7 +82,7 @@ class WordleGuesses:
 
     Attributes
     ----------
-    letters : list of WordleLetters
+    wordle_letters : list of WordleLetters
         All the letters that have been entered so far.
     blacks : length-5 list of lists
         A list of lowercase letters that are not in the word.  For example, if our
@@ -112,7 +112,7 @@ class WordleGuesses:
         if wordle_letters is None:
             wordle_letters = []
 
-        self.letters = wordle_letters
+        self.wordle_letters = wordle_letters
         self.blacks = [[], [], [], [], []]
         self.yellows = [[], [], [], [], []]
         self.greens = [None, None, None, None, None]
