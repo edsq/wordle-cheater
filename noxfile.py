@@ -26,19 +26,6 @@ def tests(session):
             session.notify("coverage", posargs=[])
 
 
-@session(python=python_versions[0])
-def black(session):
-    """Run the black formatter."""
-    if session.posargs:
-        args = session.posargs
-
-    else:
-        args = locations
-
-    session.install("black")
-    session.run("black", *args)
-
-
 @session(python=python_versions)
 def lint(session):
     """Lint using flake8."""
@@ -87,3 +74,29 @@ def docs(session):
     session.install("sphinx", "myst-parser", "numpydoc", "sphinx-click", "furo")
     session.install(".")
     session.run("sphinx-build", "docs", "docs/_build")
+
+
+@session(python=python_versions[0])
+def black(session):
+    """Run the black formatter."""
+    if session.posargs:
+        args = session.posargs
+
+    else:
+        args = locations
+
+    session.install("black")
+    session.run("black", *args)
+
+
+@session(python=python_versions[0])
+def isort(session):
+    """Run isort to sort imports."""
+    if session.posargs:
+        args = session.posargs
+
+    else:
+        args = locations
+
+    session.install("isort")
+    session.run("isort", *args)
