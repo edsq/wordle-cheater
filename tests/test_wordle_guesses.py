@@ -1,11 +1,7 @@
 """Tests for cheater.WordleGuesses."""
 import pytest
-from wordle_cheater.cheater import (
-    InvalidWordleLetters,
-    WordleGuesses,
-    WordleLetter,
-)
 
+from wordle_cheater.cheater import InvalidWordleLetters, WordleGuesses, WordleLetter
 
 # Parameters for testing valid entries into WordleGuesses
 # Values are (guesses, blacks, yellows, greens, counts)

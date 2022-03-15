@@ -1,5 +1,6 @@
 """Tests of command-line interface."""
 from click.testing import CliRunner
+
 from wordle_cheater.cli import wordle_cheat
 
 

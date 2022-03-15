@@ -1,11 +1,12 @@
 """Miscellaneous tests for cheater.py."""
 import pytest
+
 from wordle_cheater.cheater import (
+    WordleGuesses,
+    WordleLetter,
     easy_cheat,
     find_words,
     get_wordle_letters,
-    WordleGuesses,
-    WordleLetter,
 )
 from wordle_cheater.dictionary import wordle_dictionary
 
