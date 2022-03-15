@@ -33,6 +33,7 @@ sphinx-click = "^3.1.0"
 furo = "^2022.3.4"
 myst-parser = "^0.17.0"
 isort = "^5.10.1"
+flake8-isort = "^4.1.1"
 
 [tool.poetry.scripts]
 wordle-cheater = "wordle_cheater.cli:wordle_cheat"
