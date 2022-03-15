@@ -27,14 +27,6 @@ jobs:
           pip install poetry
           poetry --version
 
-      - name: Install nox and nox-poetry
-        run: |
-          pip install nox==2022.1.7
-          pip install nox-poetry==0.9.0
-
-      - name: Run tests and linting
-        run: nox --python=3.10
-
       - name: Check if there is a parent commit
         id: check-parent-commit
         run: |
