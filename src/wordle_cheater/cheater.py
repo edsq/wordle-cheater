@@ -1,8 +1,7 @@
 """Utilities for generating solutions to Wordle given previous guesses."""
 from dataclasses import dataclass
 
-from wordle_cheater.dictionary import letters
-from wordle_cheater.dictionary import wordle_dictionary
+from wordle_cheater.dictionary import letters, wordle_dictionary
 
 
 class InvalidWordleLetters(Exception):

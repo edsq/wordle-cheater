@@ -1,7 +1,8 @@
 """Tests of interface_base logic."""
 import pytest
+
 from wordle_cheater.cheater import WordleGuesses, WordleLetter
-from wordle_cheater.interface_base import format_words, WordleCheaterUI
+from wordle_cheater.interface_base import WordleCheaterUI, format_words
 
 
 class NoInterfaceUI(WordleCheaterUI):

@@ -1,6 +1,7 @@
 """Tests for cheater.check_word()."""
 import pytest
-from wordle_cheater.cheater import check_word, WordleGuesses
+
+from wordle_cheater.cheater import WordleGuesses, check_word
 
 
 def get_wordle_guesses(blacks, yellows, greens, counts):

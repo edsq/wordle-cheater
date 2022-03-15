@@ -1,5 +1,6 @@
 """Command-line interface for wordle-cheater."""
 import click
+
 from wordle_cheater.cheater import cheat, get_wordle_letters
 from wordle_cheater.interface import ClickInterface, CursesInterface
 from wordle_cheater.interface_base import format_words
