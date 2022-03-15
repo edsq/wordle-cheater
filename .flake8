@@ -1,8 +1,6 @@
 [flake8]
-select = B,B9,BLK,C,D,DAR,E,F,I,W
+select = B,B9,BLK,C,D,DAR,E,F,W
 ignore = E203,E501,W503
 max-line-length = 88
-application-import-names = wordle-cheater,tests
-import-order-style = google
 docstring-convention = numpy
 max-complexity = 10
