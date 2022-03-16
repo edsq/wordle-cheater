@@ -96,7 +96,13 @@ class CursesInterface(WordleCheaterUI):
         self.center_print(3, "spacebar: change color", curses.A_DIM)
 
     def print_results(self, sep="     "):
-        """Print possible solutions given guesses."""
+        """Print possible solutions given guesses.
+
+        Parameters
+        ----------
+        sep : str, optional
+            The string to display between each possible solution.
+        """
         height, width = self.results_window.getmaxyx()
         max_rows = height - 1  # -1 to account for "Possible solutions" header
         cols = width // (5 + len(sep))
@@ -109,7 +115,7 @@ class CursesInterface(WordleCheaterUI):
         self.results_window.refresh()
 
     def print(self, x, y, string, c=None):
-        """Print a string at coordinates x, y.
+        """Print `string` at coordinates `x`, `y`.
 
         Parameters
         ----------
@@ -156,7 +162,7 @@ class CursesInterface(WordleCheaterUI):
         self.stdscr.refresh()
 
     def move_cursor(self, x, y):
-        """Move cursor to position x, y.
+        """Move cursor to position `x`, `y`.
 
         Parameters
         ----------
@@ -244,19 +250,19 @@ class ClickInterface(WordleCheaterUI):
 
     Attributes
     ----------
-    guesses : list of WordleLetter objects
+    guesses : list of WordleLetter
         The currently entered guesses.
     entering_letters : bool
         Whether or not we are currently entering guesses.
-    max_rows : int
+    max_rows : int, optional
         The maximum rows of possible solutions to print.
-    max_cols : int
+    max_cols : int, optional
         The maximum columns of possible solutions to print.
-    x0 : int
+    x0 : int, optional
         The leftmost position where guesses will be entered.
-    y0 : int
+    y0 : int, optional
         The topmost position where guesses will be entered.
-    esc : str
+    esc : str, optional
         The ANSI escape code for the terminal.
     line_lengths : list of int
         The highest x value we've printed to per line.  For example, if we've printed
@@ -323,7 +329,7 @@ class ClickInterface(WordleCheaterUI):
         click.echo(out_str)
 
     def print(self, x, y, string, c=None, *args, **kwargs):
-        """Print a string at coordinates x, y.
+        """Print `string` at coordinates `x`, `y`.
 
         Parameters
         ----------
@@ -378,7 +384,7 @@ class ClickInterface(WordleCheaterUI):
         time.sleep(ms / 1000)
 
     def move_cursor(self, x, y):
-        """Move cursor to position x, y.
+        """Move cursor to position `x`, `y`.
 
         Parameters
         ----------
