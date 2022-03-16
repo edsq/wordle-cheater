@@ -5,12 +5,13 @@ from wordle_cheater.dictionary import letters, wordle_dictionary
 
 
 class InvalidWordleLetters(Exception):
-    """Exception for when invalid letters are passed to parse_worlde_letters.
+    """Exception for when invalid letters are passed to WordleGuesses.
 
     Attributes
     ----------
     invalid_letters : list of WordleLetter objects
-        The relevant letters that were found to be invalid.
+        The relevant letters that were found to be invalid given previously entered
+        guesses.
     """
 
     def __init__(self, message, wordle_letters):
@@ -130,7 +131,10 @@ class WordleGuesses:
             self.add_word(word)
 
     def add_word(self, word):
-        """Update `self.blacks`, `self.yellows`, `self.greens`, `self.counts`.
+        """Update current guesses.
+
+        This method appends to `self.wordle_letters` and updates `self.blacks`,
+        `self.yellows`, `self.greens`, and `self.counts`.
 
         Parameters
         ----------
@@ -158,7 +162,7 @@ class WordleGuesses:
                 + letters_str
                 + " (indices "
                 + inds_str
-                + ") incompatible with previous entries"
+                + ") incompatible with previous guesses"
             )
             raise InvalidWordleLetters(exc_str, invalid_letters)
 
@@ -331,7 +335,7 @@ def check_word(word, guesses, check_dict=True):
 
 
 def find_words(guesses):
-    """Find all possible words that are consistent with current information.
+    """Find all possible words that are consistent with `guesses`.
 
     Parameters
     ----------
