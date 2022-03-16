@@ -331,7 +331,7 @@ class WordleCheaterUI:
         raise NotImplementedError
 
     def print(self, x, y, string, c=None):  # pragma: no cover
-        """Print a string at coordinates x, y.
+        """Print a string at coordinates `x`, `y`.
 
         Parameters
         ----------
@@ -359,7 +359,7 @@ class WordleCheaterUI:
         raise NotImplementedError
 
     def move_cursor(self, x, y):  # pragma: no cover
-        """Move cursor to position x, y.
+        """Move cursor to position `x`, `y`.
 
         Parameters
         ----------
