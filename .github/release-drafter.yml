@@ -10,7 +10,7 @@ categories:
     label: 'documentation'
   - title: ':rocket: Features'
     label: 'enhancement'
-  - title: ':beetle: Fixes'
+  - title: ':bug: Fixes'
     label: 'bug'
   - title: ':racehorse: Performance'
     label: 'performance'
