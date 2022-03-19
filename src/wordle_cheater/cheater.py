@@ -1,4 +1,5 @@
 """Utilities for generating solutions to Wordle given previous guesses."""
+from copy import deepcopy
 from dataclasses import dataclass
 
 from wordle_cheater.dictionary import letters, wordle_dictionary
@@ -112,7 +113,7 @@ class WordleGuesses:
         if wordle_letters is None:
             wordle_letters = []
 
-        self.wordle_letters = wordle_letters.copy()
+        self.wordle_letters = []
         self.blacks = [[], [], [], [], []]
         self.yellows = [[], [], [], [], []]
         self.greens = [None, None, None, None, None]
@@ -167,7 +168,7 @@ class WordleGuesses:
             raise InvalidWordleLetters(exc_str, invalid_letters)
 
         # If we made it this far, update current list of letters
-        self.wordle_letters += word
+        self.wordle_letters += deepcopy(word)
 
         # Add the word to self.blacks, self.yellows, self.greens, self.counts
         these_counts = dict()  # colored letters in this word and their counts
