@@ -108,3 +108,10 @@ def test_easy_cheat():
     """Test the easy_cheat convenience function."""
     solutions = easy_cheat("beats oiled", "bybbb bbygy")
     assert sorted(solutions) == sorted(["elder", "dynel"])
+
+
+def test_wordle_guesses_letters():
+    """WordleGuesses.wordle_letters is set appropriately."""
+    wordle_letters = get_wordle_letters("beats", "bybbb")
+    guesses = WordleGuesses(wordle_letters)
+    assert guesses.wordle_letters == wordle_letters
